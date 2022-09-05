@@ -1,0 +1,80 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/hypnos/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/web:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "compiler": "babel",
+        "outputPath": "dist/apps/hypnos",
+        "index": "apps/hypnos/src/index.html",
+        "baseHref": "/",
+        "main": "apps/hypnos/src/main.tsx",
+        "polyfills": "apps/hypnos/src/polyfills.ts",
+        "tsConfig": "apps/hypnos/tsconfig.app.json",
+        "assets": ["apps/hypnos/src/favicon.ico", "apps/hypnos/src/assets"],
+        "styles": ["apps/hypnos/src/styles.css"],
+        "scripts": [],
+        "webpackConfig": "@nrwl/react/plugins/webpack"
+      },
+      "configurations": {
+        "development": {
+          "extractLicenses": false,
+          "optimization": false,
+          "sourceMap": true,
+          "vendorChunk": true
+        },
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/hypnos/src/environments/environment.ts",
+              "with": "apps/hypnos/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/web:dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "hypnos:build",
+        "hmr": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "hypnos:build:development"
+        },
+        "production": {
+          "buildTarget": "hypnos:build:production",
+          "hmr": false
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/hypnos/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/apps/hypnos"],
+      "options": {
+        "jestConfig": "apps/hypnos/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}
