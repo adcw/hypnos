@@ -4,7 +4,10 @@
   "projects": {
     "hypnos": "apps/hypnos",
     "hypnos-server": "apps/hypnos-server",
+    "server-network-rooms": "libs/server/network-rooms",
     "shared-gameevents": "libs/shared/gameevents",
-    "web-network": "libs/web/network"
+    "web-network": "libs/web/network",
+    "web-ui-lobby": "libs/web/ui-lobby",
+    "web-ui-mainmenu": "libs/web/ui-mainmenu"
   }
 }

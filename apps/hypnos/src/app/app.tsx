@@ -1,7 +1,11 @@
-import { io } from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
 
 import { Text } from '@mantine/core';
 import { useEffect, useState } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { MainMenu } from '@hypnos/web/ui-mainmenu';
+import { GameProvider } from '@hypnos/web/network';
+import { Lobby } from '@hypnos/web/ui-lobby';
 
 const socket = io('http://localhost:3001');
 
@@ -31,13 +35,14 @@ export function App() {
   }, []);
 
   return (
-    <>
-      <Text>Witaj</Text>
-
-      {messages.map((message, key) => {
-        return <Text key={key}>{message}</Text>;
-      })}
-    </>
+    <GameProvider mySocket={socket}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<MainMenu />} />
+          <Route path="/lobby" element={<Lobby />} />
+        </Routes>
+      </BrowserRouter>
+    </GameProvider>
   );
 }
 
