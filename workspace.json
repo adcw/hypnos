@@ -3,6 +3,8 @@
   "version": 2,
   "projects": {
     "hypnos": "apps/hypnos",
-    "hypnos-e2e": "apps/hypnos-e2e"
+    "hypnos-server": "apps/hypnos-server",
+    "shared-gameevents": "libs/shared/gameevents",
+    "web-network": "libs/web/network"
   }
 }
