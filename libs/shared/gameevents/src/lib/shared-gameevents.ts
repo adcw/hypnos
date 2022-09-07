@@ -4,6 +4,8 @@ export const GameEvents = {
 
 export const RoomEvents = {
   joinroom: 'joinroom',
+  checkroomexists: 'checkroomexists',
+
   leaveroom: 'leaveroom',
   createrooom: 'createroom',
   generatedRoomCode: 'generatedRoomCode',

@@ -3,6 +3,7 @@ import { Stack, TextInput, Text, Button, Grid } from '@mantine/core';
 import {
   ActionType,
   GameContext,
+  GameEntity,
   PlayerEntity,
 } from 'libs/web/network/src/lib/web-network';
 import { useContext, useEffect, useState } from 'react';
@@ -29,15 +30,33 @@ export function MainMenu(props: MainmenuProps) {
     if (roomCodeValid && context) {
       const [state, dispatch] = context;
 
-      dispatch({
-        type: ActionType.initialize,
-        payload: {
-          socketId: state.me.socket.id,
-          isMaster: false,
-        } as PlayerEntity,
-      });
+      (state.me.socket as Socket).emit(
+        RoomEvents.checkroomexists,
+        roomCode,
+        (exists: boolean) => {
+          if (exists) {
+            const player: PlayerEntity = {
+              socketId: state.me.socket.id,
+              isMaster: false,
+            };
 
-      navigate(`/lobby?roomId=${roomCode}`);
+            dispatch({
+              type: ActionType.initialize,
+              payload: {
+                cards: [],
+                players: [player],
+                me: {
+                  ...state.me,
+                  player: player,
+                },
+                roomCode: roomCode,
+              } as GameEntity,
+            });
+
+            navigate(`/lobby?roomId=${roomCode}`);
+          }
+        }
+      );
     }
   };
 
@@ -45,11 +64,6 @@ export function MainMenu(props: MainmenuProps) {
     if (!context) return;
 
     const [state, dispatch] = context;
-
-    dispatch({
-      type: ActionType.initialize,
-      payload: { socketId: state.me.socket.id, isMaster: true } as PlayerEntity,
-    });
 
     (state.me.socket as Socket).emit(RoomEvents.createrooom);
   };
@@ -61,6 +75,24 @@ export function MainMenu(props: MainmenuProps) {
     const socket = state.me.socket as Socket;
 
     socket.on(RoomEvents.generatedRoomCode, (code: string) => {
+      const player: PlayerEntity = {
+        socketId: state.me.socket.id,
+        isMaster: true,
+      };
+
+      dispatch({
+        type: ActionType.initialize,
+        payload: {
+          cards: [],
+          players: [player],
+          me: {
+            ...state.me,
+            player: player,
+          },
+          roomCode: code,
+        } as GameEntity,
+      });
+
       navigate(`/lobby?roomId=${code}`);
     });
 
@@ -84,11 +116,11 @@ export function MainMenu(props: MainmenuProps) {
             onChange={(event) => setRoomCode(event.currentTarget.value)}
             maxLength={4}
           />
-          <Button disabled={!roomCodeValid} onClick={onJoin}>
+          <Button disabled={!roomCodeValid} onClick={() => onJoin()}>
             Join
           </Button>
           <Text>Or</Text>
-          <Button color="teal" onClick={onCreate}>
+          <Button color="teal" onClick={() => onCreate()}>
             Create new room
           </Button>
         </Stack>

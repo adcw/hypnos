@@ -54,12 +54,17 @@ io.on('connection', (socket) => {
       if (i === 1) {
         socketRoom = room;
       }
+
       i++;
     });
 
     if (socketRoom) {
       socket.to(socketRoom).emit(RoomEvents.broadcastplayerupdate, players);
     }
+  });
+
+  socket.on(RoomEvents.checkroomexists, (roomCode, callback) => {
+    callback(true);
   });
 
   socket.on('disconnect', () => {

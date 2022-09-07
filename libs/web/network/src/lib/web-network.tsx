@@ -28,14 +28,9 @@ const reducer = (state: GameEntity, action: Action): GameEntity => {
     }
 
     case ActionType.initialize: {
-      const player = payload as PlayerEntity;
+      const player = payload as GameEntity;
       return {
-        cards: [],
-        players: [player],
-        me: {
-          ...state.me,
-          player: player,
-        },
+        ...payload,
       };
     }
 
@@ -168,6 +163,7 @@ export interface GameEntity {
   players: PlayerEntity[];
   cards: string[];
   me: MeEntity;
+  roomCode?: string;
 }
 
 export interface RoundEntity {
