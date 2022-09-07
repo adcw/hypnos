@@ -7,6 +7,7 @@ import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 export enum ActionType {
   addPlayer = 'addPlayer',
   initialize = 'initialize',
+  setPlayers = 'setPlayers',
 }
 
 export interface Action {
@@ -35,6 +36,14 @@ const reducer = (state: GameEntity, action: Action): GameEntity => {
           ...state.me,
           player: player,
         },
+      };
+    }
+
+    case ActionType.setPlayers: {
+      const players = payload as PlayerEntity[];
+      return {
+        ...state,
+        players: players,
       };
     }
   }
@@ -108,7 +117,11 @@ const LobbyHandler = (props: LobbyHandlerProps) => {
   };
 
   const handlePlayerUpdate = (players: PlayerEntity[]) => {
-    console.log('updated list of players: ', players);
+    // console.log('updated list of players: ', players);
+    if (!context) return;
+    const [state, dispatch] = context;
+
+    dispatch({ type: ActionType.setPlayers, payload: players });
   };
 
   useEffect(() => {

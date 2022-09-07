@@ -58,7 +58,7 @@ io.on('connection', (socket) => {
     });
 
     if (socketRoom) {
-      io.in(socketRoom).emit(RoomEvents.broadcastplayerupdate, players);
+      socket.to(socketRoom).emit(RoomEvents.broadcastplayerupdate, players);
     }
   });
 
