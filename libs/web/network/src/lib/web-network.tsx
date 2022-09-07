@@ -70,7 +70,7 @@ export const GameProvider = (props: GameProviderProps) => {
     },
   } as GameEntity);
 
-  const handleBroadcastPlayerJoin = (player: PlayerEntity) => {
+  const handleNotifyJoin = (player: PlayerEntity) => {
     console.log(player, 'joined');
 
     if (state.me.player.isMaster) {
@@ -82,10 +82,10 @@ export const GameProvider = (props: GameProviderProps) => {
   useEffect(() => {
     const socket = props.mySocket as Socket;
 
-    socket.on(RoomEvents.broadcastplayerjoin, handleBroadcastPlayerJoin);
+    socket.on(RoomEvents.notifyjoin, handleNotifyJoin);
 
     return () => {
-      socket.off(RoomEvents.broadcastplayerjoin, handleBroadcastPlayerJoin);
+      socket.off(RoomEvents.notifyjoin, handleNotifyJoin);
       console.log('Netowrk doimsount');
     };
   }, []);

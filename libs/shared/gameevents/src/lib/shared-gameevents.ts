@@ -8,5 +8,5 @@ export const RoomEvents = {
   createrooom: 'createroom',
   generatedRoomCode: 'generatedRoomCode',
 
-  broadcastplayerjoin: 'broadcastplayerjoin',
+  notifyjoin: 'notifyjoin',
 };

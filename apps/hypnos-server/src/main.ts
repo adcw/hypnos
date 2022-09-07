@@ -27,7 +27,7 @@ io.on('connection', (socket) => {
     console.log(`Socket ${socket.id} joining ${room}`);
 
     if (!player.isMaster) {
-      io.in(room).emit(RoomEvents.broadcastplayerjoin, player);
+      io.in(room).emit(RoomEvents.notifyjoin, player);
     }
 
     socket.rooms.forEach((prevRoom) => {
