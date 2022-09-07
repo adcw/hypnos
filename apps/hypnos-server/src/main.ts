@@ -21,32 +21,23 @@ io.on('connection', (socket) => {
   socket.on(RoomEvents.leaveroom, (room) => {
     console.log(`Socket ${socket.id} leaving ${room}`);
     socket.leave(room);
-
-    // console.log(
-    //   JSON.stringify(Array.from(io.adapter.rooms.entries()), null, 4)
-    // );
   });
 
-  socket.on(RoomEvents.joinroom, (room, isMaster, callback) => {
+  socket.on(RoomEvents.joinroom, (room, player, callback) => {
     console.log(`Socket ${socket.id} joining ${room}`);
 
-    socket.rooms.forEach((room) => {
-      if (room !== socket.id) {
-        console.log('LEAVING: ' + room);
+    if (!player.isMaster) {
+      io.in(room).emit(RoomEvents.broadcastplayerjoin, player);
+    }
 
-        socket.leave(room);
+    socket.rooms.forEach((prevRoom) => {
+      if (prevRoom !== socket.id) {
+        console.log('LEAVING: ' + prevRoom);
+        socket.leave(prevRoom);
       }
     });
 
     socket.join(room);
-
-    console.log('Rooms:', socket.rooms);
-
-    console.log('IsMaster', isMaster);
-
-    // console.log(
-    //   JSON.stringify(Array.from(io.adapter.rooms.entries()), null, 4)
-    // );
 
     console.log(io.sockets.adapter.rooms.get(room));
     callback([...io.sockets.adapter.rooms.get(room)]);

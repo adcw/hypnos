@@ -34,10 +34,6 @@ const reducer = (state: GameEntity, action: Action): GameEntity => {
         me: {
           ...state.me,
           player: player,
-          // player: {
-          //   ...player,
-          //   socketId: state.me.socket.id,
-          // },
         },
       };
     }
@@ -74,15 +70,23 @@ export const GameProvider = (props: GameProviderProps) => {
     },
   } as GameEntity);
 
+  const handleBroadcastPlayerJoin = (player: PlayerEntity) => {
+    console.log(player, 'joined');
+
+    if (state.me.player.isMaster) {
+      console.log(`Add to list: ${player}`);
+    }
+    // console.log(`${socketId} joined room ${room}`);
+  };
+
   useEffect(() => {
     const socket = props.mySocket as Socket;
 
-    socket.on(RoomEvents.leaveroom, (room, socketId) => {
-      console.log('Left room: ', room);
-    });
+    socket.on(RoomEvents.broadcastplayerjoin, handleBroadcastPlayerJoin);
 
     return () => {
-      // socket.off(RoomEvents.roomleft);
+      socket.off(RoomEvents.broadcastplayerjoin, handleBroadcastPlayerJoin);
+      console.log('Netowrk doimsount');
     };
   }, []);
 

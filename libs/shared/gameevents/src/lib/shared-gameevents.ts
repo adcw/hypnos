@@ -7,4 +7,6 @@ export const RoomEvents = {
   leaveroom: 'leaveroom',
   createrooom: 'createroom',
   generatedRoomCode: 'generatedRoomCode',
+
+  broadcastplayerjoin: 'broadcastplayerjoin',
 };

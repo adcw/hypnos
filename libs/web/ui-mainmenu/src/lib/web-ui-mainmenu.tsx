@@ -7,14 +7,18 @@ import {
 } from 'libs/web/network/src/lib/web-network';
 import { useContext, useEffect, useState } from 'react';
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Socket } from 'socket.io-client';
 
 /* eslint-disable-next-line */
 export interface MainmenuProps {}
 
 export function MainMenu(props: MainmenuProps) {
-  const [roomCode, setRoomCode] = useState<string | null>(null);
+  const [searchParams] = useSearchParams();
+
+  const [roomCode, setRoomCode] = useState<string | null>(
+    searchParams.get('roomId')
+  );
   const [roomCodeValid, setRoomCodeValid] = useState<boolean | undefined>();
 
   const context = useContext(GameContext);
@@ -22,7 +26,17 @@ export function MainMenu(props: MainmenuProps) {
   const navigate = useNavigate();
 
   const onJoin = () => {
-    if (roomCodeValid) {
+    if (roomCodeValid && context) {
+      const [state, dispatch] = context;
+
+      dispatch({
+        type: ActionType.initialize,
+        payload: {
+          socketId: state.me.socket.id,
+          isMaster: false,
+        } as PlayerEntity,
+      });
+
       navigate(`/lobby?roomId=${roomCode}`);
     }
   };

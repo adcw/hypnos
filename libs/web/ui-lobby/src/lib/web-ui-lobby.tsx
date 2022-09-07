@@ -7,7 +7,7 @@ import {
 } from 'libs/web/network/src/lib/web-network';
 import React from 'react';
 import { useContext, useEffect, useState } from 'react';
-import { Outlet, useSearchParams } from 'react-router-dom';
+import { Outlet, useNavigate, useSearchParams } from 'react-router-dom';
 import { Socket } from 'socket.io';
 
 /* eslint-disable-next-line */
@@ -16,6 +16,7 @@ export interface LobbyProps {}
 export function Lobby(props: LobbyProps) {
   const [searchParams] = useSearchParams();
   const [roomCode] = useState(searchParams.get('roomId'));
+  const navigate = useNavigate();
 
   const context = useContext(GameContext);
 
@@ -24,27 +25,22 @@ export function Lobby(props: LobbyProps) {
 
     const [state, dispatch] = context;
 
+    if (!state.me.player.socketId) {
+      roomCode ? navigate(`/?roomId=${roomCode}`) : navigate('/');
+      return;
+    }
+
     const socket = state.me.socket as Socket;
 
     if (roomCode) {
       socket.emit(
         RoomEvents.joinroom,
         roomCode,
-        state.me.player.isMaster,
+        state.me.player,
         (room: any) => {
           console.log(room);
         }
       );
-    }
-
-    if (!state.me.player.isMaster) {
-      dispatch({
-        type: ActionType.initialize,
-        payload: {
-          socketId: state.me.socket.id,
-          isMaster: false,
-        } as PlayerEntity,
-      });
     }
 
     console.log(state);
