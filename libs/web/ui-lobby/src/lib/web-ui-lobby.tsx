@@ -1,5 +1,5 @@
 import { RoomEvents } from '@hypnos/shared/gameevents';
-import { Button, Stack, Text } from '@mantine/core';
+import { Button, Group, Stack, Text } from '@mantine/core';
 import {
   ActionType,
   GameContext,
@@ -61,6 +61,33 @@ export function Lobby(props: LobbyProps) {
           {roomCode}
         </Text>
         <Button onClick={() => console.log(context?.[0])}>Log the state</Button>
+      </Stack>
+
+      <Stack mx={16} spacing={4}>
+        <Text>Connected players:</Text>
+        {
+          <Group position="apart">
+            <Text>{context?.[0].players.find((p) => p.isMaster)?.name}</Text>
+            <Text>Master</Text>
+          </Group>
+        }
+        {context?.[0].players
+          .filter((p) => !p.isMaster)
+          .map((player, key) => {
+            return (
+              <Group position="apart" key={key}>
+                <Text
+                  sx={
+                    {
+                      // '&::lastchild'
+                    }
+                  }
+                >
+                  {player.name}
+                </Text>
+              </Group>
+            );
+          })}
       </Stack>
     </Stack>
   );

@@ -21,6 +21,7 @@ const reducer = (state: GameEntity, action: Action): GameEntity => {
   switch (type) {
     case ActionType.addPlayer: {
       const player = payload as PlayerEntity;
+
       return {
         ...state,
         players: [...state.players, player],

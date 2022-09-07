@@ -64,7 +64,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on(RoomEvents.checkroomexists, (roomCode, callback) => {
-    callback(true);
+    callback(!!io.sockets.adapter.rooms.get(roomCode));
   });
 
   socket.on('disconnect', () => {
