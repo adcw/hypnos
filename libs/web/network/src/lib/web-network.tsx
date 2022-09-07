@@ -112,6 +112,22 @@ const LobbyHandler = (props: LobbyHandlerProps) => {
     }
   };
 
+  const handleNotifyLeave = (socketId: string) => {
+    if (!context) return;
+    const [state, dispatch] = context;
+
+    // console.log(state);
+
+    if (state.me.player.isMaster) {
+      console.log(`He left: ${socketId}`);
+
+      dispatch({
+        type: ActionType.setPlayers,
+        payload: state.players.filter((p) => p.socketId !== socketId),
+      });
+    }
+  };
+
   const handlePlayerUpdate = (players: PlayerEntity[]) => {
     // console.log('updated list of players: ', players);
     if (!context) return;
@@ -138,10 +154,12 @@ const LobbyHandler = (props: LobbyHandlerProps) => {
 
     state.me.socket.on(RoomEvents.notifyjoin, handleNotifyJoin);
     state.me.socket.on(RoomEvents.broadcastplayerupdate, handlePlayerUpdate);
+    state.me.socket.on(RoomEvents.notifyleave, handleNotifyLeave);
 
     return () => {
       state.me.socket.off(RoomEvents.notifyjoin, handleNotifyJoin);
       state.me.socket.off(RoomEvents.broadcastplayerupdate, handlePlayerUpdate);
+      state.me.socket.off(RoomEvents.notifyleave, handleNotifyLeave);
     };
   }, [context]);
 

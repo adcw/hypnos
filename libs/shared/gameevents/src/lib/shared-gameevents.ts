@@ -11,5 +11,6 @@ export const RoomEvents = {
   generatedRoomCode: 'generatedRoomCode',
 
   notifyjoin: 'notifyjoin',
+  notifyleave: 'notifyleave',
   broadcastplayerupdate: 'broadcastplayerupdate',
 };
