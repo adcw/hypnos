@@ -7,6 +7,4 @@ export const RoomEvents = {
   leaveroom: 'leaveroom',
   createrooom: 'createroom',
   generatedRoomCode: 'generatedRoomCode',
-
-  roomleft: 'roomleft',
 };

@@ -33,7 +33,7 @@ export function MainMenu(props: MainmenuProps) {
     const [state, dispatch] = context;
 
     dispatch({
-      type: ActionType.addPlayer,
+      type: ActionType.initialize,
       payload: { socketId: state.me.socket.id, isMaster: true } as PlayerEntity,
     });
 

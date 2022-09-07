@@ -39,7 +39,7 @@ export function Lobby(props: LobbyProps) {
 
     if (!state.me.player.isMaster) {
       dispatch({
-        type: ActionType.addPlayer,
+        type: ActionType.initialize,
         payload: {
           socketId: state.me.socket.id,
           isMaster: false,

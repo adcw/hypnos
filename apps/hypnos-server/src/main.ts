@@ -34,7 +34,6 @@ io.on('connection', (socket) => {
       if (room !== socket.id) {
         console.log('LEAVING: ' + room);
 
-        io.emit(RoomEvents.roomleft, room, socket.id);
         socket.leave(room);
       }
     });

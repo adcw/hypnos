@@ -6,7 +6,7 @@ import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 
 export enum ActionType {
   addPlayer = 'addPlayer',
-  clear = 'clear',
+  initialize = 'initialize',
 }
 
 export interface Action {
@@ -22,25 +22,22 @@ const reducer = (state: GameEntity, action: Action): GameEntity => {
       const player = payload as PlayerEntity;
       return {
         ...state,
-
         players: [...state.players, player],
-        me:
-          player.socketId === state.me.socket.id
-            ? { ...state.me, player: player }
-            : state.me,
       };
     }
 
-    case ActionType.clear: {
+    case ActionType.initialize: {
+      const player = payload as PlayerEntity;
       return {
         cards: [],
-        players: [],
+        players: [player],
         me: {
           ...state.me,
-          player: {
-            ...state.me.player,
-            isMaster: undefined,
-          },
+          player: player,
+          // player: {
+          //   ...player,
+          //   socketId: state.me.socket.id,
+          // },
         },
       };
     }
@@ -82,7 +79,6 @@ export const GameProvider = (props: GameProviderProps) => {
 
     socket.on(RoomEvents.leaveroom, (room, socketId) => {
       console.log('Left room: ', room);
-      dispatch({ type: ActionType.clear, payload: null });
     });
 
     return () => {
