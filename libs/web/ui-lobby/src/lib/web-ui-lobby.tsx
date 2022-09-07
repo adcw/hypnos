@@ -5,7 +5,7 @@ import {
   GameContext,
   PlayerEntity,
 } from 'libs/web/network/src/lib/web-network';
-import React from 'react';
+import React, { useLayoutEffect } from 'react';
 import { useContext, useEffect, useState } from 'react';
 import { Outlet, useNavigate, useSearchParams } from 'react-router-dom';
 import { Socket } from 'socket.io';

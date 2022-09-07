@@ -1,6 +1,6 @@
-import { RoomEvents } from '@hypnos/shared/gameevents';
+import { GameEvents, RoomEvents } from '@hypnos/shared/gameevents';
 import { RoutesMapper } from '@nestjs/core/middleware/routes-mapper';
-import React, { createContext, useEffect, useReducer } from 'react';
+import React, { createContext, useContext, useEffect, useReducer } from 'react';
 import { Socket } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 
@@ -70,26 +70,6 @@ export const GameProvider = (props: GameProviderProps) => {
     },
   } as GameEntity);
 
-  const handleNotifyJoin = (player: PlayerEntity) => {
-    console.log(player, 'joined');
-
-    if (state.me.player.isMaster) {
-      console.log(`Add to list: ${player}`);
-    }
-    // console.log(`${socketId} joined room ${room}`);
-  };
-
-  useEffect(() => {
-    const socket = props.mySocket as Socket;
-
-    socket.on(RoomEvents.notifyjoin, handleNotifyJoin);
-
-    return () => {
-      socket.off(RoomEvents.notifyjoin, handleNotifyJoin);
-      console.log('Netowrk doimsount');
-    };
-  }, []);
-
   return (
     <GameContext.Provider
       value={[
@@ -103,9 +83,60 @@ export const GameProvider = (props: GameProviderProps) => {
         },
       ]}
     >
-      {props.children}
+      <LobbyHandler>{props.children}</LobbyHandler>
     </GameContext.Provider>
   );
+};
+
+interface LobbyHandlerProps {
+  children: JSX.Element;
+}
+const LobbyHandler = (props: LobbyHandlerProps) => {
+  const context = useContext(GameContext);
+
+  const handleNotifyJoin = (player: PlayerEntity) => {
+    if (!context) return;
+    const [state, dispatch] = context;
+
+    // console.log(state);
+
+    if (state.me.player.isMaster) {
+      console.log(`Add to list: ${player}`);
+
+      dispatch({ type: ActionType.addPlayer, payload: player });
+    }
+  };
+
+  const handlePlayerUpdate = (players: PlayerEntity[]) => {
+    console.log('updated list of players: ', players);
+  };
+
+  useEffect(() => {
+    if (!context) return;
+    const [state, dispatch] = context;
+
+    if (!state.me.player.isMaster) return;
+
+    (state.me.socket as Socket).emit(
+      RoomEvents.broadcastplayerupdate,
+      state.players
+    );
+  }, [context?.[0].players, context?.[0].me.player.isMaster]);
+
+  useEffect(() => {
+    if (!context) return;
+    const [state] = context;
+
+    state.me.socket.on(RoomEvents.notifyjoin, handleNotifyJoin);
+    state.me.socket.on(RoomEvents.broadcastplayerupdate, handlePlayerUpdate);
+
+    return () => {
+      state.me.socket.off(RoomEvents.notifyjoin, handleNotifyJoin);
+      state.me.socket.off(RoomEvents.broadcastplayerupdate, handlePlayerUpdate);
+    };
+  }, [context]);
+
+  return props.children;
 };
 
 // const NetworkCtx = React.createContext<NetworkContextType | null>(null);

@@ -27,6 +27,8 @@ io.on('connection', (socket) => {
     console.log(`Socket ${socket.id} joining ${room}`);
 
     if (!player.isMaster) {
+      console.log(`I am notifying that joins: `, player);
+
       io.in(room).emit(RoomEvents.notifyjoin, player);
     }
 
@@ -41,6 +43,23 @@ io.on('connection', (socket) => {
 
     console.log(io.sockets.adapter.rooms.get(room));
     callback([...io.sockets.adapter.rooms.get(room)]);
+  });
+
+  socket.on(RoomEvents.broadcastplayerupdate, (players) => {
+    console.log(`${socket.id} tell thera are players:`, players);
+
+    let socketRoom;
+    let i = 0;
+    socket.rooms.forEach((room) => {
+      if (i === 1) {
+        socketRoom = room;
+      }
+      i++;
+    });
+
+    if (socketRoom) {
+      io.in(socketRoom).emit(RoomEvents.broadcastplayerupdate, players);
+    }
   });
 
   socket.on('disconnect', () => {
