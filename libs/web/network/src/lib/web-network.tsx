@@ -1,8 +1,10 @@
 import { GameEvents, RoomEvents } from '@hypnos/shared/gameevents';
 import { RoutesMapper } from '@nestjs/core/middleware/routes-mapper';
 import React, { createContext, useContext, useEffect, useReducer } from 'react';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Socket } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
+import { useGameLeave } from './hooks';
 
 export enum ActionType {
   addPlayer = 'addPlayer',
@@ -46,7 +48,6 @@ const reducer = (state: GameEntity, action: Action): GameEntity => {
 };
 
 export interface GameProviderProps {
-  children: JSX.Element;
   mySocket: any;
 }
 
@@ -88,7 +89,9 @@ export const GameProvider = (props: GameProviderProps) => {
         },
       ]}
     >
-      <LobbyHandler>{props.children}</LobbyHandler>
+      <LobbyHandler>
+        <Outlet />
+      </LobbyHandler>
     </GameContext.Provider>
   );
 };
@@ -98,6 +101,18 @@ interface LobbyHandlerProps {
 }
 const LobbyHandler = (props: LobbyHandlerProps) => {
   const context = useContext(GameContext);
+  const navigate = useNavigate();
+
+  useGameLeave(() => {
+    if (!context) return;
+    const [state] = context;
+
+    (state.me.socket as Socket).emit(
+      RoomEvents.leaveroom,
+      state.roomCode,
+      state.me.player.isMaster
+    );
+  }, ['lobby', 'game']);
 
   const handleNotifyJoin = (player: PlayerEntity) => {
     if (!context) return;
@@ -118,6 +133,10 @@ const LobbyHandler = (props: LobbyHandlerProps) => {
 
     // console.log(state);
 
+    if (state.players.find((p) => p.socketId === socketId)?.isMaster) {
+      navigate('/');
+    }
+
     if (state.me.player.isMaster) {
       console.log(`He left: ${socketId}`);
 
@@ -129,16 +148,29 @@ const LobbyHandler = (props: LobbyHandlerProps) => {
   };
 
   const handlePlayerUpdate = (players: PlayerEntity[]) => {
-    // console.log('updated list of players: ', players);
+    console.log('updated list of players: ', players);
     if (!context) return;
     const [state, dispatch] = context;
 
     dispatch({ type: ActionType.setPlayers, payload: players });
   };
 
+  // const handleMasterLeaveRoom = () => {
+  //   if (!context) return;
+  //   const [state] = context;
+
+  //   // (state.me.socket as Socket).emit(
+  //   //   RoomEvents.leaveroom,
+  //   //   state.roomCode,
+  //   //   state.me.player.isMaster
+  //   // );
+
+  //   navigate('/');
+  // };
+
   useEffect(() => {
     if (!context) return;
-    const [state, dispatch] = context;
+    const [state] = context;
 
     if (!state.me.player.isMaster) return;
 
@@ -155,11 +187,13 @@ const LobbyHandler = (props: LobbyHandlerProps) => {
     state.me.socket.on(RoomEvents.notifyjoin, handleNotifyJoin);
     state.me.socket.on(RoomEvents.broadcastplayerupdate, handlePlayerUpdate);
     state.me.socket.on(RoomEvents.notifyleave, handleNotifyLeave);
+    // state.me.socket.on(RoomEvents.masterleaveroom, handleMasterLeaveRoom);
 
     return () => {
       state.me.socket.off(RoomEvents.notifyjoin, handleNotifyJoin);
       state.me.socket.off(RoomEvents.broadcastplayerupdate, handlePlayerUpdate);
       state.me.socket.off(RoomEvents.notifyleave, handleNotifyLeave);
+      // state.me.socket.off(RoomEvents.masterleaveroom, handleMasterLeaveRoom);
     };
   }, [context]);
 

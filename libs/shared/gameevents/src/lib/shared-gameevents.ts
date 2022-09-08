@@ -7,6 +7,7 @@ export const RoomEvents = {
   checkroomexists: 'checkroomexists',
 
   leaveroom: 'leaveroom',
+  masterleaveroom: 'masterleaveroom',
   createrooom: 'createroom',
   generatedRoomCode: 'generatedRoomCode',
 

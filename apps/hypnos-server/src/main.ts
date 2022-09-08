@@ -18,11 +18,11 @@ io.on('connection', (socket) => {
     io.to(socket.id).emit(RoomEvents.generatedRoomCode, roomCode);
   });
 
-  socket.on(RoomEvents.leaveroom, (room) => {
+  socket.on(RoomEvents.leaveroom, (room, isMaster) => {
     console.log(`Socket ${socket.id} leaving ${room}`);
     socket.leave(room);
 
-    // io.to(room).emit(RoomEvents.notifyleave, socket.id);
+    io.to(room).emit(RoomEvents.notifyleave, socket.id);
   });
 
   socket.on(RoomEvents.joinroom, (room, player, callback) => {
@@ -69,7 +69,7 @@ io.on('connection', (socket) => {
     callback(!!io.sockets.adapter.rooms.get(roomCode));
   });
 
-  socket.on('disconnecting', () => {
+  socket.on('disconnecting', (isMaster) => {
     console.log(`socket ${socket.id} disconnecting`);
 
     let i = 0;
@@ -77,6 +77,10 @@ io.on('connection', (socket) => {
     socket.rooms.forEach((room) => {
       if (i > 0) {
         socket.to(room).emit(RoomEvents.notifyleave, socket.id);
+
+        // if (isMaster) {
+        //   io.to(room).emit(RoomEvents.masterleaveroom);
+        // }
       }
       i++;
     });

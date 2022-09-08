@@ -11,6 +11,8 @@ import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Socket } from 'socket.io-client';
 
+import { useLocalStorage } from '@mantine/hooks';
+
 /* eslint-disable-next-line */
 export interface MainmenuProps {}
 
@@ -21,7 +23,11 @@ export function MainMenu(props: MainmenuProps) {
     searchParams.get('roomId')
   );
 
-  const [nickname, setNickname] = useState<string | null>(null);
+  const [storageNickname, setStorageNickname] = useLocalStorage({
+    key: 'hypnos-nickname',
+  });
+
+  const [nickname, setNickname] = useState(storageNickname);
 
   const [roomCodeValid, setRoomCodeValid] = useState<boolean | undefined>();
   const [roomCodeError, setRoomCodeError] = useState<string | null>(null);
@@ -34,6 +40,8 @@ export function MainMenu(props: MainmenuProps) {
     if (!roomCodeValid || !context || !nickname) {
       return;
     }
+
+    setStorageNickname(nickname);
 
     const [state, dispatch] = context;
 
@@ -72,10 +80,18 @@ export function MainMenu(props: MainmenuProps) {
   const onCreate = () => {
     if (!context || !nickname) return;
 
+    setStorageNickname(nickname);
+
     const [state, dispatch] = context;
 
     (state.me.socket as Socket).emit(RoomEvents.createrooom);
   };
+
+  useEffect(() => {
+    if (!nickname) {
+      setNickname(storageNickname);
+    }
+  }, [storageNickname]);
 
   useEffect(() => {
     if (!context) return;

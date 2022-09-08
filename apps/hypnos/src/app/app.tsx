@@ -35,14 +35,14 @@ export function App() {
   }, []);
 
   return (
-    <GameProvider mySocket={socket}>
-      <BrowserRouter>
-        <Routes>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<GameProvider mySocket={socket} />}>
           <Route path="/" element={<MainMenu />} />
           <Route path="/lobby" element={<Lobby />} />
-        </Routes>
-      </BrowserRouter>
-    </GameProvider>
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
