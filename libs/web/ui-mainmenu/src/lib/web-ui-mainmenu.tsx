@@ -125,8 +125,6 @@ export function MainMenu(props: MainmenuProps) {
     const socket = state.me.socket as Socket;
 
     socket.on(RoomEvents.generatedRoomCode, (code: string) => {
-      console.log('My name is', nickname);
-
       const player: PlayerEntity = {
         socketId: state.me.socket.id,
         isMaster: true,

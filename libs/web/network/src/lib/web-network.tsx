@@ -10,7 +10,7 @@ import { useGameLeave } from './hooks';
 export enum ActionType {
   addPlayer = 'addPlayer',
   initialize = 'initialize',
-  setPlayers = 'setPlayers',
+  setGame = 'setGame',
 }
 
 export interface Action {
@@ -32,18 +32,14 @@ const reducer = (state: GameEntity, action: Action): GameEntity => {
     }
 
     case ActionType.initialize: {
-      const player = payload as GameEntity;
       return {
         ...payload,
       };
     }
 
-    case ActionType.setPlayers: {
-      const players = payload as PlayerEntity[];
-      return {
-        ...state,
-        players: players,
-      };
+    case ActionType.setGame: {
+      const game = payload as GameEntity;
+      return { ...state, ...game };
     }
   }
 };
@@ -136,42 +132,54 @@ const LobbyHandler = (props: LobbyHandlerProps) => {
 
     if (state.me.player.isMaster) {
       dispatch({
-        type: ActionType.setPlayers,
-        payload: state.players.filter((p) => p.socketId !== socketId),
+        type: ActionType.setGame,
+        payload: {
+          ...state,
+          players: state.players.filter((p) => p.socketId !== socketId),
+        } as GameEntity,
       });
     }
   };
 
-  const handlePlayerUpdate = (players: PlayerEntity[]) => {
+  const handleGameUpdate = (game: GameEntity) => {
     if (!context) return;
     const [state, dispatch] = context;
 
-    dispatch({ type: ActionType.setPlayers, payload: players });
+    console.log('New game: ', { ...game, me: state.me });
+
+    dispatch({
+      type: ActionType.setGame,
+      payload: { ...game, me: state.me } as GameEntity,
+    });
   };
 
   useEffect(() => {
     if (!context) return;
     const [state] = context;
 
-    if (!state.me.player.isMaster) return;
+    if (!state.me.player.isMaster) {
+      return;
+    }
 
-    (state.me.socket as Socket).emit(
-      RoomEvents.broadcastplayerupdate,
-      state.players
-    );
-  }, [context?.[0].players, context?.[0].me.player.isMaster]);
+    console.log('New players notification');
+
+    (state.me.socket as Socket).emit(RoomEvents.broadcastgameupdate, {
+      cards: state.cards,
+      players: state.players,
+    } as GameEntity);
+  }, [context?.[0]]);
 
   useEffect(() => {
     if (!context) return;
     const [state] = context;
 
     state.me.socket.on(RoomEvents.notifyjoin, handleNotifyJoin);
-    state.me.socket.on(RoomEvents.broadcastplayerupdate, handlePlayerUpdate);
+    state.me.socket.on(RoomEvents.broadcastgameupdate, handleGameUpdate);
     state.me.socket.on(RoomEvents.notifyleave, handleNotifyLeave);
 
     return () => {
       state.me.socket.off(RoomEvents.notifyjoin, handleNotifyJoin);
-      state.me.socket.off(RoomEvents.broadcastplayerupdate, handlePlayerUpdate);
+      state.me.socket.off(RoomEvents.broadcastgameupdate, handleGameUpdate);
       state.me.socket.off(RoomEvents.notifyleave, handleNotifyLeave);
     };
   }, [context]);

@@ -47,8 +47,8 @@ io.on('connection', (socket) => {
     callback([...io.sockets.adapter.rooms.get(room)]);
   });
 
-  socket.on(RoomEvents.broadcastplayerupdate, (players) => {
-    console.log(`${socket.id} tell thera are players:`, players);
+  socket.on(RoomEvents.broadcastgameupdate, (gameState) => {
+    // console.log(`${socket.id} tell thera are players:`, players);
 
     let socketRoom;
     let i = 0;
@@ -61,7 +61,7 @@ io.on('connection', (socket) => {
     });
 
     if (socketRoom) {
-      socket.to(socketRoom).emit(RoomEvents.broadcastplayerupdate, players);
+      socket.to(socketRoom).emit(RoomEvents.broadcastgameupdate, gameState);
     }
   });
 

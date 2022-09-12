@@ -11,7 +11,7 @@ export const RoomEvents = {
 
   notifyjoin: 'notifyjoin',
   notifyleave: 'notifyleave',
-  broadcastplayerupdate: 'broadcastplayerupdate',
+  broadcastgameupdate: 'broadcastgameupdate',
 
   roomexists: 'checkroomexists',
   issocketinroom: 'issocketinroom',
