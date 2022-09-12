@@ -1,5 +1,13 @@
 import { RoomEvents } from '@hypnos/shared/gameevents';
-import { Stack, TextInput, Text, Button, Grid } from '@mantine/core';
+import {
+  Stack,
+  TextInput,
+  Text,
+  Button,
+  Grid,
+  Group,
+  Modal,
+} from '@mantine/core';
 import {
   ActionType,
   GameContext,
@@ -12,6 +20,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Socket } from 'socket.io-client';
 
 import { useLocalStorage } from '@mantine/hooks';
+import { errorCodes } from 'libs/web/network/src/lib/errors';
 
 /* eslint-disable-next-line */
 export interface MainmenuProps {}
@@ -31,6 +40,7 @@ export function MainMenu(props: MainmenuProps) {
 
   const [roomCodeValid, setRoomCodeValid] = useState<boolean | undefined>();
   const [roomCodeError, setRoomCodeError] = useState<string | null>(null);
+  const [connectionError, setConnectionError] = useState<string | null>(null);
 
   const context = useContext(GameContext);
 
@@ -46,7 +56,7 @@ export function MainMenu(props: MainmenuProps) {
     const [state, dispatch] = context;
 
     (state.me.socket as Socket).emit(
-      RoomEvents.checkroomexists,
+      RoomEvents.roomexists,
       roomCode,
       (exists: boolean) => {
         if (exists) {
@@ -94,6 +104,21 @@ export function MainMenu(props: MainmenuProps) {
   }, [storageNickname]);
 
   useEffect(() => {
+    const error = searchParams.get('e');
+
+    if (!error) {
+      setConnectionError(null);
+      return;
+    }
+
+    switch (error) {
+      case errorCodes.masterDisconnected:
+        setConnectionError('Master client disconnected from game!');
+        break;
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
     if (!context) return;
 
     const [state, dispatch] = context;
@@ -135,27 +160,48 @@ export function MainMenu(props: MainmenuProps) {
 
   return (
     <Grid justify="center" align="center" sx={{ height: '100vh' }}>
+      <Modal
+        opened={!!connectionError}
+        onClose={() => false}
+        withCloseButton={false}
+        centered
+      >
+        <Text pb={12}>{connectionError}</Text>
+        <Button size="sm" onClick={() => navigate('/')}>
+          OK
+        </Button>
+      </Modal>
+
       <Grid.Col>
         <Stack spacing={20} p={20}>
+          <TextInput
+            pb={24}
+            label="Enter nickname"
+            value={nickname ?? ''}
+            onChange={(event) => setNickname(event.currentTarget.value)}
+            maxLength={12}
+            autoComplete="off"
+          />
+
           <TextInput
             error={roomCodeError}
             label="Enter room code"
             value={roomCode ?? ''}
             onChange={(event) => setRoomCode(event.currentTarget.value)}
             maxLength={4}
+            autoComplete="off"
+            rightSection={
+              <Button
+                fullWidth
+                disabled={!roomCodeValid || !nickname}
+                onClick={() => onJoin()}
+              >
+                Join
+              </Button>
+            }
+            rightSectionWidth={70}
           />
-          <TextInput
-            label="Enter nickname"
-            value={nickname ?? ''}
-            onChange={(event) => setNickname(event.currentTarget.value)}
-            maxLength={12}
-          />
-          <Button
-            disabled={!roomCodeValid || !nickname}
-            onClick={() => onJoin()}
-          >
-            Join
-          </Button>
+
           <Text>Or</Text>
           <Button disabled={!nickname} color="teal" onClick={() => onCreate()}>
             Create new room

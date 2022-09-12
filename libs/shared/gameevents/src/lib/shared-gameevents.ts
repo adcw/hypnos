@@ -4,14 +4,15 @@ export const GameEvents = {
 
 export const RoomEvents = {
   joinroom: 'joinroom',
-  checkroomexists: 'checkroomexists',
 
   leaveroom: 'leaveroom',
-  masterleaveroom: 'masterleaveroom',
   createrooom: 'createroom',
   generatedRoomCode: 'generatedRoomCode',
 
   notifyjoin: 'notifyjoin',
   notifyleave: 'notifyleave',
   broadcastplayerupdate: 'broadcastplayerupdate',
+
+  roomexists: 'checkroomexists',
+  issocketinroom: 'issocketinroom',
 };

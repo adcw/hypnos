@@ -4,6 +4,7 @@ import React, { createContext, useContext, useEffect, useReducer } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Socket } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
+import { errorCodes } from './errors';
 import { useGameLeave } from './hooks';
 
 export enum ActionType {
@@ -118,11 +119,7 @@ const LobbyHandler = (props: LobbyHandlerProps) => {
     if (!context) return;
     const [state, dispatch] = context;
 
-    // console.log(state);
-
     if (state.me.player.isMaster) {
-      console.log(`Add to list: ${player}`);
-
       dispatch({ type: ActionType.addPlayer, payload: player });
     }
   };
@@ -131,15 +128,13 @@ const LobbyHandler = (props: LobbyHandlerProps) => {
     if (!context) return;
     const [state, dispatch] = context;
 
-    // console.log(state);
-
     if (state.players.find((p) => p.socketId === socketId)?.isMaster) {
-      navigate('/');
+      // Master client disconnected
+
+      navigate(`/?e=${errorCodes.masterDisconnected}`);
     }
 
     if (state.me.player.isMaster) {
-      console.log(`He left: ${socketId}`);
-
       dispatch({
         type: ActionType.setPlayers,
         payload: state.players.filter((p) => p.socketId !== socketId),
@@ -148,25 +143,11 @@ const LobbyHandler = (props: LobbyHandlerProps) => {
   };
 
   const handlePlayerUpdate = (players: PlayerEntity[]) => {
-    console.log('updated list of players: ', players);
     if (!context) return;
     const [state, dispatch] = context;
 
     dispatch({ type: ActionType.setPlayers, payload: players });
   };
-
-  // const handleMasterLeaveRoom = () => {
-  //   if (!context) return;
-  //   const [state] = context;
-
-  //   // (state.me.socket as Socket).emit(
-  //   //   RoomEvents.leaveroom,
-  //   //   state.roomCode,
-  //   //   state.me.player.isMaster
-  //   // );
-
-  //   navigate('/');
-  // };
 
   useEffect(() => {
     if (!context) return;
@@ -187,22 +168,16 @@ const LobbyHandler = (props: LobbyHandlerProps) => {
     state.me.socket.on(RoomEvents.notifyjoin, handleNotifyJoin);
     state.me.socket.on(RoomEvents.broadcastplayerupdate, handlePlayerUpdate);
     state.me.socket.on(RoomEvents.notifyleave, handleNotifyLeave);
-    // state.me.socket.on(RoomEvents.masterleaveroom, handleMasterLeaveRoom);
 
     return () => {
       state.me.socket.off(RoomEvents.notifyjoin, handleNotifyJoin);
       state.me.socket.off(RoomEvents.broadcastplayerupdate, handlePlayerUpdate);
       state.me.socket.off(RoomEvents.notifyleave, handleNotifyLeave);
-      // state.me.socket.off(RoomEvents.masterleaveroom, handleMasterLeaveRoom);
     };
   }, [context]);
 
   return props.children;
 };
-
-// const NetworkCtx = React.createContext<NetworkContextType | null>(null);
-// export const NetworkContextProvider = NetworkCtx.Provider;
-// export default NetworkCtx;
 
 export interface PlayerEntity {
   socketId: string;

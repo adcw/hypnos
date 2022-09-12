@@ -65,11 +65,15 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on(RoomEvents.checkroomexists, (roomCode, callback) => {
+  socket.on(RoomEvents.roomexists, (roomCode, callback) => {
     callback(!!io.sockets.adapter.rooms.get(roomCode));
   });
 
-  socket.on('disconnecting', (isMaster) => {
+  socket.on(RoomEvents.issocketinroom, (roomCode, callback) => {
+    callback(socket.rooms.has(roomCode));
+  });
+
+  socket.on('disconnecting', () => {
     console.log(`socket ${socket.id} disconnecting`);
 
     let i = 0;
@@ -77,15 +81,9 @@ io.on('connection', (socket) => {
     socket.rooms.forEach((room) => {
       if (i > 0) {
         socket.to(room).emit(RoomEvents.notifyleave, socket.id);
-
-        // if (isMaster) {
-        //   io.to(room).emit(RoomEvents.masterleaveroom);
-        // }
       }
       i++;
     });
-
-    // console.log();
   });
 });
 
