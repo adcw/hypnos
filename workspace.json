@@ -5,6 +5,7 @@
     "hypnos": "apps/hypnos",
     "hypnos-server": "apps/hypnos-server",
     "server-network-rooms": "libs/server/network-rooms",
+    "shared-constants": "libs/shared/constants",
     "shared-gameevents": "libs/shared/gameevents",
     "web-network": "libs/web/network",
     "web-ui-lobby": "libs/web/ui-lobby",

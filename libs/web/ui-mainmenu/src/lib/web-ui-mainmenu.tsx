@@ -15,7 +15,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Socket } from 'socket.io-client';
 
 import { useLocalStorage } from '@mantine/hooks';
-import { errorCodes } from 'libs/web/network/src/lib/errors';
+import { ErrorCodes } from '@hypnos/shared/constants';
 import {
   PlayerEntity,
   ActionType,
@@ -112,8 +112,11 @@ export function MainMenu(props: MainmenuProps) {
     }
 
     switch (error) {
-      case errorCodes.masterDisconnected:
+      case ErrorCodes.masterDisconnected:
         setConnectionError('Master client disconnected from game!');
+        break;
+      case ErrorCodes.roomFull:
+        setConnectionError('Room is full!');
         break;
     }
   }, [searchParams]);

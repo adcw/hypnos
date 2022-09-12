@@ -18,6 +18,7 @@
       "@hypnos/server/network-rooms": [
         "libs/server/network-rooms/src/index.ts"
       ],
+      "@hypnos/shared/constants": ["libs/shared/constants/src/index.ts"],
       "@hypnos/shared/gameevents": ["libs/shared/gameevents/src/index.ts"],
       "@hypnos/web/network": ["libs/web/network/src/index.ts"],
       "@hypnos/web/ui-lobby": ["libs/web/ui-lobby/src/index.ts"],

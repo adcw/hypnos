@@ -1,4 +1,7 @@
+import { ErrorCodes } from '@hypnos/shared/constants';
 import { GameEvents, RoomEvents } from '@hypnos/shared/gameevents';
+
+const MAX_ROOM_SIZE = 8;
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const io = require('socket.io')(3001, {
@@ -26,6 +29,13 @@ io.on('connection', (socket) => {
   });
 
   socket.on(RoomEvents.joinroom, (room, player, callback) => {
+    const rooomSize = io.sockets.adapter.rooms.get(room)?.size ?? 0;
+
+    if (rooomSize == MAX_ROOM_SIZE) {
+      callback(ErrorCodes.roomFull);
+      return;
+    }
+
     console.log(`Socket ${socket.id} joining ${room}`);
 
     if (!player.isMaster) {
@@ -42,9 +52,6 @@ io.on('connection', (socket) => {
     });
 
     socket.join(room);
-
-    console.log(io.sockets.adapter.rooms.get(room));
-    callback([...io.sockets.adapter.rooms.get(room)]);
   });
 
   socket.on(RoomEvents.broadcastgameupdate, (gameState) => {

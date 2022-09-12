@@ -4,7 +4,8 @@ import React, { createContext, useContext, useEffect, useReducer } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Socket } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
-import { errorCodes } from './errors';
+import { ErrorCodes } from '@hypnos/shared/constants';
+
 import { useGameLeave } from './hooks';
 import {
   Action,
@@ -123,7 +124,7 @@ const LobbyHandler = (props: LobbyHandlerProps) => {
     if (state.players.find((p) => p.socketId === socketId)?.isMaster) {
       // Master client disconnected
 
-      navigate(`/?e=${errorCodes.masterDisconnected}`);
+      navigate(`/?e=${ErrorCodes.masterDisconnected}`);
     }
 
     if (state.me.player.isMaster) {

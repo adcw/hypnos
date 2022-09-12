@@ -33,8 +33,8 @@ export function Lobby(props: LobbyProps) {
         RoomEvents.joinroom,
         roomCode,
         state.me.player,
-        (room: any) => {
-          console.log(room);
+        (error: number) => {
+          navigate(`/?e=${error}`);
         }
       );
     }
