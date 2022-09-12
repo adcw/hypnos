@@ -1,10 +1,6 @@
 import { RoomEvents } from '@hypnos/shared/gameevents';
 import { Button, Group, Stack, Text } from '@mantine/core';
-import {
-  ActionType,
-  GameContext,
-  PlayerEntity,
-} from 'libs/web/network/src/lib/web-network';
+import { GameContext } from 'libs/web/network/src/lib/web-network';
 import React, { useLayoutEffect } from 'react';
 import { useContext, useEffect, useState } from 'react';
 import { Outlet, useNavigate, useSearchParams } from 'react-router-dom';
@@ -23,7 +19,7 @@ export function Lobby(props: LobbyProps) {
   useEffect(() => {
     if (!context) return;
 
-    const [state, dispatch] = context;
+    const [state] = context;
 
     if (!state.me.player.socketId) {
       roomCode ? navigate(`/?roomId=${roomCode}`) : navigate('/');
@@ -44,17 +40,10 @@ export function Lobby(props: LobbyProps) {
     }
 
     console.log(state);
-
-    return () => {
-      // socket.emit(RoomEvents.leaveroom, roomCode);
-      // console.log('Lobby dismounted');
-    };
   }, [roomCode]);
 
   return (
     <Stack>
-      {/* {context && <Text>{JSON.stringify(context[0], null, 4)}</Text>} */}
-
       <Stack align={'center'} spacing={0}>
         <Text>Room code is:</Text>
         <Text size={40} color="teal">
@@ -76,15 +65,7 @@ export function Lobby(props: LobbyProps) {
           .map((player, key) => {
             return (
               <Group position="apart" key={key}>
-                <Text
-                  sx={
-                    {
-                      // '&::lastchild'
-                    }
-                  }
-                >
-                  {player.name}
-                </Text>
+                <Text>{player.name}</Text>
               </Group>
             );
           })}
@@ -92,83 +73,5 @@ export function Lobby(props: LobbyProps) {
     </Stack>
   );
 }
-
-// export interface LobbyContextValue {
-//   roomCode: string | null;
-// }
-
-// export interface LobbyProviderProps {}
-
-// export const LobbyContext = React.createContext<LobbyContextValue | null>(null);
-
-// export const LobbyProvider = (props: LobbyProviderProps) => {
-//   const [searchParams] = useSearchParams();
-//   const [roomCode] = useState(searchParams.get('roomId'));
-
-//   const context = useContext(GameContext);
-
-//   useEffect(() => {
-//     if (!context) return;
-
-//     const [state, dispatch] = context;
-
-//     const socket = state.me.socket as Socket;
-
-//     if (roomCode) {
-//       socket.emit(RoomEvents.joinroom, roomCode, (room: any) => {
-//         console.log(room);
-//       });
-//     }
-
-//     return () => {
-//       socket.emit(RoomEvents.leaveroom, roomCode);
-//       console.log('Lobby dismounted');
-//     };
-//   }, [roomCode]);
-
-//   console.log(context);
-
-//   return (
-//     <LobbyContext.Provider value={{ roomCode: roomCode }}>
-//       <Outlet />
-//     </LobbyContext.Provider>
-//   );
-// };
-
-/*
-export const GameContext = React.createContext<
-  [GameEntity, React.Dispatch<Action>, MeEntity] | null
->(null);
-
-export const GameProvider = (props: GameProviderProps) => {
-  const [state, dispatch] = useReducer(reducer, {
-    cards: [],
-    players: [],
-    me: {
-      player: {
-        socketId: (props.mySocket as Socket).id,
-      },
-      socket: props.mySocket,
-    },
-  } as GameEntity);
-
-  return (
-    <GameContext.Provider
-      value={[
-        state,
-        dispatch,
-        {
-          socket: props.mySocket,
-          player: {
-            socketId: props.mySocket.id,
-          },
-        },
-      ]}
-    >
-      {props.children}
-    </GameContext.Provider>
-  );
-};
- */
 
 export default Lobby;

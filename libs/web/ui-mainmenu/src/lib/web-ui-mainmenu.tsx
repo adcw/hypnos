@@ -8,12 +8,7 @@ import {
   Group,
   Modal,
 } from '@mantine/core';
-import {
-  ActionType,
-  GameContext,
-  GameEntity,
-  PlayerEntity,
-} from 'libs/web/network/src/lib/web-network';
+import { GameContext } from 'libs/web/network/src/lib/web-network';
 import { useContext, useEffect, useState } from 'react';
 
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -21,6 +16,11 @@ import { Socket } from 'socket.io-client';
 
 import { useLocalStorage } from '@mantine/hooks';
 import { errorCodes } from 'libs/web/network/src/lib/errors';
+import {
+  PlayerEntity,
+  ActionType,
+  GameEntity,
+} from 'libs/web/network/src/lib/types';
 
 /* eslint-disable-next-line */
 export interface MainmenuProps {}
@@ -92,7 +92,7 @@ export function MainMenu(props: MainmenuProps) {
 
     setStorageNickname(nickname);
 
-    const [state, dispatch] = context;
+    const [state] = context;
 
     (state.me.socket as Socket).emit(RoomEvents.createrooom);
   };

@@ -9,7 +9,6 @@ export const useGameLeave = (
   const location = useLocation();
 
   useEffect(() => {
-    // console.log(location.pathname);
     if (!allowedLocations.includes(location.pathname.slice(1))) {
       onGameLeave();
     }

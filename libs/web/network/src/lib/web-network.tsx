@@ -6,17 +6,13 @@ import { Socket } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { errorCodes } from './errors';
 import { useGameLeave } from './hooks';
-
-export enum ActionType {
-  addPlayer = 'addPlayer',
-  initialize = 'initialize',
-  setGame = 'setGame',
-}
-
-export interface Action {
-  type: ActionType;
-  payload: any;
-}
+import {
+  Action,
+  ActionType,
+  GameEntity,
+  MeEntity,
+  PlayerEntity,
+} from './types';
 
 const reducer = (state: GameEntity, action: Action): GameEntity => {
   const { type, payload } = action;
@@ -186,30 +182,3 @@ const LobbyHandler = (props: LobbyHandlerProps) => {
 
   return props.children;
 };
-
-export interface PlayerEntity {
-  socketId: string;
-  name?: string;
-  points?: number;
-  isMaster?: boolean;
-  cards?: string[];
-}
-
-export interface GameEntity {
-  players: PlayerEntity[];
-  cards: string[];
-  me: MeEntity;
-  roomCode?: string;
-}
-
-export interface RoundEntity {
-  currentPlayer: PlayerEntity;
-  phrase: string | null;
-  card: string;
-  fakeCards: [{ card: string; player: PlayerEntity }];
-}
-
-export interface MeEntity {
-  player: PlayerEntity;
-  socket: any;
-}
