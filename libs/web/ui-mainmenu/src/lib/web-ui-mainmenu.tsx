@@ -7,6 +7,7 @@ import {
   Grid,
   Group,
   Modal,
+  Image,
 } from '@mantine/core';
 import { GameContext } from 'libs/web/network/src/lib/web-network';
 import { useContext, useEffect, useState } from 'react';
@@ -175,6 +176,8 @@ export function MainMenu(props: MainmenuProps) {
 
       <Grid.Col>
         <Stack spacing={20} p={20}>
+          <Image src="http://localhost:3002/images/maklo.jpg"></Image>
+
           <TextInput
             pb={24}
             label="Enter nickname"

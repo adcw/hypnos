@@ -1,10 +1,18 @@
 import { ErrorCodes } from '@hypnos/shared/constants';
 import { GameEvents, RoomEvents } from '@hypnos/shared/gameevents';
 
+import express = require('express');
+const app = express();
+
+app.use('/images', express.static(__dirname + '/assets/public'));
+console.log(__dirname + '/assets/public');
+
+app.listen(3002);
+
 const MAX_ROOM_SIZE = 8;
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const io = require('socket.io')(3001, {
+import socketio = require('socket.io');
+const io = new socketio.Server(3001, {
   cors: {
     origin: 'http://localhost:4200',
     methods: ['GET', 'POST'],
@@ -55,8 +63,6 @@ io.on('connection', (socket) => {
   });
 
   socket.on(RoomEvents.broadcastgameupdate, (gameState) => {
-    // console.log(`${socket.id} tell thera are players:`, players);
-
     let socketRoom;
     let i = 0;
     socket.rooms.forEach((room) => {

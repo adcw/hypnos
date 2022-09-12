@@ -7,6 +7,7 @@
     "server-network-rooms": "libs/server/network-rooms",
     "shared-constants": "libs/shared/constants",
     "shared-gameevents": "libs/shared/gameevents",
+    "shared-images": "libs/shared/images",
     "web-network": "libs/web/network",
     "web-ui-lobby": "libs/web/ui-lobby",
     "web-ui-mainmenu": "libs/web/ui-mainmenu"
