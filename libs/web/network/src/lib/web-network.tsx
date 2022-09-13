@@ -176,6 +176,10 @@ const LobbyHandler = (props: LobbyHandlerProps) => {
 
     console.log('New players notification');
 
+    if (state.players.length === 0) {
+      navigate('/');
+    }
+
     (state.me.socket as Socket).emit(RoomEvents.broadcastgameupdate, {
       cards: state.cards,
       players: state.players,
