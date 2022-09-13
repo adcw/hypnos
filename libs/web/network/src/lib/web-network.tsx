@@ -166,6 +166,10 @@ const LobbyHandler = (props: LobbyHandlerProps) => {
     });
   };
 
+  const handleGameStart = () => {
+    navigate('/game');
+  };
+
   useEffect(() => {
     if (!context) return;
     const [state] = context;
@@ -193,11 +197,13 @@ const LobbyHandler = (props: LobbyHandlerProps) => {
     state.me.socket.on(RoomEvents.notifyjoin, handleNotifyJoin);
     state.me.socket.on(RoomEvents.broadcastgameupdate, handleGameUpdate);
     state.me.socket.on(RoomEvents.notifyleave, handleNotifyLeave);
+    state.me.socket.on(RoomEvents.gamestart, handleGameStart);
 
     return () => {
       state.me.socket.off(RoomEvents.notifyjoin, handleNotifyJoin);
       state.me.socket.off(RoomEvents.broadcastgameupdate, handleGameUpdate);
       state.me.socket.off(RoomEvents.notifyleave, handleNotifyLeave);
+      state.me.socket.off(RoomEvents.gamestart, handleGameStart);
     };
   }, [context]);
 

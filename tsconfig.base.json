@@ -22,6 +22,10 @@
       "@hypnos/shared/gameevents": ["libs/shared/gameevents/src/index.ts"],
       "@hypnos/shared/images": ["libs/shared/images/src/index.ts"],
       "@hypnos/web/network": ["libs/web/network/src/index.ts"],
+      "@hypnos/web/ui-design-system": [
+        "libs/web/ui-design-system/src/index.ts"
+      ],
+      "@hypnos/web/ui-game": ["libs/web/ui-game/src/index.ts"],
       "@hypnos/web/ui-lobby": ["libs/web/ui-lobby/src/index.ts"],
       "@hypnos/web/ui-mainmenu": ["libs/web/ui-mainmenu/src/index.ts"]
     }

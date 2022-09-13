@@ -1,27 +1,22 @@
 import { io, Socket } from 'socket.io-client';
 
-import { Text } from '@mantine/core';
+import { MantineProvider, Text } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { MainMenu } from '@hypnos/web/ui-mainmenu';
 import { GameProvider } from '@hypnos/web/network';
 import { Lobby } from '@hypnos/web/ui-lobby';
+import { Game } from '@hypnos/web/ui-game';
+import { themeOverride } from '@hypnos/web/ui-design-system';
 
 const socket = io('http://localhost:3001');
 
 export function App() {
-  const [messages, setMessages] = useState<string[]>([]);
-
   const [isConnected, setIsConnected] = useState(socket.connected);
-
-  const displayMessage = (message: string) => {
-    setMessages([...messages, message]);
-  };
 
   useEffect(() => {
     socket.on('connect', () => {
       setIsConnected(true);
-      displayMessage(`You connected with id: ${socket.id}`);
     });
 
     socket.on('disconnect', () => {
@@ -35,14 +30,17 @@ export function App() {
   }, []);
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<GameProvider mySocket={socket} />}>
-          <Route path="/" element={<MainMenu />} />
-          <Route path="/lobby" element={<Lobby />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <MantineProvider theme={themeOverride}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<GameProvider mySocket={socket} />}>
+            <Route path="/" element={<MainMenu />} />
+            <Route path="/lobby" element={<Lobby />} />
+            <Route path="/game" element={<Game />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </MantineProvider>
   );
 }
 

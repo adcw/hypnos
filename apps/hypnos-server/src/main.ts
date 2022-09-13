@@ -80,6 +80,10 @@ io.on('connection', (socket) => {
     }
   });
 
+  socket.on(RoomEvents.gamestart, (roomCode) =>
+    io.to(roomCode).emit(RoomEvents.gamestart)
+  );
+
   socket.on(RoomEvents.roomexists, (roomCode, callback) => {
     callback(!!io.sockets.adapter.rooms.get(roomCode));
   });

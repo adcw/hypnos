@@ -9,6 +9,8 @@
     "shared-gameevents": "libs/shared/gameevents",
     "shared-images": "libs/shared/images",
     "web-network": "libs/web/network",
+    "web-ui-design-system": "libs/web/ui-design-system",
+    "web-ui-game": "libs/web/ui-game",
     "web-ui-lobby": "libs/web/ui-lobby",
     "web-ui-mainmenu": "libs/web/ui-mainmenu"
   }

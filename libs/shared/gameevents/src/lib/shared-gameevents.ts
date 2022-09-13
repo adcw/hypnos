@@ -15,4 +15,6 @@ export const RoomEvents = {
 
   roomexists: 'checkroomexists',
   issocketinroom: 'issocketinroom',
+
+  gamestart: 'gamestart',
 };
