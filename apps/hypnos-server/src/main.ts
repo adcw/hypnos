@@ -1,12 +1,14 @@
 import { ErrorCodes } from '@hypnos/shared/constants';
 import { GameEvents, RoomEvents } from '@hypnos/shared/gameevents';
 
+import fs = require('fs');
+
 import express = require('express');
 const app = express();
 
-app.use('/images', express.static(__dirname + '/assets/public'));
-console.log(__dirname + '/assets/public');
+const imageFolderPath = __dirname + '/assets/public';
 
+app.use('/images', express.static(imageFolderPath));
 app.listen(3002);
 
 const MAX_ROOM_SIZE = 8;
@@ -99,6 +101,26 @@ io.on('connection', (socket) => {
     });
   });
 });
+
+const arrayShuffle = (array: any[]) => {
+  return array
+    .map((value) => ({ value, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ value }) => value);
+};
+
+const getImagePaths = () => {
+  return arrayShuffle(
+    readDir(imageFolderPath).map((p) => `http://localhost:3002/images/${p}`)
+  );
+};
+
+function readDir(path: string) {
+  return fs
+    .readdirSync(path, { withFileTypes: true })
+    .filter((item) => !item.isDirectory())
+    .map((item) => item.name);
+}
 
 const getFreeRoomCode = () => {
   let randomCode = getRandomRoomCode();

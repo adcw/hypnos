@@ -121,18 +121,34 @@ const LobbyHandler = (props: LobbyHandlerProps) => {
     if (!context) return;
     const [state, dispatch] = context;
 
+    let newMaster: PlayerEntity | undefined;
+
     if (state.players.find((p) => p.socketId === socketId)?.isMaster) {
       // Master client disconnected
 
-      navigate(`/?e=${ErrorCodes.masterDisconnected}`);
+      // navigate(`/?e=${ErrorCodes.masterDisconnected}`);
+
+      newMaster = state.players.find(
+        (p) => p.socketId !== socketId && !p.isMaster
+      );
     }
 
-    if (state.me.player.isMaster) {
+    if (state.me.player.isMaster || newMaster) {
       dispatch({
         type: ActionType.setGame,
         payload: {
           ...state,
-          players: state.players.filter((p) => p.socketId !== socketId),
+          players: state.players
+            .filter((p) => p.socketId !== socketId)
+            .map((p) =>
+              newMaster && p.socketId === newMaster.socketId
+                ? ({ ...p, isMaster: true } as PlayerEntity)
+                : p
+            ),
+          me:
+            state.me.socket.id === newMaster?.socketId
+              ? { ...state.me, player: { ...state.me.player, isMaster: true } }
+              : state.me,
         } as GameEntity,
       });
     }

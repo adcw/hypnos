@@ -8,6 +8,7 @@ import {
   Group,
   Modal,
   Image,
+  Center,
 } from '@mantine/core';
 import { GameContext } from 'libs/web/network/src/lib/web-network';
 import { useContext, useEffect, useState } from 'react';
@@ -175,42 +176,46 @@ export function MainMenu(props: MainmenuProps) {
       </Modal>
 
       <Grid.Col>
-        <Stack spacing={20} p={20}>
-          <Image src="http://localhost:3002/images/maklo.jpg"></Image>
+        <Center>
+          <Stack spacing={20} p={20} sx={{ width: '400px' }}>
+            <TextInput
+              pb={24}
+              label="Enter nickname"
+              value={nickname ?? ''}
+              onChange={(event) => setNickname(event.currentTarget.value)}
+              maxLength={12}
+              autoComplete="off"
+            />
 
-          <TextInput
-            pb={24}
-            label="Enter nickname"
-            value={nickname ?? ''}
-            onChange={(event) => setNickname(event.currentTarget.value)}
-            maxLength={12}
-            autoComplete="off"
-          />
+            <TextInput
+              error={roomCodeError}
+              label="Enter room code"
+              value={roomCode ?? ''}
+              onChange={(event) => setRoomCode(event.currentTarget.value)}
+              maxLength={4}
+              autoComplete="off"
+              rightSection={
+                <Button
+                  fullWidth
+                  disabled={!roomCodeValid || !nickname}
+                  onClick={() => onJoin()}
+                >
+                  Join
+                </Button>
+              }
+              rightSectionWidth={70}
+            />
 
-          <TextInput
-            error={roomCodeError}
-            label="Enter room code"
-            value={roomCode ?? ''}
-            onChange={(event) => setRoomCode(event.currentTarget.value)}
-            maxLength={4}
-            autoComplete="off"
-            rightSection={
-              <Button
-                fullWidth
-                disabled={!roomCodeValid || !nickname}
-                onClick={() => onJoin()}
-              >
-                Join
-              </Button>
-            }
-            rightSectionWidth={70}
-          />
-
-          <Text>Or</Text>
-          <Button disabled={!nickname} color="teal" onClick={() => onCreate()}>
-            Create new room
-          </Button>
-        </Stack>
+            <Text>Or</Text>
+            <Button
+              disabled={!nickname}
+              color="teal"
+              onClick={() => onCreate()}
+            >
+              Create new room
+            </Button>
+          </Stack>
+        </Center>
       </Grid.Col>
     </Grid>
   );
