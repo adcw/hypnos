@@ -14,32 +14,7 @@ import {
   MeEntity,
   PlayerEntity,
 } from './types';
-
-const reducer = (state: GameEntity, action: Action): GameEntity => {
-  const { type, payload } = action;
-
-  switch (type) {
-    case ActionType.addPlayer: {
-      const player = payload as PlayerEntity;
-
-      return {
-        ...state,
-        players: [...state.players, player],
-      };
-    }
-
-    case ActionType.initialize: {
-      return {
-        ...payload,
-      };
-    }
-
-    case ActionType.setGame: {
-      const game = payload as GameEntity;
-      return { ...state, ...game };
-    }
-  }
-};
+import { reducer } from './reducer';
 
 export interface GameProviderProps {
   mySocket: any;
@@ -158,8 +133,6 @@ const LobbyHandler = (props: LobbyHandlerProps) => {
     if (!context) return;
     const [state, dispatch] = context;
 
-    console.log('New game: ', { ...game, me: state.me });
-
     dispatch({
       type: ActionType.setGame,
       payload: { ...game, me: state.me } as GameEntity,
@@ -187,12 +160,15 @@ const LobbyHandler = (props: LobbyHandlerProps) => {
     (state.me.socket as Socket).emit(RoomEvents.broadcastgameupdate, {
       cards: state.cards,
       players: state.players,
+      round: state.round,
     } as GameEntity);
   }, [context?.[0]]);
 
   useEffect(() => {
     if (!context) return;
     const [state] = context;
+
+    console.log('Game update: ', context[0]);
 
     state.me.socket.on(RoomEvents.notifyjoin, handleNotifyJoin);
     state.me.socket.on(RoomEvents.broadcastgameupdate, handleGameUpdate);

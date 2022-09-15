@@ -27,7 +27,8 @@
       ],
       "@hypnos/web/ui-game": ["libs/web/ui-game/src/index.ts"],
       "@hypnos/web/ui-lobby": ["libs/web/ui-lobby/src/index.ts"],
-      "@hypnos/web/ui-mainmenu": ["libs/web/ui-mainmenu/src/index.ts"]
+      "@hypnos/web/ui-mainmenu": ["libs/web/ui-mainmenu/src/index.ts"],
+      "@hypnos/web/ui-room": ["libs/web/ui-room/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

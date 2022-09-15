@@ -1,10 +1,14 @@
 import { GameEvents, RoomEvents } from '@hypnos/shared/gameevents';
-import { Box, Button, Grid, Group, Stack, Text } from '@mantine/core';
+import { XCard, XNickname } from '@hypnos/web/ui-design-system';
+import { Box, Button, Center, Grid, Group, Stack, Text } from '@mantine/core';
 import { GameContext } from 'libs/web/network/src/lib/web-network';
 import React, { useLayoutEffect } from 'react';
 import { useContext, useEffect, useState } from 'react';
 import { Outlet, useNavigate, useSearchParams } from 'react-router-dom';
 import { Socket } from 'socket.io';
+
+import { GiCrown } from 'react-icons/gi';
+import { ActionType } from 'libs/web/network/src/lib/types';
 
 /* eslint-disable-next-line */
 export interface LobbyProps {}
@@ -18,9 +22,9 @@ export function Lobby(props: LobbyProps) {
 
   const handleGameStart = () => {
     if (!context) return;
-    const [state] = context;
+    const [state, dispatch] = context;
 
-    (state.me.socket as Socket).emit(RoomEvents.gamestart, state.roomCode);
+    dispatch({ type: ActionType.initRound, payload: null });
   };
 
   useEffect(() => {
@@ -55,7 +59,7 @@ export function Lobby(props: LobbyProps) {
         <Stack justify="space-between" sx={{ height: '100%' }}>
           <Box>
             <Stack align={'center'} spacing={0}>
-              <Text>Room code is:</Text>
+              <Text color="dimmed">Room code is:</Text>
               <Text size={40} color="teal">
                 {roomCode}
               </Text>
@@ -64,26 +68,45 @@ export function Lobby(props: LobbyProps) {
               </Button>
             </Stack>
 
-            <Stack mx={16} spacing={4}>
-              <Text>Connected players:</Text>
-              {
-                <Group position="apart">
-                  <Text>
-                    {context?.[0].players.find((p) => p.isMaster)?.name}
-                  </Text>
-                  <Text>Master</Text>
-                </Group>
-              }
-              {context?.[0].players
-                .filter((p) => !p.isMaster)
-                .map((player, key) => {
-                  return (
-                    <Group position="apart" key={key}>
-                      <Text>{player.name}</Text>
+            <Center>
+              <XCard mt="lg" sx={{ width: '400px' }}>
+                <Stack mx={16} spacing={4}>
+                  <Text>Connected players:</Text>
+                  {
+                    <Group position="apart">
+                      <Group spacing={4}>
+                        <XNickname
+                          value={
+                            context?.[0].players.find((p) => p.isMaster)?.name
+                          }
+                          color="#AD5"
+                          highlight={
+                            context?.[0].players.find((p) => p.isMaster)
+                              ?.socketId === context?.[0].me.socket.id
+                          }
+                        />
+                      </Group>
+                      <GiCrown color="#e0d83d" />
                     </Group>
-                  );
-                })}
-            </Stack>
+                  }
+                  {context?.[0].players
+                    .filter((p) => !p.isMaster)
+                    .map((player, key) => {
+                      return (
+                        <Group key={key} position="apart">
+                          <XNickname
+                            value={player.name}
+                            color="#AD5"
+                            highlight={
+                              player.socketId === context[0].me.socket.id
+                            }
+                          />
+                        </Group>
+                      );
+                    })}
+                </Stack>
+              </XCard>
+            </Center>
           </Box>
 
           <Stack align="center" mb={50}>

@@ -9,6 +9,7 @@ import {
   Modal,
   Image,
   Center,
+  HueSlider,
 } from '@mantine/core';
 import { GameContext } from 'libs/web/network/src/lib/web-network';
 import { useContext, useEffect, useState } from 'react';
@@ -81,7 +82,7 @@ export function MainMenu(props: MainmenuProps) {
             } as GameEntity,
           });
 
-          navigate(`/lobby?roomId=${roomCode}`);
+          navigate(`/game?roomId=${roomCode}`);
         } else {
           setRoomCodeError('Specified room does not exist');
         }
@@ -149,7 +150,7 @@ export function MainMenu(props: MainmenuProps) {
         } as GameEntity,
       });
 
-      navigate(`/lobby?roomId=${code}`);
+      navigate(`/game?roomId=${code}`);
     });
 
     return () => {
@@ -177,7 +178,7 @@ export function MainMenu(props: MainmenuProps) {
 
       <Grid.Col>
         <Center>
-          <Stack spacing={20} p={20} sx={{ width: '400px' }}>
+          <Stack spacing={20} p={20} sx={{ width: '360px' }}>
             <TextInput
               pb={24}
               label="Enter nickname"
@@ -186,6 +187,8 @@ export function MainMenu(props: MainmenuProps) {
               maxLength={12}
               autoComplete="off"
             />
+
+            {/* <HueSlider value={}/> */}
 
             <TextInput
               error={roomCodeError}
@@ -206,7 +209,8 @@ export function MainMenu(props: MainmenuProps) {
               rightSectionWidth={70}
             />
 
-            <Text>Or</Text>
+            <Text size="sm">Or</Text>
+
             <Button
               disabled={!nickname}
               color="teal"

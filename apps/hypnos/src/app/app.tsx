@@ -8,6 +8,7 @@ import { GameProvider } from '@hypnos/web/network';
 import { Lobby } from '@hypnos/web/ui-lobby';
 import { Game } from '@hypnos/web/ui-game';
 import { themeOverride } from '@hypnos/web/ui-design-system';
+import { Room } from '@hypnos/web/ui-room';
 
 const socket = io('http://localhost:3001');
 
@@ -35,8 +36,7 @@ export function App() {
         <Routes>
           <Route path="/" element={<GameProvider mySocket={socket} />}>
             <Route path="/" element={<MainMenu />} />
-            <Route path="/lobby" element={<Lobby />} />
-            <Route path="/game" element={<Game />} />
+            <Route path="/game" element={<Room />} />
           </Route>
         </Routes>
       </BrowserRouter>

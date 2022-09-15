@@ -2,6 +2,7 @@ export enum ActionType {
   addPlayer = 'addPlayer',
   initialize = 'initialize',
   setGame = 'setGame',
+  initRound = 'initRound',
 }
 
 export interface Action {
@@ -22,16 +23,30 @@ export interface GameEntity {
   cards: string[];
   me: MeEntity;
   roomCode?: string;
+  round?: RoundEntity;
 }
 
 export interface RoundEntity {
-  currentPlayer: PlayerEntity;
-  phrase: string | null;
-  card: string;
-  fakeCards: [{ card: string; player: PlayerEntity }];
+  currentPlayerSID: string;
+  phrase?: string;
+  roudPhase: RoundPhase;
+  realCardUrl?: string;
+  playerData: {
+    playerSID: string;
+    ownedCardUrl: string;
+    votedCardUrl?: string;
+    points?: number;
+  }[];
 }
 
 export interface MeEntity {
   player: PlayerEntity;
   socket: any;
+}
+
+export enum RoundPhase {
+  PHRASE,
+  FORGERY,
+  VOTING,
+  PRESENTATION,
 }
