@@ -17,7 +17,7 @@ export const Card = (props: CardProps) => {
     props.onHeld && props.onHeld();
   };
 
-  const [onStart, onEnd] = useLongPress(handleHold, 1000);
+  const [onStart, onEnd] = useLongPress(handleHold, 200);
 
   return (
     <>
@@ -31,6 +31,7 @@ export const Card = (props: CardProps) => {
         <Image
           onTouchStart={onStart}
           onTouchEnd={onEnd}
+          onClick={onEnd}
           height={260}
           src={props.src}
         />

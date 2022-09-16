@@ -65,7 +65,7 @@ export function useLongPress(
     // run the callback fn the timer hasn't gone off yet (non zero)
     if (timerRef.current) {
       endTimer();
-      callback();
+      // callback();
     }
   }, [callback]);
 
