@@ -71,10 +71,10 @@ export const CardDrawer = (props: CardDrawerProps) => {
               context[0].me.player.cards.map((c, key) => {
                 return (
                   <Card
-                    // onClick={() => handleCardClick(c)}
+                    onClick={() => handleCardClick(c)}
                     src={c}
                     key={key}
-                    // chosen={c === selecetdCard}
+                    chosen={c === selecetdCard}
                   />
                 );
               })}
