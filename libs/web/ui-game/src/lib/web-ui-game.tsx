@@ -3,6 +3,7 @@ import { Box, Button, Card, Text } from '@mantine/core';
 import { RoundPhase } from 'libs/web/network/src/lib/types';
 import { useContext, useEffect, useState } from 'react';
 import { useNextPhase } from './Hooks';
+import { PhrasePhase } from './phases/Phrase';
 
 /* eslint-disable-next-line */
 export interface GameProps {}
@@ -23,7 +24,7 @@ export function Game(props: GameProps) {
       {context ? (
         <>
           {context[0].round?.roundPhase === RoundPhase.PHRASE && (
-            <Text>1. Phrase</Text>
+            <PhrasePhase />
           )}
           {context[0].round?.roundPhase === RoundPhase.FORGERY && (
             <Text>2. Forgery</Text>

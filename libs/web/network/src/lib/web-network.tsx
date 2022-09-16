@@ -40,6 +40,7 @@ export const GameProvider = (props: GameProviderProps) => {
     me: {
       player: {
         socketId: (props.mySocket as Socket).id,
+        cards: [],
       },
       socket: props.mySocket,
     },
@@ -54,6 +55,7 @@ export const GameProvider = (props: GameProviderProps) => {
           socket: props.mySocket,
           player: {
             socketId: props.mySocket.id,
+            cards: [],
           },
         },
       ]}
@@ -150,8 +152,6 @@ const LobbyHandler = (props: LobbyHandlerProps) => {
     if (!state.me.player.isMaster) {
       return;
     }
-
-    console.log('New players notification');
 
     if (state.players.length === 0) {
       navigate('/');

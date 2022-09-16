@@ -17,4 +17,5 @@ export const RoomEvents = {
   issocketinroom: 'issocketinroom',
 
   gamestart: 'gamestart',
+  fetchCards: 'fetchCards',
 };

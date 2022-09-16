@@ -27,12 +27,19 @@ export const reducer = (state: GameEntity, action: Action): GameEntity => {
 
     case ActionType.setGame: {
       const game = payload as GameEntity;
-      return { ...state, ...game };
+      const me = game.players.find((p) => p.socketId === state.me.socket.id);
+      return {
+        ...state,
+        ...game,
+        me: { ...state.me, player: me ?? state.me.player },
+      };
     }
 
     case ActionType.initRound: {
+      const cards = payload as string[];
       return {
         ...state,
+        cards: cards,
         round: {
           currentPlayerSID:
             state.players[Math.floor(Math.random() * state.players.length)]

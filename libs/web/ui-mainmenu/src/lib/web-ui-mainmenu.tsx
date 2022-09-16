@@ -67,6 +67,7 @@ export function MainMenu(props: MainmenuProps) {
             socketId: state.me.socket.id,
             isMaster: false,
             name: nickname ?? undefined,
+            cards: [],
           };
 
           dispatch({
@@ -135,6 +136,7 @@ export function MainMenu(props: MainmenuProps) {
         socketId: state.me.socket.id,
         isMaster: true,
         name: nickname ?? undefined,
+        cards: [],
       };
 
       dispatch({

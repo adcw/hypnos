@@ -24,7 +24,12 @@ export function Lobby(props: LobbyProps) {
     if (!context) return;
     const [state, dispatch] = context;
 
-    dispatch({ type: ActionType.initRound, payload: null });
+    (state.me.socket as Socket).emit(
+      RoomEvents.fetchCards,
+      (cards: string[]) => {
+        dispatch({ type: ActionType.initRound, payload: cards });
+      }
+    );
   };
 
   useEffect(() => {
@@ -79,14 +84,14 @@ export function Lobby(props: LobbyProps) {
                           value={
                             context?.[0].players.find((p) => p.isMaster)?.name
                           }
-                          color="#AD5"
+                          color="#666666"
                           highlight={
                             context?.[0].players.find((p) => p.isMaster)
                               ?.socketId === context?.[0].me.socket.id
                           }
                         />
                       </Group>
-                      <GiCrown color="#e0d83d" />
+                      <GiCrown color="#666666" />
                     </Group>
                   }
                   {context?.[0].players
@@ -96,7 +101,7 @@ export function Lobby(props: LobbyProps) {
                         <Group key={key} position="apart">
                           <XNickname
                             value={player.name}
-                            color="#AD5"
+                            color="#9cffc8"
                             highlight={
                               player.socketId === context[0].me.socket.id
                             }

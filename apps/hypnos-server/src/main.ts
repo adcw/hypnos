@@ -92,6 +92,10 @@ io.on('connection', (socket) => {
     callback(socket.rooms.has(roomCode));
   });
 
+  socket.on(RoomEvents.fetchCards, (callback) => {
+    callback(getImagePaths());
+  });
+
   socket.on('disconnecting', () => {
     console.log(`socket ${socket.id} disconnecting`);
 
