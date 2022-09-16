@@ -37,7 +37,7 @@ export const reducer = (state: GameEntity, action: Action): GameEntity => {
           currentPlayerSID:
             state.players[Math.floor(Math.random() * state.players.length)]
               .socketId,
-          roudPhase: RoundPhase.PHRASE,
+          roundPhase: RoundPhase.PHRASE,
           playerData: [],
         },
       };
