@@ -15,6 +15,7 @@ import { useLongPress } from 'libs/web/ui-game/src/lib/phases/hooks';
 import { useContext, useEffect, useState } from 'react';
 import { GiCardPick } from 'react-icons/gi';
 import { Card } from './Card';
+import { CardSelector } from './CardSelector';
 
 export interface CardDrawerProps {
   opened: boolean;
@@ -27,20 +28,9 @@ export interface CardDrawerProps {
 export const CardDrawer = (props: CardDrawerProps) => {
   const context = useContext(GameContext);
 
-  const [selecetdCard, setSelecetdCard] = useState<string | null>(null);
-
-  const handleSubmit = () => {
+  const handleSubmit = (src: string) => {
     props.setOpened(false);
   };
-
-  const handleCardClick = (src: string) => {
-    setSelecetdCard(src);
-    props.onChange && props.onChange(src);
-  };
-
-  useEffect(() => {
-    console.log(selecetdCard);
-  }, [selecetdCard]);
 
   return (
     <>
@@ -64,22 +54,15 @@ export const CardDrawer = (props: CardDrawerProps) => {
       >
         <Stack align="center">
           {props.mode === 'select' && (
-            <Text size="lg">Choose your makłowicZ</Text>
+            <>
+              <Text size="lg">Choose your makłowicZ</Text>
+              <CardSelector
+                cards={context?.[0].me.player.cards ?? []}
+                onSubmit={handleSubmit}
+              />
+            </>
           )}
-          <Group position="center" mb={12} sx={{ height: '280px' }}>
-            {context &&
-              context[0].me.player.cards.map((c, key) => {
-                return (
-                  <Card
-                    onClick={() => handleCardClick(c)}
-                    src={c}
-                    key={key}
-                    chosen={c === selecetdCard}
-                  />
-                );
-              })}
-          </Group>
-          <Button onClick={handleSubmit}>Submit</Button>
+          {/*  */}
         </Stack>
       </Drawer>
     </>

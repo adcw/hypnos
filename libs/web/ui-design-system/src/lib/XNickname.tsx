@@ -1,14 +1,14 @@
-import { Text } from '@mantine/core';
+import { Text, TextProps } from '@mantine/core';
 
-export interface XNicknameProps {
+export interface XNicknameProps extends TextProps {
   value?: string;
-  color: string;
   highlight?: boolean;
 }
 
 export const XNickname = (props: XNicknameProps) => {
   return (
     <Text
+      {...props}
       // sx={(theme) => ({
       //   color: props.color,
       //   textShadow: props.highlight
@@ -16,9 +16,11 @@ export const XNickname = (props: XNicknameProps) => {
       //     : undefined,
       // })}
       sx={(theme) => ({
-        color: props.highlight
-          ? theme.fn.lighten(props.color, 0.6)
-          : props.color,
+        color: props.color
+          ? props.highlight
+            ? theme.fn.lighten(props.color, 0.6)
+            : props.color
+          : undefined,
       })}
     >
       {props.value ?? '???'}

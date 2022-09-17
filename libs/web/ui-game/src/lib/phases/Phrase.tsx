@@ -1,10 +1,21 @@
 import { GameContext } from '@hypnos/web/network';
-import { ActionIcon, Affix, Drawer, Text } from '@mantine/core';
+import {
+  ActionIcon,
+  Affix,
+  CheckIcon,
+  Container,
+  Drawer,
+  Grid,
+  Group,
+  Stack,
+  Text,
+} from '@mantine/core';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { useDrawCards } from './hooks';
 
 import { GiCardPick } from 'react-icons/gi';
-import { CardDrawer } from 'libs/web/ui-game-controls/src';
+import { CardDrawer, PlayerList } from 'libs/web/ui-game-controls/src';
+import { XNickname } from '@hypnos/web/ui-design-system';
 
 export const PhrasePhase = () => {
   const [mounted, setMounted] = useState(false);
@@ -37,6 +48,17 @@ export const PhrasePhase = () => {
         setOpened={setCardsOpened}
         mode="select"
       />
+      <Group>
+        <PlayerList
+          players={
+            context?.[0].players.map((p, key) => ({
+              name: p.name ?? '???',
+              highlight: p.socketId === context[0].me.player.name,
+              state: 'ready',
+            })) ?? []
+          }
+        />
+      </Group>
     </>
   );
 };
