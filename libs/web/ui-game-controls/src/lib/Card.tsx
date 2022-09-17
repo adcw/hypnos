@@ -66,6 +66,8 @@ export const Card = (props: CardProps) => {
           <Image
             onTouchStart={onStart}
             onTouchEnd={onEnd}
+            onMouseDown={onStart}
+            onMouseUp={onEnd}
             onClick={onEnd}
             src={props.src}
           />

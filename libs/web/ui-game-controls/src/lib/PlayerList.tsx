@@ -11,7 +11,7 @@ export interface PlayerListProps {
 
 export const PlayerList = (props: PlayerListProps) => {
   return (
-    <Stack m={12} sx={{ minWidth: '200px' }}>
+    <Stack m={12} sx={{ width: '200px' }}>
       {props.players.map((p, key) => {
         return (
           <Group key={key} position="apart">

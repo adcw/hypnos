@@ -1,5 +1,6 @@
 import { GameContext } from '@hypnos/web/network';
-import { Box, Button, Card, Text } from '@mantine/core';
+import { CardDrawer, PlayerList } from '@hypnos/web/ui-game-controls';
+import { Box, Button, Card, Group, Text } from '@mantine/core';
 import { RoundPhase } from 'libs/web/network/src/lib/types';
 import { useContext, useEffect, useState } from 'react';
 import { useNextPhase } from './Hooks';
@@ -20,7 +21,6 @@ export function Game(props: GameProps) {
 
   return (
     <Box sx={{ color: 'white' }}>
-      <Button onClick={() => nextPhase()}>Next state</Button>
       {context ? (
         <>
           {context[0].round?.roundPhase === RoundPhase.PHRASE && (

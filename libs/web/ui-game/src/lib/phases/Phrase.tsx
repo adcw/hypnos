@@ -2,6 +2,7 @@ import { GameContext } from '@hypnos/web/network';
 import {
   ActionIcon,
   Affix,
+  Center,
   CheckIcon,
   Container,
   Drawer,
@@ -48,17 +49,25 @@ export const PhrasePhase = () => {
         setOpened={setCardsOpened}
         mode="select"
       />
-      <Group>
-        <PlayerList
-          players={
-            context?.[0].players.map((p, key) => ({
-              name: p.name ?? '???',
-              highlight: p.socketId === context[0].me.player.name,
-              state: 'ready',
-            })) ?? []
-          }
-        />
-      </Group>
+      <Grid>
+        <Grid.Col span={2}>
+          <PlayerList
+            players={
+              context?.[0].players.map((p, key) => ({
+                name: p.name ?? '???',
+                highlight: p.socketId === context[0].me.player.name,
+                state: 'ready',
+              })) ?? []
+            }
+          />
+        </Grid.Col>
+
+        <Grid.Col span={10}>
+          <Center sx={{ height: '100vh' }}>
+            <Text>AAA</Text>
+          </Center>
+        </Grid.Col>
+      </Grid>
     </>
   );
 };
