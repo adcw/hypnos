@@ -21,7 +21,8 @@ export interface CardDrawerProps {
   opened: boolean;
   setOpened: (opened: boolean) => void;
   submitting?: boolean;
-  onChange?: (value: string) => void;
+  onChange: (value: string) => void;
+  value: string | null;
   mode: 'view' | 'select';
 }
 
@@ -58,7 +59,8 @@ export const CardDrawer = (props: CardDrawerProps) => {
               <Text size="lg">Choose your makłowicZ</Text>
               <CardSelector
                 cards={context?.[0].me.player.cards ?? []}
-                onSubmit={handleSubmit}
+                onChange={props.onChange}
+                value={props.value}
               />
             </>
           )}
