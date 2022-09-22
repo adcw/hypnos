@@ -32,6 +32,27 @@ export const useDrawCards = () => {
   return draw;
 };
 
+export const useNextPlayerSID = () => {
+  const context = useContext(GameContext);
+
+  const callback: () => string | undefined = () => {
+    if (!context) return;
+    const [state] = context;
+
+    const prevSID = state.round?.currentPlayerSID;
+    const nPlayers = state.players.length;
+
+    if (prevSID) {
+      const indx = state.players.findIndex((p) => p.socketId === prevSID);
+      if (indx) return state.players[(indx + 1) % nPlayers].socketId;
+    }
+
+    return state.players[Math.floor(Math.random() * nPlayers)].socketId;
+  };
+
+  return callback;
+};
+
 export function useLongPress(
   // callback that is invoked at the specified duration or `onEndLongPress`
   callback: () => any,

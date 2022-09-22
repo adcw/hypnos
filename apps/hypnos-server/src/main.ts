@@ -1,5 +1,5 @@
 import { ErrorCodes } from '@hypnos/shared/constants';
-import { GameEvents, RoomEvents } from '@hypnos/shared/gameevents';
+import { PhrasePhaseEvents, RoomEvents } from '@hypnos/shared/gameevents';
 
 import fs = require('fs');
 
@@ -78,6 +78,10 @@ io.on('connection', (socket) => {
     if (socketRoom) {
       socket.to(socketRoom).emit(RoomEvents.broadcastgameupdate, gameState);
     }
+  });
+
+  socket.on(PhrasePhaseEvents.submit, (roomCode, obj) => {
+    io.to(roomCode).emit(PhrasePhaseEvents.submit, obj);
   });
 
   socket.on(RoomEvents.gamestart, (roomCode) =>

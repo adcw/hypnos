@@ -1,5 +1,5 @@
-export const GameEvents = {
-  // connected: 'connected',
+export const PhrasePhaseEvents = {
+  submit: 'ppSubmit',
 };
 
 export const RoomEvents = {

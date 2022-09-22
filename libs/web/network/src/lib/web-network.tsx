@@ -1,4 +1,4 @@
-import { GameEvents, RoomEvents } from '@hypnos/shared/gameevents';
+import { PhrasePhaseEvents, RoomEvents } from '@hypnos/shared/gameevents';
 import { RoutesMapper } from '@nestjs/core/middleware/routes-mapper';
 import React, { createContext, useContext, useEffect, useReducer } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';

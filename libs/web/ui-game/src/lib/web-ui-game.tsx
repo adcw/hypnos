@@ -3,7 +3,6 @@ import { CardDrawer, PlayerList } from '@hypnos/web/ui-game-controls';
 import { Box, Button, Card, Group, Text } from '@mantine/core';
 import { RoundPhase } from 'libs/web/network/src/lib/types';
 import { useContext, useEffect, useState } from 'react';
-import { useNextPhase } from './Hooks';
 import { PhrasePhase } from './phases/Phrase';
 
 /* eslint-disable-next-line */
@@ -11,7 +10,6 @@ export interface GameProps {}
 
 export function Game(props: GameProps) {
   const context = useContext(GameContext);
-  const nextPhase = useNextPhase();
 
   useEffect(() => {
     if (context) {

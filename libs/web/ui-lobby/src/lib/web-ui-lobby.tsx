@@ -1,4 +1,4 @@
-import { GameEvents, RoomEvents } from '@hypnos/shared/gameevents';
+import { PhrasePhaseEvents, RoomEvents } from '@hypnos/shared/gameevents';
 import { XCard, XNickname } from '@hypnos/web/ui-design-system';
 import { Box, Button, Center, Grid, Group, Stack, Text } from '@mantine/core';
 import { GameContext } from 'libs/web/network/src/lib/web-network';

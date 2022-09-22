@@ -4,7 +4,7 @@ import {
   GameEntity,
   RoundPhase,
 } from 'libs/web/network/src/lib/types';
-import { useCallback, useContext } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 
 export const useNextPhase = () => {
   const context = useContext(GameContext);
@@ -15,26 +15,15 @@ export const useNextPhase = () => {
     RoundPhase.PRESENTATION,
   ];
 
-  const next = useCallback(() => {
+  return () => {
     if (!context) return;
 
-    const state = context[0];
-    const dispatch = context[1];
+    const curr = context[0].round?.roundPhase;
 
-    const prevPhase = state.round?.roundPhase;
+    if (curr === undefined) return;
+    console.log('Found');
 
-    if (prevPhase === undefined) return;
-
-    const nextPhase = order[(order.indexOf(prevPhase) + 1) % order.length];
-
-    dispatch({
-      type: ActionType.setGame,
-      payload: {
-        ...state,
-        round: { ...state.round, roundPhase: nextPhase },
-      } as GameEntity,
-    });
-  }, [context]);
-
-  return next;
+    const n = order[(order.indexOf(curr) + 1) % order.length];
+    return n;
+  };
 };
