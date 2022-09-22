@@ -133,6 +133,17 @@ const LobbyHandler = (props: LobbyHandlerProps) => {
           //   }
         } as GameEntity,
       });
+
+      if (state.round) {
+        dispatch({
+          type: ActionType.initRound,
+          payload: [
+            ...state.cards,
+            ...(state.players.find((p) => p.socketId === socketId)?.cards ||
+              []),
+          ],
+        });
+      }
     }
   };
 

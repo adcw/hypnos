@@ -67,7 +67,7 @@ export const PhrasePhase = () => {
             players={
               context?.[0].players.map((p, key) => ({
                 name: p.name ?? '???',
-                highlight: p.socketId === context[0].me.player.name,
+                highlight: p.socketId === context[0].me.player.socketId,
                 state:
                   p.socketId === context[0].round?.currentPlayerSID
                     ? 'notready'
