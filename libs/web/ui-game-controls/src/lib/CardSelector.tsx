@@ -6,16 +6,14 @@ export interface CardSelectorProps {
   cards: string[];
   onChange?: (src: string) => void;
   value: string | null;
+  mode: 'view' | 'select';
 }
 
 export const CardSelector = (props: CardSelectorProps) => {
   const [selecetdCard, setSelecetdCard] = useState<string | null>(props.value);
 
-  useEffect(() => {
-    console.log(selecetdCard);
-  }, [selecetdCard]);
-
   const handleCardClick = (src: string) => {
+    if (props.mode !== 'select') return;
     setSelecetdCard(src);
     props.onChange && props.onChange(src);
   };
@@ -28,7 +26,7 @@ export const CardSelector = (props: CardSelectorProps) => {
             onClick={() => handleCardClick(c)}
             src={c}
             key={key}
-            chosen={c === selecetdCard}
+            chosen={props.mode === 'select' && c === selecetdCard}
           />
         );
       })}

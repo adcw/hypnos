@@ -126,6 +126,11 @@ const LobbyHandler = (props: LobbyHandlerProps) => {
             state.me.socket.id === newMaster?.socketId
               ? { ...state.me, player: { ...state.me.player, isMaster: true } }
               : state.me,
+          // round:
+          //   {
+          //     ...state.round,
+          //     currentPlayerSID: state.round?.currentPlayerSID === socketId ?
+          //   }
         } as GameEntity,
       });
     }

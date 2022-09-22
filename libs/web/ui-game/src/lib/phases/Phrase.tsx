@@ -68,7 +68,10 @@ export const PhrasePhase = () => {
               context?.[0].players.map((p, key) => ({
                 name: p.name ?? '???',
                 highlight: p.socketId === context[0].me.player.name,
-                state: 'ready',
+                state:
+                  p.socketId === context[0].round?.currentPlayerSID
+                    ? 'notready'
+                    : 'none',
               })) ?? []
             }
           />
@@ -90,7 +93,7 @@ export const PhrasePhase = () => {
             ) : (
               context && (
                 <Stack justify="center" align="center">
-                  <Text>{`Waitoing for ${
+                  <Text>{`Waiting for ${
                     context?.[0].players.find(
                       (p) => p.socketId === context[0].round?.currentPlayerSID
                     )?.name

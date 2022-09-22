@@ -4,10 +4,12 @@ import { Box, CheckIcon, Container, Group, Loader, Stack } from '@mantine/core';
 export interface PlayerListProps {
   players: {
     name: string;
-    state: 'notready' | 'ready' | 'none';
+    state: PlayerState;
     highlight: boolean;
   }[];
 }
+
+export type PlayerState = 'notready' | 'ready' | 'none';
 
 export const PlayerList = (props: PlayerListProps) => {
   return (

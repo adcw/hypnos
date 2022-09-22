@@ -54,16 +54,13 @@ export const CardDrawer = (props: CardDrawerProps) => {
         padding="md"
       >
         <Stack align="center">
-          {props.mode === 'select' && (
-            <>
-              <Text size="lg">Choose your makłowicZ</Text>
-              <CardSelector
-                cards={context?.[0].me.player.cards ?? []}
-                onChange={props.onChange}
-                value={props.value}
-              />
-            </>
-          )}
+          {props.mode === 'select' && <Text size="lg">Choose your card</Text>}
+          <CardSelector
+            mode={props.mode}
+            cards={context?.[0].me.player.cards ?? []}
+            onChange={props.onChange}
+            value={props.value}
+          />
           {/*  */}
         </Stack>
       </Drawer>
