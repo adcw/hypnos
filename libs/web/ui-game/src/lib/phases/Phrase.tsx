@@ -45,7 +45,7 @@ export const PhrasePhase = () => {
   const init = useCallback(() => {
     if (!context) return;
 
-    const [state, dispatch] = context;
+    const [state] = context;
 
     if (state.me.player.isMaster) {
       draw();
@@ -74,32 +74,37 @@ export const PhrasePhase = () => {
     } as SubmitPayload);
   };
 
-  const handleSubmit = (data: SubmitPayload) => {
-    if (!context) return;
+  const handleSubmit = useCallback(
+    (data: SubmitPayload) => {
+      if (!context) return;
 
-    const [state, dispatch] = context;
+      const [state, dispatch] = context;
 
-    if (!state.me.player.isMaster) return;
+      if (!state.me.player.isMaster) return;
 
-    dispatch({
-      type: ActionType.setGame,
-      payload: {
-        ...state,
-        round: {
-          ...state.round,
-          realCardUrl: data.cardUrl,
-          phrase: data.phrase,
-          playerData: [
-            {
-              playerSID: state.round?.currentPlayerSID,
-              ownedCardUrl: data.cardUrl,
-            },
-          ],
-          roundPhase: nextPhase(),
-        },
-      } as GameEntity,
-    });
-  };
+      console.log('State: ', state);
+
+      // dispatch({
+      //   type: ActionType.setGame,
+      //   payload: {
+      //     ...state,
+      //     players: state.players,
+      //     round: {
+      //       ...state.round,
+      //       phrase: data.phrase,
+      //       playerData: [
+      //         {
+      //           playerSID: state.round?.currentPlayerSID,
+      //           ownedCardUrl: data.cardUrl,
+      //         },
+      //       ],
+      //       roundPhase: nextPhase(),
+      //     },
+      //   } as GameEntity,
+      // });
+    },
+    [context?.[0]]
+  );
 
   useEffect(() => {
     if (!context) return;
@@ -119,7 +124,12 @@ export const PhrasePhase = () => {
       <CardDrawer
         opened={cardsOpened}
         setOpened={setCardsOpened}
-        mode="select"
+        mode={
+          context &&
+          context[0].me.socket.id === context[0].round?.currentPlayerSID
+            ? 'select'
+            : 'view'
+        }
         onChange={handleCardChange}
         value={card}
       />

@@ -29,7 +29,6 @@ export const reducer = (state: GameEntity, action: Action): GameEntity => {
       const game = payload as GameEntity;
       const me = game.players.find((p) => p.socketId === state.me.socket.id);
       return {
-        ...state,
         ...game,
         me: { ...state.me, player: me ?? state.me.player },
       };

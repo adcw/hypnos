@@ -30,7 +30,6 @@ export interface RoundEntity {
   currentPlayerSID: string;
   phrase?: string;
   roundPhase: RoundPhase;
-  realCardUrl?: string;
   playerData: {
     playerSID: string;
     ownedCardUrl: string;

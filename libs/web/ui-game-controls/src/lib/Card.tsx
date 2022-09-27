@@ -1,3 +1,4 @@
+import { useLongPress } from '@hypnos/web/ui-design-system';
 import {
   Card as MCard,
   Image,
@@ -8,7 +9,8 @@ import {
   SelectChevronIcon,
   CheckIcon,
 } from '@mantine/core';
-import { useLongPress } from 'libs/web/ui-game/src/lib/phases/hooks';
+// import { useLongPress } from 'libs/web/ui-game/src/lib/phases/hooks';
+
 import { MouseEvent, useState } from 'react';
 
 export interface CardProps {
