@@ -21,7 +21,11 @@ import { GiCardPick } from 'react-icons/gi';
 import { CardDrawer, PlayerList } from 'libs/web/ui-game-controls/src';
 import { XNickname } from '@hypnos/web/ui-design-system';
 import { Card } from 'libs/web/ui-game-controls/src/lib/Card';
-import { ActionType, GameEntity } from 'libs/web/network/src/lib/types';
+import {
+  ActionType,
+  GameEntity,
+  PlayerEntity,
+} from 'libs/web/network/src/lib/types';
 import { useNextPhase } from '../Hooks';
 import { PhrasePhaseEvents } from '@hypnos/shared/gameevents';
 import { Socket } from 'socket.io';
@@ -88,7 +92,14 @@ export const PhrasePhase = () => {
         type: ActionType.setGame,
         payload: {
           ...state,
-          players: state.players,
+          players: state.players.map((p) =>
+            p.socketId === state.round?.currentPlayerSID
+              ? ({
+                  ...p,
+                  cards: p.cards.filter((c) => c !== data.cardUrl),
+                } as PlayerEntity)
+              : p
+          ),
           round: {
             ...state.round,
             phrase: data.phrase,
