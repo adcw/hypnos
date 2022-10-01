@@ -2,6 +2,9 @@ export const PhrasePhaseEvents = {
   submit: 'ppSubmit',
 };
 
+export const ForgeryPhaseEvents = {
+  submit: 'fpSubmit',
+};
 export const RoomEvents = {
   joinroom: 'joinroom',
 

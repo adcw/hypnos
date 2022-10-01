@@ -1,5 +1,9 @@
 import { ErrorCodes } from '@hypnos/shared/constants';
-import { PhrasePhaseEvents, RoomEvents } from '@hypnos/shared/gameevents';
+import {
+  ForgeryPhaseEvents,
+  PhrasePhaseEvents,
+  RoomEvents,
+} from '@hypnos/shared/gameevents';
 
 import fs = require('fs');
 
@@ -82,6 +86,10 @@ io.on('connection', (socket) => {
 
   socket.on(PhrasePhaseEvents.submit, (roomCode, obj) => {
     io.to(roomCode).emit(PhrasePhaseEvents.submit, obj);
+  });
+
+  socket.on(ForgeryPhaseEvents.submit, (roomCode, card) => {
+    io.to(roomCode).emit(ForgeryPhaseEvents.submit, card);
   });
 
   socket.on(RoomEvents.gamestart, (roomCode) =>

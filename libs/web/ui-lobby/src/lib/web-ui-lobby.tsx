@@ -101,7 +101,7 @@ export function Lobby(props: LobbyProps) {
                         <Group key={key} position="apart">
                           <XNickname
                             value={player.name}
-                            color="#9cffc8"
+                            color="#666666"
                             highlight={
                               player.socketId === context[0].me.socket.id
                             }
