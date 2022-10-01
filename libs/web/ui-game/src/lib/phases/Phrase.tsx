@@ -84,24 +84,26 @@ export const PhrasePhase = () => {
 
       console.log('State: ', state);
 
-      // dispatch({
-      //   type: ActionType.setGame,
-      //   payload: {
-      //     ...state,
-      //     players: state.players,
-      //     round: {
-      //       ...state.round,
-      //       phrase: data.phrase,
-      //       playerData: [
-      //         {
-      //           playerSID: state.round?.currentPlayerSID,
-      //           ownedCardUrl: data.cardUrl,
-      //         },
-      //       ],
-      //       roundPhase: nextPhase(),
-      //     },
-      //   } as GameEntity,
-      // });
+      dispatch({
+        type: ActionType.setGame,
+        payload: {
+          ...state,
+          players: state.players,
+          round: {
+            ...state.round,
+            phrase: data.phrase,
+            playerData: [
+              {
+                playerSID: state.round?.currentPlayerSID,
+                ownedCardUrl: data.cardUrl,
+              },
+            ],
+            roundPhase: nextPhase(),
+          },
+        } as GameEntity,
+      });
+
+      nextPhase();
     },
     [context?.[0]]
   );
@@ -117,7 +119,7 @@ export const PhrasePhase = () => {
     return () => {
       socket.off(PhrasePhaseEvents.submit, handleSubmit);
     };
-  }, []);
+  }, [context?.[0]]);
 
   return (
     <>

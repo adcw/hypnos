@@ -11,7 +11,6 @@ import {
   LoadingOverlay,
   Button,
 } from '@mantine/core';
-import { useLongPress } from 'libs/web/ui-game/src/lib/phases/hooks';
 import { useContext, useEffect, useState } from 'react';
 import { GiCardPick } from 'react-icons/gi';
 import { Card } from './Card';
