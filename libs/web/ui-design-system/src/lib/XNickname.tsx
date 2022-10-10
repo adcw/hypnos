@@ -8,7 +8,7 @@ export interface XNicknameProps extends TextProps {
 export const XNickname = (props: XNicknameProps) => {
   return (
     <Text
-      {...props}
+      {...{ ...props, highlight: undefined }}
       // sx={(theme) => ({
       //   color: props.color,
       //   textShadow: props.highlight

@@ -29,48 +29,45 @@ export const Forgery = () => {
     );
   };
 
-  const handleSubmit = useCallback(
-    (card: string) => {
-      console.log('New card is ', card);
+  const handleSubmit = (card: string) => {
+    console.log('New card is ', card);
 
-      // if (!context) return;
+    // if (!context) return;
 
-      // const [state, dispatch] = context;
+    // const [state, dispatch] = context;
 
-      // if (!state.me.player.isMaster) return;
+    // if (!state.me.player.isMaster) return;
 
-      // console.log('State: ', state);
+    // console.log('State: ', state);
 
-      // dispatch({
-      //   type: ActionType.setGame,
-      //   payload: {
-      //     ...state,
-      //     players: state.players.map((p) =>
-      //       p.socketId === state.round?.currentPlayerSID
-      //         ? ({
-      //             ...p,
-      //             cards: p.cards.filter((c) => c !== data.cardUrl),
-      //           } as PlayerEntity)
-      //         : p
-      //     ),
-      //     round: {
-      //       ...state.round,
-      //       phrase: data.phrase,
-      //       playerData: [
-      //         {
-      //           playerSID: state.round?.currentPlayerSID,
-      //           ownedCardUrl: data.cardUrl,
-      //         },
-      //       ],
-      //       roundPhase: nextPhase(),
-      //     },
-      //   } as GameEntity,
-      // });
+    // dispatch({
+    //   type: ActionType.setGame,
+    //   payload: {
+    //     ...state,
+    //     players: state.players.map((p) =>
+    //       p.socketId === state.round?.currentPlayerSID
+    //         ? ({
+    //             ...p,
+    //             cards: p.cards.filter((c) => c !== data.cardUrl),
+    //           } as PlayerEntity)
+    //         : p
+    //     ),
+    //     round: {
+    //       ...state.round,
+    //       phrase: data.phrase,
+    //       playerData: [
+    //         {
+    //           playerSID: state.round?.currentPlayerSID,
+    //           ownedCardUrl: data.cardUrl,
+    //         },
+    //       ],
+    //       roundPhase: nextPhase(),
+    //     },
+    //   } as GameEntity,
+    // });
 
-      // nextPhase();
-    },
-    [context?.[0]]
-  );
+    // nextPhase();
+  };
 
   useEffect(() => {
     if (!context) return;

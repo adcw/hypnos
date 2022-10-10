@@ -122,6 +122,8 @@ export const PhrasePhase = () => {
   useEffect(() => {
     if (!context) return;
 
+    console.log('OK');
+
     const [state] = context;
     const socket = state.me.socket as Socket;
 

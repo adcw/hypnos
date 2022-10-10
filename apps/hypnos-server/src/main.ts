@@ -89,6 +89,8 @@ io.on('connection', (socket) => {
   });
 
   socket.on(ForgeryPhaseEvents.submit, (roomCode, card) => {
+    console.log('card: ', card);
+
     io.to(roomCode).emit(ForgeryPhaseEvents.submit, card);
   });
 
