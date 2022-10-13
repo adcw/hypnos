@@ -1,3 +1,5 @@
+import 'tslib';
+
 import { ErrorCodes } from '@hypnos/shared/constants';
 import {
   ForgeryPhaseEvents,

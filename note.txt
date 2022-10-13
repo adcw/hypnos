@@ -1,0 +1,3 @@
+socket.io: 3001
+express: 3002
+react-app: 4200
