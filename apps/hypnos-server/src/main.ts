@@ -1,28 +1,35 @@
-import 'tslib';
+import _d = require('dotenv');
+_d.config();
 
-import { ErrorCodes } from '@hypnos/shared/constants';
+import fs = require('fs');
+import express = require('express');
+import { getEnv, EnvVars } from './utils';
+
+const app = express();
+const imageFolderPath = __dirname + '/assets/public';
+
+const MAX_ROOM_SIZE = 8;
+
+const env = getEnv();
+
+const EXPRESS_PORT = Number(env[EnvVars.EXPRESS_PORT]);
+const SOCKET_PORT = Number(env[EnvVars.SOCKET_PORT]);
+const APP_PATH = env[EnvVars.APP_PATH];
+
+app.use('/images', express.static(imageFolderPath));
+app.listen(EXPRESS_PORT);
+
+import socketio = require('socket.io');
 import {
   ForgeryPhaseEvents,
   PhrasePhaseEvents,
   RoomEvents,
 } from '@hypnos/shared/gameevents';
+import { ErrorCodes } from '@hypnos/shared/constants';
 
-import fs = require('fs');
-
-import express = require('express');
-const app = express();
-
-const imageFolderPath = __dirname + '/assets/public';
-
-app.use('/images', express.static(imageFolderPath));
-app.listen(3002);
-
-const MAX_ROOM_SIZE = 8;
-
-import socketio = require('socket.io');
-const io = new socketio.Server(3001, {
+const io = new socketio.Server(SOCKET_PORT, {
   cors: {
-    origin: 'http://localhost:4200',
+    origin: APP_PATH,
     methods: ['GET', 'POST'],
   },
 });
@@ -135,7 +142,7 @@ const arrayShuffle = (array: any[]) => {
 
 const getImagePaths = () => {
   return arrayShuffle(
-    readDir(imageFolderPath).map((p) => `http://localhost:3002/images/${p}`)
+    readDir(imageFolderPath).map((p) => `http://localhost:3302/images/${p}`)
   );
 };
 
@@ -165,3 +172,6 @@ const getFreeRoomCode = () => {
 
 const getRandomRoomCode = () =>
   [...Array(4)].map(() => Math.random().toString(36)[2].toUpperCase()).join('');
+
+console.log(`Express listening on port ${EXPRESS_PORT}`);
+console.log(`Socket.io listening on port ${SOCKET_PORT}`);
