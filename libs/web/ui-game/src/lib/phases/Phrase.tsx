@@ -25,6 +25,7 @@ import {
   ActionType,
   GameEntity,
   PlayerEntity,
+  RoundEntity,
 } from 'libs/web/network/src/lib/types';
 import { useNextPhase } from '../Hooks';
 import { PhrasePhaseEvents } from '@hypnos/shared/gameevents';
@@ -88,6 +89,8 @@ export const PhrasePhase = () => {
 
       console.log('State: ', state);
 
+      console.log('Room code  is ' + state.roomCode);
+
       dispatch({
         type: ActionType.setGame,
         payload: {
@@ -110,11 +113,9 @@ export const PhrasePhase = () => {
               },
             ],
             roundPhase: nextPhase(),
-          },
-        } as GameEntity,
+          } as RoundEntity,
+        },
       });
-
-      nextPhase();
     },
     [context?.[0]]
   );

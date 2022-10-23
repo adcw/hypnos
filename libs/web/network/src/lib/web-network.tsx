@@ -177,6 +177,7 @@ const LobbyHandler = (props: LobbyHandlerProps) => {
       cards: state.cards,
       players: state.players,
       round: state.round,
+      roomCode: state.roomCode,
     } as GameEntity);
   }, [context?.[0]]);
 
