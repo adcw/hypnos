@@ -102,10 +102,14 @@ io.on('connection', (socket) => {
     io.to(roomCode).emit(PhrasePhaseEvents.submit, obj);
   });
 
-  socket.on(ForgeryPhaseEvents.submit, (roomCode, card) => {
+  socket.on(ForgeryPhaseEvents.submit, (roomCode, card, sid) => {
     console.log('card: ', card);
 
-    io.to(roomCode).emit(ForgeryPhaseEvents.submit, card);
+    io.to(roomCode).emit(ForgeryPhaseEvents.submit, card, sid);
+  });
+
+  socket.on(ForgeryPhaseEvents.phaseEnd, (roomCode) => {
+    io.to(roomCode).emit(ForgeryPhaseEvents.phaseEnd);
   });
 
   socket.on(RoomEvents.gamestart, (roomCode) =>

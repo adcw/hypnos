@@ -2,14 +2,23 @@ import { ForgeryPhaseEvents } from '@hypnos/shared/gameevents';
 import { GameContext } from '@hypnos/web/network';
 import { CardDrawer, PlayerList, Card } from '@hypnos/web/ui-game-controls';
 import { Button, Center, Grid, Stack, Text } from '@mantine/core';
+import {
+  ActionType,
+  GameEntity,
+  PlayerEntity,
+} from 'libs/web/network/src/lib/types';
 import { useCallback, useContext, useEffect, useState } from 'react';
+import { Action } from 'rxjs/internal/scheduler/Action';
 import { Socket } from 'socket.io';
+import { useNextPhase } from '../Hooks';
 
 export const Forgery = () => {
   const context = useContext(GameContext);
 
   const [cardsOpened, setCardsOpened] = useState(false);
   const [card, setCard] = useState<string | null>(null);
+
+  const nextPhase = useNextPhase();
 
   const handleCardChange = (src: string) => {
     setCard(src);
@@ -25,50 +34,67 @@ export const Forgery = () => {
     (state.me.socket as Socket).emit(
       ForgeryPhaseEvents.submit,
       state.roomCode,
-      card
+      card,
+      state.me.player.socketId
     );
   };
 
   const handleSubmit = useCallback(
-    (card: string) => {
-      console.log('New card is ', card);
+    (card: string, sid: string) => {
+      if (!context) return;
 
-      // if (!context) return;
+      const [state, dispatch] = context;
 
-      // const [state, dispatch] = context;
+      if (!state.me.player.isMaster) return;
 
-      // if (!state.me.player.isMaster) return;
+      console.log(`${sid} has a card: ${card}`);
 
-      // console.log('State: ', state);
-
-      // dispatch({
-      //   type: ActionType.setGame,
-      //   payload: {
-      //     ...state,
-      //     players: state.players.map((p) =>
-      //       p.socketId === state.round?.currentPlayerSID
-      //         ? ({
-      //             ...p,
-      //             cards: p.cards.filter((c) => c !== data.cardUrl),
-      //           } as PlayerEntity)
-      //         : p
-      //     ),
-      //     round: {
-      //       ...state.round,
-      //       phrase: data.phrase,
-      //       playerData: [
-      //         {
-      //           playerSID: state.round?.currentPlayerSID,
-      //           ownedCardUrl: data.cardUrl,
-      //         },
-      //       ],
-      //       roundPhase: nextPhase(),
-      //     },
-      //   } as GameEntity,
-      // });
+      dispatch({
+        type: ActionType.setGame,
+        payload: {
+          ...state,
+          players: state.players.map((p) =>
+            p.socketId === sid
+              ? ({
+                  ...p,
+                  cards: p.cards.filter((c) => c !== c),
+                } as PlayerEntity)
+              : p
+          ),
+          round: {
+            ...state.round,
+            playerData: [
+              ...(state.round?.playerData ?? []),
+              {
+                playerSID: sid,
+                ownedCardUrl: card,
+              },
+            ],
+          },
+        } as GameEntity,
+      });
     },
     [context?.[0]]
   );
+
+  const handleRoundEnd = () => {
+    if (!context) return;
+
+    const [state, dispatch] = context;
+
+    if (!state.me.player.isMaster) return;
+
+    dispatch({
+      type: ActionType.setGame,
+      payload: {
+        ...state,
+        round: {
+          ...state.round,
+          roundPhase: nextPhase(),
+        },
+      } as GameEntity,
+    });
+  };
 
   useEffect(() => {
     if (!context) return;
@@ -77,9 +103,11 @@ export const Forgery = () => {
     const socket = state.me.socket as Socket;
 
     socket.on(ForgeryPhaseEvents.submit, handleSubmit);
+    socket.on(ForgeryPhaseEvents.phaseEnd, handleRoundEnd);
 
     return () => {
       socket.off(ForgeryPhaseEvents.submit, handleSubmit);
+      socket.off(ForgeryPhaseEvents.phaseEnd, handleRoundEnd);
     };
   }, [context?.[0]]);
 
@@ -123,9 +151,15 @@ export const Forgery = () => {
                   <Text>Chose card from drawer and enter a prompt: </Text>
 
                   {card && <Card src={card} />}
-                  <Button disabled={!prompt || !card} onClick={notifySubmit}>
-                    Submit
-                  </Button>
+                  {!context?.[0].round?.playerData.find(
+                    (p) => p.playerSID === context[0].me.player.socketId
+                  ) ? (
+                    <Button disabled={!prompt || !card} onClick={notifySubmit}>
+                      Submit
+                    </Button>
+                  ) : (
+                    <Text>Wait for other players</Text>
+                  )}
                 </Stack>
               )}
             </Stack>

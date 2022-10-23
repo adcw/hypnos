@@ -1,4 +1,8 @@
-import { PhrasePhaseEvents, RoomEvents } from '@hypnos/shared/gameevents';
+import {
+  ForgeryPhaseEvents,
+  PhrasePhaseEvents,
+  RoomEvents,
+} from '@hypnos/shared/gameevents';
 import { RoutesMapper } from '@nestjs/core/middleware/routes-mapper';
 import React, { createContext, useContext, useEffect, useReducer } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
@@ -13,6 +17,7 @@ import {
   GameEntity,
   MeEntity,
   PlayerEntity,
+  RoundPhase,
 } from './types';
 import { reducer } from './reducer';
 
@@ -171,6 +176,16 @@ const LobbyHandler = (props: LobbyHandlerProps) => {
 
     if (state.players.length === 0) {
       navigate('/');
+    }
+
+    if (
+      state.round?.roundPhase === RoundPhase.FORGERY &&
+      state.round?.playerData.length === state.players.length
+    ) {
+      (state.me.socket as Socket).emit(
+        ForgeryPhaseEvents.phaseEnd,
+        state.roomCode
+      );
     }
 
     (state.me.socket as Socket).emit(RoomEvents.broadcastgameupdate, {

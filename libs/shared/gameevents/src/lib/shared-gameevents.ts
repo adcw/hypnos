@@ -4,6 +4,7 @@ export const PhrasePhaseEvents = {
 
 export const ForgeryPhaseEvents = {
   submit: 'fpSubmit',
+  phaseEnd: 'fpphaseEnd',
 };
 export const RoomEvents = {
   joinroom: 'joinroom',
