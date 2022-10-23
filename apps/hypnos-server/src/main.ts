@@ -8,13 +8,18 @@ import { getEnv, EnvVars } from './utils';
 const app = express();
 const imageFolderPath = __dirname + '/assets/public';
 
-const MAX_ROOM_SIZE = 8;
-
 const env = getEnv();
 
-const EXPRESS_PORT = Number(env[EnvVars.EXPRESS_PORT]);
-const SOCKET_PORT = Number(env[EnvVars.SOCKET_PORT]);
-const APP_PATH = env[EnvVars.APP_PATH];
+const MAX_ROOM_SIZE = 8;
+
+const EXPRESS_PORT = 3302;
+const SOCKET_PORT = 3301;
+const APP_PORT = env['APP_PORT'] ?? 80;
+const DOMAIN = env['DOMAIN'] ?? 'localhost';
+const APP_PATH = `http://${DOMAIN}:${APP_PORT}`;
+const EXPRESS_PATH = `http://${DOMAIN}:${EXPRESS_PORT}`;
+
+const ORIGINS = [`http://${DOMAIN}:*`, `http://${DOMAIN}`];
 
 app.use('/images', express.static(imageFolderPath));
 app.listen(EXPRESS_PORT);
@@ -29,7 +34,7 @@ import { ErrorCodes } from '@hypnos/shared/constants';
 
 const io = new socketio.Server(SOCKET_PORT, {
   cors: {
-    origin: APP_PATH,
+    origin: ORIGINS,
     methods: ['GET', 'POST'],
   },
 });
@@ -142,7 +147,7 @@ const arrayShuffle = (array: any[]) => {
 
 const getImagePaths = () => {
   return arrayShuffle(
-    readDir(imageFolderPath).map((p) => `http://localhost:3302/images/${p}`)
+    readDir(imageFolderPath).map((p) => `${EXPRESS_PATH}/images/${p}`)
   );
 };
 
@@ -175,3 +180,4 @@ const getRandomRoomCode = () =>
 
 console.log(`Express listening on port ${EXPRESS_PORT}`);
 console.log(`Socket.io listening on port ${SOCKET_PORT}`);
+console.log('CORS: ' + ORIGINS);
