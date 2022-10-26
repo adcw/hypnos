@@ -2,6 +2,7 @@ import {
   VotingPhaseEvents,
   PhrasePhaseEvents,
   RoomEvents,
+  ForgeryPhaseEvents,
 } from '@hypnos/shared/gameevents';
 import { RoutesMapper } from '@nestjs/core/middleware/routes-mapper';
 import React, { createContext, useContext, useEffect, useReducer } from 'react';
@@ -183,6 +184,20 @@ const LobbyHandler = (props: LobbyHandlerProps) => {
       state.round?.roundPhase === RoundPhase.FORGERY &&
       state.round.playerData.length === state.players.length &&
       !state.round.playerData.find((d) => !d.ownedCardUrl)
+    ) {
+      (state.me.socket as Socket).emit(
+        ForgeryPhaseEvents.phaseEnd,
+        state.roomCode
+      );
+    }
+
+    // Notify if everyone has chosen their vote
+    if (
+      state.round?.roundPhase === RoundPhase.VOTING &&
+      state.round.playerData.length === state.players.length &&
+      !state.round.playerData.find(
+        (d) => !d.votedCardUrl && d.playerSID !== state.round?.currentPlayerSID
+      )
     ) {
       (state.me.socket as Socket).emit(
         VotingPhaseEvents.phaseEnd,

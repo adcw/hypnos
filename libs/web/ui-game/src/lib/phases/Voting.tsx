@@ -21,6 +21,7 @@ import {
 import { Socket } from 'socket.io';
 import { useEvent } from 'libs/web/network/src/lib/hooks';
 import { ActionType, GameEntity } from 'libs/web/network/src/lib/types';
+import { useNextPhase } from '../Hooks';
 
 export interface SubmitPayload {
   cardUrl: string;
@@ -30,6 +31,8 @@ export const VotingPhase = () => {
   const context = useContext(GameContext);
 
   const [card, setCard] = useState<string | null>();
+
+  const nextPhase = useNextPhase();
 
   const notifySubmit = () => {
     if (!context) return;
@@ -70,7 +73,27 @@ export const VotingPhase = () => {
     [context?.[0]]
   );
 
+  const handlePhaseEnd = () => {
+    if (!context) return;
+
+    const [state, dispatch] = context;
+
+    if (!state.me.player.isMaster) return;
+
+    dispatch({
+      type: ActionType.setGame,
+      payload: {
+        ...state,
+        round: {
+          ...state.round,
+          roundPhase: nextPhase(),
+        },
+      } as GameEntity,
+    });
+  };
+
   useEvent(VotingPhaseEvents.submit, handleSubmit);
+  useEvent(VotingPhaseEvents.phaseEnd, handlePhaseEnd);
 
   return (
     <Grid>
@@ -81,9 +104,16 @@ export const VotingPhase = () => {
               name: p.name ?? '???',
               highlight: p.socketId === context[0].me.player.socketId,
               state:
+                // p.socketId === context[0].round?.currentPlayerSID
+                //   ? 'notready'
+                //   : 'none',
                 p.socketId === context[0].round?.currentPlayerSID
-                  ? 'notready'
-                  : 'none',
+                  ? 'none'
+                  : context[0].round?.playerData.find(
+                      (pd) => pd.playerSID === p.socketId
+                    )?.votedCardUrl
+                  ? 'ready'
+                  : 'notready',
             })) ?? []
           }
         />

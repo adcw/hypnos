@@ -5,6 +5,7 @@ import { RoundPhase } from 'libs/web/network/src/lib/types';
 import { useContext, useEffect, useState } from 'react';
 import { Forgery } from './phases/Forgery';
 import { PhrasePhase } from './phases/Phrase';
+import { Presentation } from './phases/Presentation';
 import { VotingPhase } from './phases/Voting';
 
 /* eslint-disable-next-line */
@@ -32,7 +33,7 @@ export function Game(props: GameProps) {
             <VotingPhase />
           )}
           {context[0].round?.roundPhase === RoundPhase.PRESENTATION && (
-            <Text>4. Presentation</Text>
+            <Presentation />
           )}
         </>
       ) : (

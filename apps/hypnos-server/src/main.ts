@@ -29,8 +29,9 @@ import {
   VotingPhaseEvents,
   PhrasePhaseEvents,
   RoomEvents,
+  ForgeryPhaseEvents,
 } from '@hypnos/shared/gameevents';
-import { ErrorCodes } from '@hypnos/shared/constants';
+import { arrayShuffle, ErrorCodes } from '@hypnos/shared/constants';
 
 const io = new socketio.Server(SOCKET_PORT, {
   cors: {
@@ -109,7 +110,17 @@ io.on('connection', (socket) => {
   });
 
   socket.on(VotingPhaseEvents.phaseEnd, (roomCode) => {
+    console.log('Voting end');
+
     io.to(roomCode).emit(VotingPhaseEvents.phaseEnd);
+  });
+
+  socket.on(ForgeryPhaseEvents.submit, (roomCode, card, sid) => {
+    io.to(roomCode).emit(ForgeryPhaseEvents.submit, card, sid);
+  });
+
+  socket.on(ForgeryPhaseEvents.phaseEnd, (roomCode) => {
+    io.to(roomCode).emit(ForgeryPhaseEvents.phaseEnd);
   });
 
   socket.on(RoomEvents.gamestart, (roomCode) =>
@@ -141,13 +152,6 @@ io.on('connection', (socket) => {
     });
   });
 });
-
-const arrayShuffle = (array: any[]) => {
-  return array
-    .map((value) => ({ value, sort: Math.random() }))
-    .sort((a, b) => a.sort - b.sort)
-    .map(({ value }) => value);
-};
 
 const getImagePaths = () => {
   return arrayShuffle(

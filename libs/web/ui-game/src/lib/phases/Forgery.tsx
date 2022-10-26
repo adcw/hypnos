@@ -1,7 +1,11 @@
-import { VotingPhaseEvents } from '@hypnos/shared/gameevents';
+import {
+  ForgeryPhaseEvents,
+  VotingPhaseEvents,
+} from '@hypnos/shared/gameevents';
 import { GameContext } from '@hypnos/web/network';
 import { CardDrawer, PlayerList, Card } from '@hypnos/web/ui-game-controls';
 import { Button, Center, Grid, Stack, Text } from '@mantine/core';
+import { useEvent } from 'libs/web/network/src/lib/hooks';
 import {
   ActionType,
   GameEntity,
@@ -32,7 +36,7 @@ export const Forgery = () => {
     console.log('Emmiting');
 
     (state.me.socket as Socket).emit(
-      VotingPhaseEvents.submit,
+      ForgeryPhaseEvents.submit,
       state.roomCode,
       card,
       state.me.player.socketId
@@ -77,7 +81,7 @@ export const Forgery = () => {
     [context?.[0]]
   );
 
-  const handleRoundEnd = () => {
+  const handlePhaseEnd = () => {
     if (!context) return;
 
     const [state, dispatch] = context;
@@ -96,20 +100,8 @@ export const Forgery = () => {
     });
   };
 
-  useEffect(() => {
-    if (!context) return;
-
-    const [state] = context;
-    const socket = state.me.socket as Socket;
-
-    socket.on(VotingPhaseEvents.submit, handleSubmit);
-    socket.on(VotingPhaseEvents.phaseEnd, handleRoundEnd);
-
-    return () => {
-      socket.off(VotingPhaseEvents.submit, handleSubmit);
-      socket.off(VotingPhaseEvents.phaseEnd, handleRoundEnd);
-    };
-  }, [context?.[0]]);
+  useEvent(ForgeryPhaseEvents.submit, handleSubmit);
+  useEvent(ForgeryPhaseEvents.phaseEnd, handlePhaseEnd);
 
   return (
     <>
