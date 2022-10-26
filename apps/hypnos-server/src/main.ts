@@ -26,7 +26,7 @@ app.listen(EXPRESS_PORT);
 
 import socketio = require('socket.io');
 import {
-  ForgeryPhaseEvents,
+  VotingPhaseEvents,
   PhrasePhaseEvents,
   RoomEvents,
 } from '@hypnos/shared/gameevents';
@@ -102,14 +102,14 @@ io.on('connection', (socket) => {
     io.to(roomCode).emit(PhrasePhaseEvents.submit, obj);
   });
 
-  socket.on(ForgeryPhaseEvents.submit, (roomCode, card, sid) => {
+  socket.on(VotingPhaseEvents.submit, (roomCode, card, sid) => {
     console.log('card: ', card);
 
-    io.to(roomCode).emit(ForgeryPhaseEvents.submit, card, sid);
+    io.to(roomCode).emit(VotingPhaseEvents.submit, card, sid);
   });
 
-  socket.on(ForgeryPhaseEvents.phaseEnd, (roomCode) => {
-    io.to(roomCode).emit(ForgeryPhaseEvents.phaseEnd);
+  socket.on(VotingPhaseEvents.phaseEnd, (roomCode) => {
+    io.to(roomCode).emit(VotingPhaseEvents.phaseEnd);
   });
 
   socket.on(RoomEvents.gamestart, (roomCode) =>

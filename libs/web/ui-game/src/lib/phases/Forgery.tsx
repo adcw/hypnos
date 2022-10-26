@@ -1,4 +1,4 @@
-import { ForgeryPhaseEvents } from '@hypnos/shared/gameevents';
+import { VotingPhaseEvents } from '@hypnos/shared/gameevents';
 import { GameContext } from '@hypnos/web/network';
 import { CardDrawer, PlayerList, Card } from '@hypnos/web/ui-game-controls';
 import { Button, Center, Grid, Stack, Text } from '@mantine/core';
@@ -32,7 +32,7 @@ export const Forgery = () => {
     console.log('Emmiting');
 
     (state.me.socket as Socket).emit(
-      ForgeryPhaseEvents.submit,
+      VotingPhaseEvents.submit,
       state.roomCode,
       card,
       state.me.player.socketId
@@ -102,12 +102,12 @@ export const Forgery = () => {
     const [state] = context;
     const socket = state.me.socket as Socket;
 
-    socket.on(ForgeryPhaseEvents.submit, handleSubmit);
-    socket.on(ForgeryPhaseEvents.phaseEnd, handleRoundEnd);
+    socket.on(VotingPhaseEvents.submit, handleSubmit);
+    socket.on(VotingPhaseEvents.phaseEnd, handleRoundEnd);
 
     return () => {
-      socket.off(ForgeryPhaseEvents.submit, handleSubmit);
-      socket.off(ForgeryPhaseEvents.phaseEnd, handleRoundEnd);
+      socket.off(VotingPhaseEvents.submit, handleSubmit);
+      socket.off(VotingPhaseEvents.phaseEnd, handleRoundEnd);
     };
   }, [context?.[0]]);
 

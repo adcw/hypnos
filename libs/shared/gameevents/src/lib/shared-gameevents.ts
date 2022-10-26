@@ -6,6 +6,12 @@ export const ForgeryPhaseEvents = {
   submit: 'fpSubmit',
   phaseEnd: 'fpphaseEnd',
 };
+
+export const VotingPhaseEvents = {
+  submit: 'vpSubmit',
+  phaseEnd: 'vpphaseEnd',
+};
+
 export const RoomEvents = {
   joinroom: 'joinroom',
 

@@ -3,11 +3,13 @@ import {
   Card as MCard,
   Image,
   Modal,
+  Text,
   ContainerProps,
   Box,
   Overlay,
   SelectChevronIcon,
   CheckIcon,
+  Center,
 } from '@mantine/core';
 // import { useLongPress } from 'libs/web/ui-game/src/lib/phases/hooks';
 
@@ -19,6 +21,7 @@ export interface CardProps {
   chosen?: boolean;
   disabled?: boolean;
   onClick?: () => void;
+  text?: string;
 }
 
 export const Card = (props: CardProps) => {
@@ -41,9 +44,15 @@ export const Card = (props: CardProps) => {
         radius="md"
         sx={{
           width: 170,
+          cursor: props.disabled ? 'not-allowed' : 'pointer',
+          transition: '0.3s',
+
+          '&:hover': {
+            transform: !props.disabled ? 'scale(1.02)' : undefined,
+          },
         }}
       >
-        <Box sx={{ height: 260 }}>
+        <Box sx={{ height: 260, width: '100%' }}>
           {props.chosen && (
             <Box
               sx={{
@@ -64,7 +73,32 @@ export const Card = (props: CardProps) => {
               <CheckIcon />
             </Box>
           )}
-          {props.disabled && <Overlay color="black" opacity={0.2} blur={1} />}
+          {props.disabled && (
+            <Overlay sx={{ zIndex: 10 }} color="black" opacity={0.2} blur={1} />
+          )}
+          {props.text && (
+            <Center
+              style={{
+                position: 'absolute',
+                zIndex: 20,
+                height: 'inherit',
+                width: 150,
+              }}
+            >
+              <Text
+                color={'dimmed'}
+                weight={600}
+                size={15}
+                px={10}
+                style={{
+                  backgroundColor: '#000000ab',
+                  borderRadius: '20px',
+                }}
+              >
+                {props.text}
+              </Text>
+            </Center>
+          )}
           <Image
             onTouchStart={onStart}
             onTouchEnd={onEnd}

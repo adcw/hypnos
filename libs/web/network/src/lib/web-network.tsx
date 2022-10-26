@@ -1,5 +1,5 @@
 import {
-  ForgeryPhaseEvents,
+  VotingPhaseEvents,
   PhrasePhaseEvents,
   RoomEvents,
 } from '@hypnos/shared/gameevents';
@@ -10,7 +10,7 @@ import { Socket } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { ErrorCodes } from '@hypnos/shared/constants';
 
-import { useGameLeave } from './hooks';
+import { useEvent, useGameLeave } from './hooks';
 import {
   Action,
   ActionType,
@@ -183,7 +183,7 @@ const LobbyHandler = (props: LobbyHandlerProps) => {
       state.round?.playerData.length === state.players.length
     ) {
       (state.me.socket as Socket).emit(
-        ForgeryPhaseEvents.phaseEnd,
+        VotingPhaseEvents.phaseEnd,
         state.roomCode
       );
     }
@@ -196,23 +196,16 @@ const LobbyHandler = (props: LobbyHandlerProps) => {
     } as GameEntity);
   }, [context?.[0]]);
 
+  useEvent(RoomEvents.notifyjoin, handleNotifyJoin);
+  useEvent(RoomEvents.broadcastgameupdate, handleGameUpdate);
+  useEvent(RoomEvents.notifyleave, handleNotifyLeave);
+  useEvent(RoomEvents.gamestart, handleGameStart);
+
   useEffect(() => {
     if (!context) return;
     const [state] = context;
 
-    console.log('Game update: ', context[0]);
-
-    state.me.socket.on(RoomEvents.notifyjoin, handleNotifyJoin);
-    state.me.socket.on(RoomEvents.broadcastgameupdate, handleGameUpdate);
-    state.me.socket.on(RoomEvents.notifyleave, handleNotifyLeave);
-    state.me.socket.on(RoomEvents.gamestart, handleGameStart);
-
-    return () => {
-      state.me.socket.off(RoomEvents.notifyjoin, handleNotifyJoin);
-      state.me.socket.off(RoomEvents.broadcastgameupdate, handleGameUpdate);
-      state.me.socket.off(RoomEvents.notifyleave, handleNotifyLeave);
-      state.me.socket.off(RoomEvents.gamestart, handleGameStart);
-    };
+    console.log('Game update: ', state);
   }, [context]);
 
   return props.children;
