@@ -178,9 +178,11 @@ const LobbyHandler = (props: LobbyHandlerProps) => {
       navigate('/');
     }
 
+    // Notify if everyone has chosen their card
     if (
       state.round?.roundPhase === RoundPhase.FORGERY &&
-      state.round?.playerData.length === state.players.length
+      state.round.playerData.length === state.players.length &&
+      !state.round.playerData.find((d) => !d.ownedCardUrl)
     ) {
       (state.me.socket as Socket).emit(
         VotingPhaseEvents.phaseEnd,
