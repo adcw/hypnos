@@ -1,16 +1,30 @@
 import { PresentationPhaseEvents } from '@hypnos/shared/gameevents';
 import { GameContext } from '@hypnos/web/network';
-import { Box, Center, Grid, JsonInput, Stack, Text } from '@mantine/core';
+import {
+  Box,
+  Center,
+  Grid,
+  Group,
+  JsonInput,
+  Stack,
+  Text,
+} from '@mantine/core';
 import arrayShuffle from 'array-shuffle';
 import { useEvent } from 'libs/web/network/src/lib/hooks';
 import { useContext, useEffect, useState } from 'react';
 import { Socket } from 'socket.io-client';
+
+import { motion } from 'framer-motion';
+import { Card } from '@hypnos/web/ui-game-controls';
 
 export const Presentation = () => {
   const context = useContext(GameContext);
   const data = usePresentationData();
 
   const [cardIndex, setCardIndex] = useState<null | number>(null);
+
+  const currentRecord = cardIndex ? data[cardIndex] : null;
+  const isFinal = cardIndex === data.length;
 
   const notifyNextScene = () => {
     if (cardIndex === context?.[0].players.length) {
@@ -38,17 +52,70 @@ export const Presentation = () => {
             sx={{ minHeight: '100px', cursor: 'pointer' }}
             onClick={notifyNextScene}
           >
-            <Text sx={{ fontStyle: 'italic' }} color={'dimmed'} size="xl">
-              Click to start Presentation
-            </Text>
+            <motion.div initial={{ y: '-501px' }} animate={{ y: '0px' }}>
+              <Text sx={{ fontStyle: 'italic' }} color={'dimmed'} size="xl">
+                Click to start Presentations
+              </Text>
+            </motion.div>
           </Center>
         ) : (
           <>
-            <Text onClick={notifyNextScene}>{cardIndex}</Text>
+            <Group>
+              <Stack>
+                <motion.div
+                  initial={{ y: '-1000px' }}
+                  animate={{ y: '0px' }}
+                  transition={{ delay: 1 }}
+                >
+                  <Stack spacing="xs" align="center">
+                    <Text>Card from:</Text>
+                    <Text size={30} variant="gradient">
+                      {
+                        context?.[0].players.find(
+                          (p) => p.socketId === currentRecord?.ownerSID
+                        )?.name
+                      }
+                    </Text>
+                  </Stack>
+                </motion.div>
+                <motion.div initial={{ y: '-1000px' }} animate={{ y: '0px' }}>
+                  <Card
+                    onClick={notifyNextScene}
+                    src={currentRecord?.card ?? ''}
+                  />
+                </motion.div>
+              </Stack>
+
+              <Stack>
+                <motion.div
+                  initial={{ y: '-1000px' }}
+                  animate={{ y: '0px' }}
+                  transition={{ delay: 2 }}
+                >
+                  <Text>Votes on this card:</Text>
+                  {currentRecord?.votes.map((vote, i) => {
+                    return (
+                      <motion.div
+                        key={i}
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 2 + i * 0.2 }}
+                      >
+                        <Text>
+                          {
+                            context?.[0].players.find(
+                              (p) => p.socketId === vote.playerSID
+                            )?.name
+                          }
+                        </Text>
+                      </motion.div>
+                    );
+                  })}
+                </motion.div>
+              </Stack>
+            </Group>
           </>
         )}
-
-        <Text>{JSON.stringify(data)}</Text>
       </Stack>
     </Center>
   );
@@ -75,7 +142,7 @@ const usePresentationData = () => {
     const playerData = context[0].round.playerData;
 
     setPointObject(
-      arrayShuffle(playerData)
+      playerData
         .sort((a) =>
           a.playerSID === context[0].round?.currentPlayerSID ? 1 : -1
         )
