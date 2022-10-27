@@ -1,15 +1,53 @@
+import { PresentationPhaseEvents } from '@hypnos/shared/gameevents';
 import { GameContext } from '@hypnos/web/network';
-import { Center, Grid, JsonInput, Stack, Text } from '@mantine/core';
+import { Box, Center, Grid, JsonInput, Stack, Text } from '@mantine/core';
 import arrayShuffle from 'array-shuffle';
+import { useEvent } from 'libs/web/network/src/lib/hooks';
 import { useContext, useEffect, useState } from 'react';
+import { Socket } from 'socket.io-client';
 
 export const Presentation = () => {
   const context = useContext(GameContext);
   const data = usePresentationData();
 
+  const [cardIndex, setCardIndex] = useState<null | number>(null);
+
+  const notifyNextScene = () => {
+    if (cardIndex === context?.[0].players.length) {
+      console.log('End');
+      return;
+    }
+    (context?.[0].me.socket as Socket).emit(
+      PresentationPhaseEvents.setScene,
+      context?.[0].roomCode,
+      (cardIndex ?? 0) + 1
+    );
+  };
+
+  const handleNextScene = (index: number) => {
+    setCardIndex(index);
+  };
+
+  useEvent(PresentationPhaseEvents.setScene, handleNextScene);
+
   return (
     <Center sx={{ height: 'calc(100vh - 50px)' }}>
       <Stack justify="center" align="center">
+        {!cardIndex && context?.[0].me.player.isMaster ? (
+          <Center
+            sx={{ minHeight: '100px', cursor: 'pointer' }}
+            onClick={notifyNextScene}
+          >
+            <Text sx={{ fontStyle: 'italic' }} color={'dimmed'} size="xl">
+              Click to start Presentation
+            </Text>
+          </Center>
+        ) : (
+          <>
+            <Text onClick={notifyNextScene}>{cardIndex}</Text>
+          </>
+        )}
+
         <Text>{JSON.stringify(data)}</Text>
       </Stack>
     </Center>

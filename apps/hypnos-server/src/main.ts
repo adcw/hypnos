@@ -30,6 +30,7 @@ import {
   PhrasePhaseEvents,
   RoomEvents,
   ForgeryPhaseEvents,
+  PresentationPhaseEvents,
 } from '@hypnos/shared/gameevents';
 import { arrayShuffle, ErrorCodes } from '@hypnos/shared/constants';
 
@@ -121,6 +122,10 @@ io.on('connection', (socket) => {
 
   socket.on(ForgeryPhaseEvents.phaseEnd, (roomCode) => {
     io.to(roomCode).emit(ForgeryPhaseEvents.phaseEnd);
+  });
+
+  socket.on(PresentationPhaseEvents.setScene, (roomCode, sceneIndex) => {
+    io.to(roomCode).emit(PresentationPhaseEvents.setScene, sceneIndex);
   });
 
   socket.on(RoomEvents.gamestart, (roomCode) =>

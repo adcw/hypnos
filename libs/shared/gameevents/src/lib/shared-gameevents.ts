@@ -12,6 +12,10 @@ export const VotingPhaseEvents = {
   phaseEnd: 'vpphaseEnd',
 };
 
+export const PresentationPhaseEvents = {
+  setScene: 'ppnextScene',
+};
+
 export const RoomEvents = {
   joinroom: 'joinroom',
 
