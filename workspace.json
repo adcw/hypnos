@@ -2,6 +2,7 @@
   "$schema": "./node_modules/nx/schemas/workspace-schema.json",
   "version": 2,
   "projects": {
+    "api": "apps/api",
     "hypnos": "apps/hypnos",
     "hypnos-server": "apps/hypnos-server",
     "server-network-rooms": "libs/server/network-rooms",
