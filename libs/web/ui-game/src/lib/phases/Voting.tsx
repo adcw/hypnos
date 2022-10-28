@@ -31,6 +31,7 @@ export const VotingPhase = () => {
   const context = useContext(GameContext);
 
   const [card, setCard] = useState<string | null>();
+  const [submitted, setSubmitted] = useState(false);
 
   const nextPhase = useNextPhase();
 
@@ -39,6 +40,7 @@ export const VotingPhase = () => {
 
     const [state] = context;
 
+    setSubmitted(true);
     (state.me.socket as Socket).emit(
       VotingPhaseEvents.submit,
       state.roomCode,
@@ -157,7 +159,7 @@ export const VotingPhase = () => {
               </Group>
               {context[0].me.player.socketId !==
                 context[0].round?.currentPlayerSID && (
-                <Button disabled={!card} onClick={notifySubmit}>
+                <Button disabled={!card || submitted} onClick={notifySubmit}>
                   Submit
                 </Button>
               )}

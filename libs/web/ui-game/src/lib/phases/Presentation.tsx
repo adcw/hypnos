@@ -1,6 +1,7 @@
 import { PresentationPhaseEvents } from '@hypnos/shared/gameevents';
 import { GameContext } from '@hypnos/web/network';
 import {
+  Affix,
   Box,
   Center,
   Grid,
@@ -14,8 +15,9 @@ import { useEvent } from 'libs/web/network/src/lib/hooks';
 import { useContext, useEffect, useState } from 'react';
 import { Socket } from 'socket.io-client';
 
-import { motion } from 'framer-motion';
+import { motion, useAnimationControls } from 'framer-motion';
 import { Card } from '@hypnos/web/ui-game-controls';
+import { ActionType } from 'libs/web/network/src/lib/types';
 
 export const Presentation = () => {
   const context = useContext(GameContext);
@@ -23,31 +25,56 @@ export const Presentation = () => {
 
   const [cardIndex, setCardIndex] = useState<null | number>(null);
 
-  const currentRecord = cardIndex ? data[cardIndex] : null;
-  const isFinal = cardIndex === data.length;
+  const currentRecord = cardIndex !== null ? data[cardIndex] : null;
+  const isFinal = cardIndex === data.length - 1;
+
+  const cardControls = useAnimationControls();
+  const nicknameControls = useAnimationControls();
+  const votesControls = useAnimationControls();
 
   const notifyNextScene = () => {
-    if (cardIndex === context?.[0].players.length) {
-      console.log('End');
-      return;
-    }
-    (context?.[0].me.socket as Socket).emit(
+    if (!context) return;
+
+    const [state, dispatch] = context;
+
+    if (!state.me.player.isMaster) return;
+
+    // if (cardIndex === context?.[0].players.length) {
+    //   // dispatch({ type: ActionType.initRound, payload: null });
+
+    //   return;
+    // }
+
+    (state.me.socket as Socket).emit(
       PresentationPhaseEvents.setScene,
       context?.[0].roomCode,
-      (cardIndex ?? 0) + 1
+      cardIndex === null ? 0 : (cardIndex + 1) % state.players.length
     );
   };
 
-  const handleNextScene = (index: number) => {
+  const handleNextScene = async (index: number) => {
+    await cardControls.start({ y: '-1000px' });
+    await nicknameControls.start({ y: '-1000px' });
+    await votesControls.start({ y: '-1000px' });
     setCardIndex(index);
   };
+
+  useEffect(() => {
+    const animate = async () => {
+      await cardControls.start({ y: '0px' });
+      await nicknameControls.start({ y: '0px' });
+      await votesControls.start({ y: '0px' });
+    };
+
+    animate();
+  }, [cardIndex]);
 
   useEvent(PresentationPhaseEvents.setScene, handleNextScene);
 
   return (
     <Center sx={{ height: 'calc(100vh - 50px)' }}>
       <Stack justify="center" align="center">
-        {!cardIndex && context?.[0].me.player.isMaster ? (
+        {cardIndex === null && context?.[0].me.player.isMaster && (
           <Center
             sx={{ minHeight: '100px', cursor: 'pointer' }}
             onClick={notifyNextScene}
@@ -58,17 +85,26 @@ export const Presentation = () => {
               </Text>
             </motion.div>
           </Center>
-        ) : (
+        )}
+
+        {cardIndex === null && !context?.[0].me.player.isMaster && (
+          <Text>Waiting for master to start presentation of votes</Text>
+        )}
+
+        {cardIndex !== null && (
           <>
             <Group>
               <Stack>
                 <motion.div
                   initial={{ y: '-1000px' }}
-                  animate={{ y: '0px' }}
-                  transition={{ delay: 1 }}
+                  animate={nicknameControls}
                 >
                   <Stack spacing="xs" align="center">
-                    <Text>Card from:</Text>
+                    {isFinal ? (
+                      <Text size={18}>The actual card:</Text>
+                    ) : (
+                      <Text>Card from:</Text>
+                    )}
                     <Text size={30} variant="gradient">
                       {
                         context?.[0].players.find(
@@ -78,7 +114,7 @@ export const Presentation = () => {
                     </Text>
                   </Stack>
                 </motion.div>
-                <motion.div initial={{ y: '-1000px' }} animate={{ y: '0px' }}>
+                <motion.div initial={{ y: '-1000px' }} animate={cardControls}>
                   <Card
                     onClick={notifyNextScene}
                     src={currentRecord?.card ?? ''}
@@ -87,36 +123,48 @@ export const Presentation = () => {
               </Stack>
 
               <Stack>
-                <motion.div
-                  initial={{ y: '-1000px' }}
-                  animate={{ y: '0px' }}
-                  transition={{ delay: 2 }}
-                >
+                <motion.div initial={{ y: '-1000px' }} animate={votesControls}>
                   <Text>Votes on this card:</Text>
-                  {currentRecord?.votes.map((vote, i) => {
-                    return (
-                      <motion.div
-                        key={i}
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ delay: 2 + i * 0.2 }}
-                      >
-                        <Text>
-                          {
-                            context?.[0].players.find(
-                              (p) => p.socketId === vote.playerSID
-                            )?.name
-                          }
-                        </Text>
-                      </motion.div>
-                    );
-                  })}
+                  {currentRecord && currentRecord?.votes.length > 0 ? (
+                    currentRecord?.votes.map((vote, i) => {
+                      return (
+                        <motion.div
+                          key={i}
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ delay: i * 0.2 }}
+                        >
+                          <Text>
+                            {
+                              context?.[0].players.find(
+                                (p) => p.socketId === vote.playerSID
+                              )?.name
+                            }
+                          </Text>
+                        </motion.div>
+                      );
+                    })
+                  ) : (
+                    <Text>No votes :/</Text>
+                  )}
                 </motion.div>
               </Stack>
             </Group>
           </>
         )}
       </Stack>
+
+      <Affix>
+        <Text size={10}>
+          {JSON.stringify(
+            data.map(
+              (d) =>
+                context?.[0].players.find((p) => p.socketId === d.ownerSID)
+                  ?.name
+            )
+          )}
+        </Text>
+      </Affix>
     </Center>
   );
 };
@@ -140,33 +188,37 @@ const usePresentationData = () => {
     if (!context || !context[0].round) return;
 
     const playerData = context[0].round.playerData;
+    playerData.sort((a, b) => {
+      if (a.playerSID === context[0].round?.currentPlayerSID) return 1;
+      if (b.playerSID === context[0].round?.currentPlayerSID) return -1;
+      return (
+        (a.votedCardUrl?.charCodeAt(0) ?? 0) -
+        (b.votedCardUrl?.charCodeAt(0) ?? 0)
+      );
+    });
 
     setPointObject(
-      playerData
-        .sort((a) =>
-          a.playerSID === context[0].round?.currentPlayerSID ? 1 : -1
-        )
-        .map((player) => {
-          const votes = playerData.filter(
-            (vote) => vote.votedCardUrl === player.ownedCardUrl
-          );
+      playerData.map((player) => {
+        const votes = playerData.filter(
+          (vote) => vote.votedCardUrl === player.ownedCardUrl
+        );
 
-          const isNarrator =
-            player.playerSID === context[0].round?.currentPlayerSID;
+        const isNarrator =
+          player.playerSID === context[0].round?.currentPlayerSID;
 
-          return {
-            card: player.ownedCardUrl,
-            ownerSID: player.playerSID,
-            forgeryPoints: !isNarrator ? votes.length : 0,
-            narrationPoints:
-              isNarrator &&
-              votes.length > 0 &&
-              votes.length < playerData.length - 1
-                ? 3
-                : 0,
-            votes: votes.map((v) => ({ playerSID: v.playerSID, points: 2 })),
-          };
-        })
+        return {
+          card: player.ownedCardUrl,
+          ownerSID: player.playerSID,
+          forgeryPoints: !isNarrator ? votes.length : 0,
+          narrationPoints:
+            isNarrator &&
+            votes.length > 0 &&
+            votes.length < playerData.length - 1
+              ? 3
+              : 0,
+          votes: votes.map((v) => ({ playerSID: v.playerSID, points: 2 })),
+        };
+      })
     );
   }, [context]);
 
