@@ -18,7 +18,7 @@ export class UsersRepository {
 
     async remove(user: User): Promise<User> {
         const removeUser = new this.userModel(user);
-        return removeUser.delete();
+        return removeUser.deleteOne();
     }
 
     async create(user: User): Promise<User> {

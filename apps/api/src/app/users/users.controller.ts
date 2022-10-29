@@ -22,7 +22,7 @@ export class UsersController {
       return this.usersService.getUsers();
   }
 
-  @Delete()
+  @Delete(':userId')
   async removeUser(@Param('userId') userId: string): Promise<User> {
       return this.usersService.removeUser(userId);
   }

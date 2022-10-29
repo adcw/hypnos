@@ -7,7 +7,7 @@ import { UsersModule } from './users/users.module';
 
 
 @Module({
-  imports: [MongooseModule.forRoot('mongodb://localhost:3333/api/demo'), UsersModule],
+  imports: [MongooseModule.forRoot('mongodb://localhost/demo'), UsersModule],
   controllers: [AppController],
   providers: [AppService],
 })
