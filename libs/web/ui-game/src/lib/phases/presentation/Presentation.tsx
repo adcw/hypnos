@@ -106,6 +106,12 @@ export const Presentation = () => {
   return (
     <Center sx={{ height: 'calc(100vh - 50px)' }}>
       <Stack justify="center" align="center">
+        {cardIndex === null && !context?.[0].me.player.isMaster && (
+          <Center>
+            <Text color="dimmed">Waiting for master to start presentation</Text>
+          </Center>
+        )}
+
         {cardIndex !== null && cardIndex < (context?.[0].players.length ?? 0) && (
           <Group>
             <Stack>
