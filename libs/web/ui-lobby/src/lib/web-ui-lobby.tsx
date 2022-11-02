@@ -116,7 +116,17 @@ export function Lobby(props: LobbyProps) {
 
           <Stack align="center" mb={50}>
             {context?.[0].me.player.isMaster && (
-              <Button onClick={handleGameStart}>Start game!</Button>
+              <Button
+                onClick={handleGameStart}
+                disabled={context[0].players.length < 3}
+              >
+                Start game!
+              </Button>
+            )}
+            {(context?.[0].players.length ?? 0) < 3 && (
+              <Text color="dimmed" size={'sm'}>
+                Waiting for at least 3 players
+              </Text>
             )}
           </Stack>
         </Stack>

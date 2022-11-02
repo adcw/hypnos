@@ -134,13 +134,16 @@ export const Presentation = () => {
                           animate={{ scale: 1 }}
                           transition={{ delay: i * 0.2 }}
                         >
-                          <Text>
-                            {
-                              context?.[0].players.find(
-                                (p) => p.socketId === vote.playerSID
-                              )?.name
-                            }
-                          </Text>
+                          <Group>
+                            <Text>
+                              {
+                                context?.[0].players.find(
+                                  (p) => p.socketId === vote.playerSID
+                                )?.name
+                              }
+                            </Text>
+                            {/* <Text>{isFinal ? '' : '+3'}</Text> */}
+                          </Group>
                         </motion.div>
                       );
                     })
