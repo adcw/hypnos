@@ -1,3 +1,4 @@
+import { getSafeId } from '@mantine/utils';
 import {
   GameEntity,
   Action,
@@ -38,15 +39,24 @@ export const reducer = (state: GameEntity, action: Action): GameEntity => {
       const cards = payload as string[];
       return {
         ...state,
-        cards: cards,
+        cards: cards ?? state.cards,
+
         round: {
-          currentPlayerSID:
-            state.players[Math.floor(Math.random() * state.players.length)]
-              .socketId,
+          currentPlayerSID: getNextSID(state),
           roundPhase: RoundPhase.PHRASE,
           playerData: [],
         },
       };
     }
   }
+};
+
+const getNextSID = (state: GameEntity) => {
+  const nPlayers = state.players.length;
+  const lastIndx =
+    state.players.findIndex(
+      (p) => p.socketId === state.round?.currentPlayerSID
+    ) ?? Math.floor(Math.random() * nPlayers);
+
+  return state.players[(lastIndx + 1) % nPlayers].socketId;
 };
