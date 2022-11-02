@@ -61,7 +61,7 @@ export const Forgery = () => {
             p.socketId === sid
               ? ({
                   ...p,
-                  cards: p.cards.filter((c) => c !== c),
+                  cards: p.cards.filter((c) => c !== card),
                 } as PlayerEntity)
               : p
           ),
