@@ -3,11 +3,13 @@ import { GameContext } from '@hypnos/web/network';
 import {
   Affix,
   Box,
+  BoxProps,
   Center,
   Grid,
   Group,
   JsonInput,
   Stack,
+  StackProps,
   Text,
 } from '@mantine/core';
 import arrayShuffle from 'array-shuffle';
@@ -31,6 +33,7 @@ export const Presentation = () => {
   const cardControls = useAnimationControls();
   const nicknameControls = useAnimationControls();
   const votesControls = useAnimationControls();
+  const continueControls = useAnimationControls();
 
   const notifyNextScene = () => {
     if (!context) return;
@@ -48,14 +51,16 @@ export const Presentation = () => {
     (state.me.socket as Socket).emit(
       PresentationPhaseEvents.setScene,
       context?.[0].roomCode,
-      cardIndex === null ? 0 : (cardIndex + 1) % state.players.length
+      cardIndex === null ? 0 : (cardIndex + 1) % (state.players.length + 1)
     );
   };
 
   const handleNextScene = async (index: number) => {
+    await continueControls.start({ opacity: 0 });
     await cardControls.start({ y: '-1000px' });
     await nicknameControls.start({ y: '-1000px' });
     await votesControls.start({ y: '-1000px' });
+
     setCardIndex(index);
   };
 
@@ -64,6 +69,7 @@ export const Presentation = () => {
       await cardControls.start({ y: '0px' });
       await nicknameControls.start({ y: '0px' });
       await votesControls.start({ y: '0px' });
+      await continueControls.start({ opacity: 1 });
     };
 
     animate();
@@ -91,7 +97,7 @@ export const Presentation = () => {
           <Text>Waiting for master to start presentation of votes</Text>
         )}
 
-        {cardIndex !== null && (
+        {cardIndex !== null && cardIndex < (context?.[0].players.length ?? 0) && (
           <>
             <Group>
               <Stack>
@@ -116,8 +122,8 @@ export const Presentation = () => {
                 </motion.div>
                 <motion.div initial={{ y: '-1000px' }} animate={cardControls}>
                   <Card
-                    onClick={notifyNextScene}
                     src={currentRecord?.card ?? ''}
+                    // onClick={notifyNextScene}
                   />
                 </motion.div>
               </Stack>
@@ -154,6 +160,26 @@ export const Presentation = () => {
               </Stack>
             </Group>
           </>
+        )}
+
+        {cardIndex !== null &&
+          cardIndex === (context?.[0].players.length ?? 0) && (
+            <>
+              <Text onClick={notifyNextScene}>Show points</Text>
+            </>
+          )}
+
+        {context?.[0].me.player.isMaster && (
+          <Center
+            sx={{ minHeight: '100px', cursor: 'pointer' }}
+            onClick={notifyNextScene}
+          >
+            <motion.div initial={{ y: '-501px' }} animate={continueControls}>
+              <Text sx={{ fontStyle: 'italic' }} color={'dimmed'} size="xl">
+                Click to continue
+              </Text>
+            </motion.div>
+          </Center>
         )}
       </Stack>
 

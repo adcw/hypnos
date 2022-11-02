@@ -107,10 +107,6 @@ const LobbyHandler = (props: LobbyHandlerProps) => {
     let newMaster: PlayerEntity | undefined;
 
     if (state.players.find((p) => p.socketId === socketId)?.isMaster) {
-      // Master client disconnected
-
-      // navigate(`/?e=${ErrorCodes.masterDisconnected}`);
-
       newMaster = state.players.find(
         (p) => p.socketId !== socketId && !p.isMaster
       );
@@ -203,6 +199,10 @@ const LobbyHandler = (props: LobbyHandlerProps) => {
         VotingPhaseEvents.phaseEnd,
         state.roomCode
       );
+    }
+
+    if (state.round && state.players.length < 3) {
+      console.log('Too few players');
     }
 
     (state.me.socket as Socket).emit(RoomEvents.broadcastgameupdate, {
