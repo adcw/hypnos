@@ -105,5 +105,5 @@ const printSum = (value: number) => {
 const zerofy = (value: number | undefined) => (value === 0 ? '' : value);
 
 const calcPoints = (rec: PresentationRecord) => {
-  return rec.forgeryPoints + rec.forgeryPoints + rec.narrationPoints;
+  return rec.forgeryPoints + rec.guessPoints + rec.narrationPoints;
 };
