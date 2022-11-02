@@ -44,7 +44,7 @@ export const Presentation = () => {
 
     if (!state.me.player.isMaster) return;
 
-    if (cardIndex === context?.[0].players.length + 1) {
+    if (cardIndex === context?.[0].players.length) {
       // dispatch({ type: ActionType.initRound, payload: null });
       console.log('End');
 
