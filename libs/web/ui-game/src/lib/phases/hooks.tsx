@@ -16,7 +16,7 @@ export const useDrawCards = () => {
 
       const toTake = CARDS_IN_HANDS - oldhands.length;
 
-      return cards.splice(0, toTake);
+      return [...oldhands, ...cards.splice(0, toTake)];
     });
 
     dispatch({
