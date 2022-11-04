@@ -8,7 +8,9 @@ export class User {
     @Prop()
     userId: string;
 
-    @Prop()
+    @Prop({
+        unique: true,
+    })
     email: string;
 
     @Prop()
