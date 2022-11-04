@@ -5,6 +5,10 @@ export class CreateUserDto {
     @IsString()
     @MinLength(6)
     @MaxLength(30)
+    @Matches(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/,
+    {
+        message: 'incorrect email address'
+    })
     email: string;
     
     @IsString()
