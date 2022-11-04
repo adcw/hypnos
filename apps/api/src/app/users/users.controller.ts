@@ -33,7 +33,7 @@ export class UsersController {
   }
 
   @Patch(':userId')
-  async updateUser(@Param('userId') userId: string, @Body() updateUserDto: UpdateUserDto): Promise<User> {
+  async updateUser(@Param('userId') userId: string, @Body(ValidationPipe) updateUserDto: UpdateUserDto): Promise<User> {
       return this.usersService.updateUser(userId, updateUserDto);
   }
 }
