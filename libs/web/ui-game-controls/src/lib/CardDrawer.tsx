@@ -10,9 +10,12 @@ import {
   Loader,
   LoadingOverlay,
   Button,
+  ScrollArea,
 } from '@mantine/core';
 import { useContext, useEffect, useState } from 'react';
 import { GiCardPick } from 'react-icons/gi';
+import { TiArrowDown } from 'react-icons/ti';
+import { IconBase } from 'react-icons/lib';
 import { Card } from './Card';
 import { CardSelector } from './CardSelector';
 
@@ -52,16 +55,27 @@ export const CardDrawer = (props: CardDrawerProps) => {
         size={440}
         padding="md"
       >
-        <Stack align="center">
-          {props.mode === 'select' && <Text size="lg">Choose your card</Text>}
-          <CardSelector
-            mode={props.mode}
-            cards={context?.[0].me.player.cards ?? []}
-            onChange={props.onChange}
-            value={props.value}
-          />
-          {/*  */}
-        </Stack>
+        <ScrollArea style={{ height: '100%' }}>
+          <Stack align="center">
+            {props.mode === 'select' && <Text size="lg">Choose your card</Text>}
+            <CardSelector
+              mode={props.mode}
+              cards={context?.[0].me.player.cards ?? []}
+              onChange={props.onChange}
+              value={props.value}
+            />
+            {/*  */}
+            {/* <Button onClick={() => props.setOpened(false)}>Close</Button>
+             */}
+
+            <ActionIcon variant="light" onClick={() => props.setOpened(false)}>
+              {/* <IconBase icon/>
+            
+            */}
+              <TiArrowDown />
+            </ActionIcon>
+          </Stack>
+        </ScrollArea>
       </Drawer>
     </>
   );
