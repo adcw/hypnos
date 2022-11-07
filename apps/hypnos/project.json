@@ -5,7 +5,9 @@
   "targets": {
     "build": {
       "executor": "@nrwl/web:webpack",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "defaultConfiguration": "production",
       "options": {
         "compiler": "babel",
@@ -15,8 +17,13 @@
         "main": "apps/hypnos/src/main.tsx",
         "polyfills": "apps/hypnos/src/polyfills.ts",
         "tsConfig": "apps/hypnos/tsconfig.app.json",
-        "assets": ["apps/hypnos/src/favicon.ico", "apps/hypnos/src/assets"],
-        "styles": ["apps/hypnos/src/styles.css"],
+        "assets": [
+          "apps/hypnos/src/favicon.ico",
+          "apps/hypnos/src/assets"
+        ],
+        "styles": [
+          "apps/hypnos/src/styles.css"
+        ],
         "scripts": [],
         "webpackConfig": "@nrwl/react/plugins/webpack"
       },
@@ -48,7 +55,8 @@
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "hypnos:build",
-        "hmr": true
+        "hmr": true,
+        "port": 80
       },
       "configurations": {
         "development": {
@@ -62,14 +70,20 @@
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": ["{options.outputFile}"],
+      "outputs": [
+        "{options.outputFile}"
+      ],
       "options": {
-        "lintFilePatterns": ["apps/hypnos/**/*.{ts,tsx,js,jsx}"]
+        "lintFilePatterns": [
+          "apps/hypnos/**/*.{ts,tsx,js,jsx}"
+        ]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/apps/hypnos"],
+      "outputs": [
+        "coverage/apps/hypnos"
+      ],
       "options": {
         "jestConfig": "apps/hypnos/jest.config.ts",
         "passWithNoTests": true
