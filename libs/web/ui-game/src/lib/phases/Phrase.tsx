@@ -149,7 +149,7 @@ export const PhrasePhase = () => {
         onChange={handleCardChange}
         value={card}
       />
-      <Grid>
+      <Grid m={0}>
         <Grid.Col span={2}>
           <PlayerList
             players={
