@@ -1,4 +1,4 @@
-import { PresentationPhaseEvents } from '@hypnos/shared/gameevents';
+import { PresentationPhaseEvents, RoomEvents } from '@hypnos/shared/gameevents';
 import { GameContext } from '@hypnos/web/network';
 import {
   Affix,
@@ -20,7 +20,11 @@ import { Socket } from 'socket.io-client';
 
 import { motion, useAnimationControls } from 'framer-motion';
 import { Card } from '@hypnos/web/ui-game-controls';
-import { ActionType, GameEntity } from 'libs/web/network/src/lib/types';
+import {
+  ActionType,
+  GameEntity,
+  RoundPhase,
+} from 'libs/web/network/src/lib/types';
 import { ShowPoints } from './ShowPoints';
 
 export const Presentation = () => {
@@ -44,9 +48,10 @@ export const Presentation = () => {
 
     if (!state.me.player.isMaster) return;
 
-    if (cardIndex === context?.[0].players.length) {
+    const areCardsSufficient = cardSufficient();
+
+    if (cardIndex === context?.[0].players.length && areCardsSufficient) {
       // dispatch({ type: ActionType.initRound, payload: null });
-      console.log('End');
 
       dispatch({
         type: ActionType.setGame,
@@ -67,18 +72,35 @@ export const Presentation = () => {
           }),
         } as GameEntity,
       });
-
       dispatch({ type: ActionType.initRound, payload: null });
 
       return;
     }
 
+    if (cardIndex === context?.[0].players.length && !areCardsSufficient) {
+      dispatch({
+        type: ActionType.setGame,
+        payload: {
+          ...state,
+          round: {
+            ...state.round,
+            roundPhase: RoundPhase.GAME_OVER,
+          },
+        } as GameEntity,
+      });
+      return;
+    }
+
     (state.me.socket as Socket).emit(
       PresentationPhaseEvents.setScene,
-      context?.[0].roomCode,
+      context[0].roomCode,
       cardIndex === null ? 0 : cardIndex + 1
       //  % (state.players.length + 1)
     );
+  };
+
+  const cardSufficient = () => {
+    return !context?.[0].players.find((p) => p.cards.length <= 1);
   };
 
   const handleNextScene = async (index: number) => {

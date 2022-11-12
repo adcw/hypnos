@@ -48,4 +48,5 @@ export enum RoundPhase {
   FORGERY,
   VOTING,
   PRESENTATION,
+  GAME_OVER,
 }

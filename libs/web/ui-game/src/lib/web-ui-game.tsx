@@ -17,6 +17,7 @@ import { RoundPhase } from 'libs/web/network/src/lib/types';
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Forgery } from './phases/Forgery';
+import { GameOver } from './phases/GameOver';
 import { PhrasePhase } from './phases/Phrase';
 import { Presentation } from './phases/presentation/Presentation';
 import { VotingPhase } from './phases/Voting';
@@ -72,6 +73,9 @@ export function Game(props: GameProps) {
           )}
           {context[0].round?.roundPhase === RoundPhase.PRESENTATION && (
             <Presentation />
+          )}
+          {context[0].round?.roundPhase === RoundPhase.GAME_OVER && (
+            <GameOver />
           )}
         </>
       ) : (

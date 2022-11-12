@@ -32,4 +32,6 @@ export const RoomEvents = {
 
   gamestart: 'gamestart',
   fetchCards: 'fetchCards',
+
+  gameend: 'gameend',
 };
