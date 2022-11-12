@@ -112,7 +112,7 @@ export const Forgery = () => {
         onChange={handleCardChange}
         value={card}
       />
-      <Grid m={0}>
+      <Grid>
         <Grid.Col span={2}>
           <PlayerList
             players={

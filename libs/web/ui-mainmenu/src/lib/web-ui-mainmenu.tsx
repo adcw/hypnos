@@ -165,7 +165,7 @@ export function MainMenu(props: MainmenuProps) {
   }, [roomCode]);
 
   return (
-    <Grid justify="center" align="center" sx={{ height: '100vh' }} m={0}>
+    <Grid justify="center" align="center" sx={{ height: '100vh' }}>
       <Modal
         opened={!!connectionError}
         onClose={() => false}

@@ -22,8 +22,7 @@ export const ShowPoints = (props: ShowPointsProps) => {
       >
         <thead>
           <tr>
-            <td></td>
-            <td></td>
+            <td></td> <td></td>
             <td>
               <Text>Points</Text>
             </td>
