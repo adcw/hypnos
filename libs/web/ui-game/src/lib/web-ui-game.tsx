@@ -42,7 +42,7 @@ export function Game(props: GameProps) {
 
   return (
     <Box sx={{ color: 'white' }}>
-      <Button onClick={() => console.log(context?.[0])} />
+      {/* <Button onClick={() => console.log(context?.[0])} /> */}
       {overlayShown && (
         <Modal
           opened={overlayShown}

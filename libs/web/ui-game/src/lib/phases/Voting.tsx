@@ -98,7 +98,7 @@ export const VotingPhase = () => {
   useEvent(VotingPhaseEvents.phaseEnd, handlePhaseEnd);
 
   return (
-    <Grid>
+    <Grid m={0}>
       <Grid.Col span={2}>
         <PlayerList
           players={

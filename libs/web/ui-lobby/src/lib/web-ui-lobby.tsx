@@ -59,7 +59,7 @@ export function Lobby(props: LobbyProps) {
   }, [roomCode]);
 
   return (
-    <Grid justify="center" sx={{ height: '100vh' }}>
+    <Grid justify="center" sx={{ height: '100vh' }} m={0}>
       <Grid.Col>
         <Stack justify="space-between" sx={{ height: '100%' }}>
           <Box>
