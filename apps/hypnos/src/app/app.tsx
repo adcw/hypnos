@@ -11,9 +11,13 @@ import { themeOverride } from '@hypnos/web/ui-design-system';
 import { Room } from '@hypnos/web/ui-room';
 
 const socket = io(
-  process.env['NODE_ENV'] === 'production'
-    ? `http://192.168.3.11:3301`
-    : 'http://localhost:3301'
+  // process.env['NODE_ENV'] === 'production'
+  //   ? `http://192.168.3.11:3301`
+  //   : 'http://localhost:3301'
+
+  // 'http://localhost:3301'
+
+  window.location.hostname + ':3301'
 );
 
 export function App() {

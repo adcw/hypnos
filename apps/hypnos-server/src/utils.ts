@@ -9,7 +9,7 @@ export const getEnv = () => {
   const defaultValues: Record<keyof typeof EnvVars, string> = {
     EXPRESS_PORT: '3302',
     SOCKET_PORT: '3301',
-    DOMAIN: 'localhost',
+    DOMAIN: 'http://localhost',
     APP_PORT: '80',
   };
 

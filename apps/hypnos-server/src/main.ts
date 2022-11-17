@@ -5,24 +5,30 @@ import fs = require('fs');
 import express = require('express');
 import { getEnv, EnvVars } from './utils';
 
+const APP_PORT = 80;
+const DOMAIN =
+  process.env['NODE_ENV'] === 'production'
+    ? 'https://hypnos-game.duckdns.org'
+    : 'http://localhost';
+const APP_PATH = `${DOMAIN}:${APP_PORT}`;
+
+console.log(DOMAIN);
+
+/* EXPRESS setup */
+const EXPRESS_PORT = 3302;
+const EXPRESS_PATH = `${DOMAIN}:${EXPRESS_PORT}`;
+
 const app = express();
 const imageFolderPath = __dirname + '/assets/public';
 
-const env = getEnv();
-
-const MAX_ROOM_SIZE = 8;
-
-const EXPRESS_PORT = 3302;
-const SOCKET_PORT = 3301;
-const APP_PORT = env['APP_PORT'] ?? 80;
-const DOMAIN = env['DOMAIN'] ?? 'localhost';
-const APP_PATH = `http://${DOMAIN}:${APP_PORT}`;
-const EXPRESS_PATH = `http://${DOMAIN}:${EXPRESS_PORT}`;
-
-const ORIGINS = [`http://${DOMAIN}:*`, `http://${DOMAIN}`];
-
 app.use('/images', express.static(imageFolderPath));
 app.listen(EXPRESS_PORT);
+/*         */
+
+/* Socket setup */
+const SOCKET_PORT = 3301;
+const ORIGINS = [`${DOMAIN}`];
+/*              */
 
 import socketio = require('socket.io');
 import {
@@ -32,7 +38,10 @@ import {
   ForgeryPhaseEvents,
   PresentationPhaseEvents,
 } from '@hypnos/shared/gameevents';
+
 import { arrayShuffle, ErrorCodes } from '@hypnos/shared/constants';
+
+const MAX_ROOM_SIZE = 8;
 
 const io = new socketio.Server(SOCKET_PORT, {
   cors: {
