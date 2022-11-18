@@ -1,36 +1,35 @@
 import _d = require('dotenv');
 _d.config();
 
-import fs = require('fs');
+import socketio = require('socket.io');
 import express = require('express');
-import { getEnv, EnvVars } from './utils';
+import http = require('http');
 
-const APP_PORT = 80;
+/* SETUP start */
 const DOMAIN =
-  process.env['NODE_ENV'] === 'production'
-    ? 'https://hypnos-game.duckdns.org'
-    : 'http://localhost';
-const APP_PATH = `${DOMAIN}:${APP_PORT}`;
+  process.env['NODE_ENV'] === 'development'
+    ? 'http://localhost'
+    : 'https://hypnos-game.duckdns.org';
 
-console.log(DOMAIN);
-
-/* EXPRESS setup */
-const EXPRESS_PORT = 3302;
-const EXPRESS_PATH = `${DOMAIN}:${EXPRESS_PORT}`;
+const SERVER_PORT = 3301;
+const SERVER_PATH = `${DOMAIN}:${SERVER_PORT}`;
 
 const app = express();
+const httpServer = http.createServer(app);
 const imageFolderPath = __dirname + '/assets/public';
 
 app.use('/images', express.static(imageFolderPath));
-app.listen(EXPRESS_PORT);
-/*         */
 
-/* Socket setup */
-const SOCKET_PORT = 3301;
-const ORIGINS = [`${DOMAIN}`];
-/*              */
+httpServer.listen(SERVER_PORT);
 
-import socketio = require('socket.io');
+const io = new socketio.Server(httpServer, {
+  cors: {
+    origin: DOMAIN,
+    methods: ['GET', 'POST'],
+  },
+});
+/* SETUP end */
+
 import {
   VotingPhaseEvents,
   PhrasePhaseEvents,
@@ -40,15 +39,9 @@ import {
 } from '@hypnos/shared/gameevents';
 
 import { arrayShuffle, ErrorCodes } from '@hypnos/shared/constants';
+import { getRandomRoomCode, readDir } from './utils';
 
 const MAX_ROOM_SIZE = 8;
-
-const io = new socketio.Server(SOCKET_PORT, {
-  cors: {
-    origin: ORIGINS,
-    methods: ['GET', 'POST'],
-  },
-});
 
 io.on('connection', (socket) => {
   console.log('socket connection : ', socket.id);
@@ -167,19 +160,6 @@ io.on('connection', (socket) => {
   });
 });
 
-const getImagePaths = () => {
-  return arrayShuffle(
-    readDir(imageFolderPath).map((p) => `${EXPRESS_PATH}/images/${p}`)
-  );
-};
-
-function readDir(path: string) {
-  return fs
-    .readdirSync(path, { withFileTypes: true })
-    .filter((item) => !item.isDirectory())
-    .map((item) => item.name);
-}
-
 const getFreeRoomCode = () => {
   let randomCode = getRandomRoomCode();
   const MAX_ITER = 200;
@@ -197,9 +177,12 @@ const getFreeRoomCode = () => {
   return randomCode;
 };
 
-const getRandomRoomCode = () =>
-  [...Array(4)].map(() => Math.random().toString(36)[2].toUpperCase()).join('');
+const getImagePaths = () => {
+  return arrayShuffle(
+    readDir(imageFolderPath).map((p) => `${SERVER_PATH}/images/${p}`)
+  );
+};
 
-console.log(`Express listening on port ${EXPRESS_PORT}`);
-console.log(`Socket.io listening on port ${SOCKET_PORT}`);
-console.log('CORS: ' + ORIGINS);
+// console.log(`Express listening on port ${EXPRESS_PORT}`);
+// console.log(`Socket.io listening on port ${SOCKET_PORT}`);
+// console.log('CORS: ' + DOMAIN);

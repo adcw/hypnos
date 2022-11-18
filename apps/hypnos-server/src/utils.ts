@@ -1,3 +1,6 @@
+import { arrayShuffle } from '@hypnos/shared/constants';
+import fs = require('fs');
+
 export const EnvVars = {
   EXPRESS_PORT: 'EXPRESS_PORT',
   SOCKET_PORT: 'SOCKET_PORT',
@@ -27,3 +30,13 @@ export const getEnv = () => {
     })
   );
 };
+
+export function readDir(path: string) {
+  return fs
+    .readdirSync(path, { withFileTypes: true })
+    .filter((item) => !item.isDirectory())
+    .map((item) => item.name);
+}
+
+export const getRandomRoomCode = () =>
+  [...Array(4)].map(() => Math.random().toString(36)[2].toUpperCase()).join('');
