@@ -140,7 +140,7 @@ export const Forgery = () => {
                   <Text color="teal" size={26}>
                     {context?.[0].round?.phrase}
                   </Text>
-                  <Text>Chose card from drawer and enter a prompt: </Text>
+                  <Text>Chose a card matching this phrase the best</Text>
 
                   {card && <Card src={card} />}
                   {!context?.[0].round?.playerData.find(
