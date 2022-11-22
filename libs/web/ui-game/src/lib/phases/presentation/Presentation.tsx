@@ -100,7 +100,7 @@ export const Presentation = () => {
   };
 
   const cardSufficient = () => {
-    return !context?.[0].players.find((p) => p.cards.length <= 1);
+    return !context?.[0].players.find((p) => p.cards.length == 1);
   };
 
   const handleNextScene = async (index: number) => {

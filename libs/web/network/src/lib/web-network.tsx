@@ -136,7 +136,7 @@ const LobbyHandler = (props: LobbyHandlerProps) => {
         } as GameEntity,
       });
 
-      if (state.round) {
+      if (state.round && state.round.roundPhase !== RoundPhase.PRESENTATION) {
         dispatch({
           type: ActionType.initRound,
           payload: [

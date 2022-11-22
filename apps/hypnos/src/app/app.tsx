@@ -1,4 +1,4 @@
-import { io, Socket } from 'socket.io-client';
+import { io, Socket, SocketOptions } from 'socket.io-client';
 
 import { MantineProvider, Text } from '@mantine/core';
 import { useEffect, useState } from 'react';
@@ -10,12 +10,7 @@ import { Game } from '@hypnos/web/ui-game';
 import { themeOverride } from '@hypnos/web/ui-design-system';
 import { Room } from '@hypnos/web/ui-room';
 
-const socket = io(
-  // window.location.hostname + ':3301'
-  process.env['NODE_ENV'] === 'development'
-    ? window.location.hostname + ':3301'
-    : window.location.hostname + '/socket.io'
-);
+const socket = io();
 
 export function App() {
   const [isConnected, setIsConnected] = useState(socket.connected);

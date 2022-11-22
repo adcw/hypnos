@@ -39,13 +39,18 @@ export const GameOver = () => {
             {context &&
               context[0].players.map((p, k) => {
                 return (
-                  <Group key={k}>
-                    <Progress
-                      radius="xs"
-                      size="lg"
-                      value={(p.points ?? 0) / (data?.max ?? 1)}
-                      sx={{ width: '300px' }}
-                    />
+                  <Group key={k} sx={{ width: '100%' }}>
+                    <Group align="flex-start">
+                      <Progress
+                        label={`${p.points} ${
+                          p.points === 1 ? 'point' : 'points'
+                        }`}
+                        radius="xs"
+                        size="xl"
+                        value={((p.points ?? 0) / (data?.max ?? 1)) * 100}
+                        sx={{ width: '300px' }}
+                      />
+                    </Group>
                     <Text>{p.name}</Text>
                   </Group>
                 );

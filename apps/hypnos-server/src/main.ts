@@ -4,29 +4,45 @@ _d.config();
 import socketio = require('socket.io');
 import express = require('express');
 import http = require('http');
+import https = require('https');
+import fs = require('fs');
 
 /* SETUP start */
-const DOMAIN =
-  process.env['NODE_ENV'] === 'development'
-    ? 'http://localhost'
-    : 'https://hypnos-game.duckdns.org';
-
+const DOMAIN = 'https://hypnos-game.duckdns.org';
 const SERVER_PORT = 3301;
+
 const SERVER_PATH = `${DOMAIN}:${SERVER_PORT}`;
 
 const app = express();
-const httpServer = http.createServer(app);
+//const httpServer = http.createServer(app);
 const imageFolderPath = __dirname + '/assets/public';
 
 app.use('/images', express.static(imageFolderPath));
 
-httpServer.listen(SERVER_PORT);
+app.get('/imagesx', (req, res) => {
+  res.send('hello world');
+});
 
-const io = new socketio.Server(httpServer, {
-  cors: {
-    origin: DOMAIN,
-    methods: ['GET', 'POST'],
+//httpServer.listen(SERVER_PORT);
+
+const httpsServer = https.createServer(
+  {
+    key: fs.readFileSync('keys/privkey.pem'),
+    cert: fs.readFileSync('keys/cert.pem'),
   },
+  app
+);
+
+httpsServer.listen(SERVER_PORT);
+
+const io = new socketio.Server(httpsServer, {
+  //cors: {
+  //  origin: ['http://192.168.3.13'],
+  //  methods: ['GET', 'POST'],
+  //},
+  // transports: ['websocket' , 'polling'],
+  // allowUpgrades: true,
+  // allowEIO3: true,
 });
 /* SETUP end */
 
