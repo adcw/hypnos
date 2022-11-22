@@ -1,50 +1,6 @@
+/* SETUP end */
 import _d = require('dotenv');
 _d.config();
-
-import socketio = require('socket.io');
-import express = require('express');
-import http = require('http');
-import https = require('https');
-import fs = require('fs');
-
-/* SETUP start */
-const DOMAIN = 'https://hypnos-game.duckdns.org';
-const SERVER_PORT = 3301;
-
-const SERVER_PATH = `${DOMAIN}:${SERVER_PORT}`;
-
-const app = express();
-//const httpServer = http.createServer(app);
-const imageFolderPath = __dirname + '/assets/public';
-
-app.use('/images', express.static(imageFolderPath));
-
-app.get('/imagesx', (req, res) => {
-  res.send('hello world');
-});
-
-//httpServer.listen(SERVER_PORT);
-
-const httpsServer = https.createServer(
-  {
-    key: fs.readFileSync('keys/privkey.pem'),
-    cert: fs.readFileSync('keys/cert.pem'),
-  },
-  app
-);
-
-httpsServer.listen(SERVER_PORT);
-
-const io = new socketio.Server(httpsServer, {
-  //cors: {
-  //  origin: ['http://192.168.3.13'],
-  //  methods: ['GET', 'POST'],
-  //},
-  // transports: ['websocket' , 'polling'],
-  // allowUpgrades: true,
-  // allowEIO3: true,
-});
-/* SETUP end */
 
 import {
   VotingPhaseEvents,
@@ -56,6 +12,7 @@ import {
 
 import { arrayShuffle, ErrorCodes } from '@hypnos/shared/constants';
 import { getRandomRoomCode, readDir } from './utils';
+import { imageFolderPath, io, SERVER_PATH } from './Config';
 
 const MAX_ROOM_SIZE = 8;
 
@@ -198,7 +155,3 @@ const getImagePaths = () => {
     readDir(imageFolderPath).map((p) => `${SERVER_PATH}/images/${p}`)
   );
 };
-
-// console.log(`Express listening on port ${EXPRESS_PORT}`);
-// console.log(`Socket.io listening on port ${SOCKET_PORT}`);
-// console.log('CORS: ' + DOMAIN);
