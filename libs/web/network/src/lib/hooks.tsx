@@ -9,9 +9,20 @@ export const useGameLeave = (
   allowedLocations: string[]
 ) => {
   const location = useLocation();
+  const path = (p: string) => {
+    const begSlash = p.charAt(0) === '/';
+    const endSlash = p.charAt(p.length - 1) === '/';
+
+    const r = p.slice(begSlash ? 1 : 0, p.length - (endSlash ? 1 : 0));
+    console.log(r);
+
+    return r;
+  };
 
   useEffect(() => {
-    if (!allowedLocations.includes(location.pathname.slice(1))) {
+    console.log(location.pathname.slice(1));
+
+    if (!allowedLocations.includes(path(location.pathname))) {
       onGameLeave();
     }
   }, [location]);

@@ -58,7 +58,7 @@ export function Game(props: GameProps) {
               connect
             </Text>
             <Loader variant="dots" />
-            <Button onClick={() => navigate('/')}>Exit to menu</Button>
+            <Button onClick={() => navigate('/game')}>Exit to menu</Button>
           </Stack>
         </Modal>
       )}

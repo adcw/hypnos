@@ -83,7 +83,7 @@ export function MainMenu(props: MainmenuProps) {
             } as GameEntity,
           });
 
-          navigate(`/game?roomId=${roomCode}`);
+          navigate(`/game/room/?roomId=${roomCode}`);
         } else {
           setRoomCodeError('Specified room does not exist');
         }
@@ -152,7 +152,7 @@ export function MainMenu(props: MainmenuProps) {
         } as GameEntity,
       });
 
-      navigate(`/game?roomId=${code}`);
+      navigate(`/game/room?roomId=${code}`);
     });
 
     return () => {
@@ -173,7 +173,7 @@ export function MainMenu(props: MainmenuProps) {
         centered
       >
         <Text pb={12}>{connectionError}</Text>
-        <Button size="sm" onClick={() => navigate('/')}>
+        <Button size="sm" onClick={() => navigate('/game')}>
           OK
         </Button>
       </Modal>

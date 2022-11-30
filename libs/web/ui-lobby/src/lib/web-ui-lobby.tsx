@@ -38,7 +38,7 @@ export function Lobby(props: LobbyProps) {
     const [state] = context;
 
     if (!state.me.player.socketId) {
-      roomCode ? navigate(`/?roomId=${roomCode}`) : navigate('/');
+      roomCode ? navigate(`/game?roomId=${roomCode}`) : navigate('/game');
       return;
     }
 
@@ -50,7 +50,7 @@ export function Lobby(props: LobbyProps) {
         roomCode,
         state.me.player,
         (error: number) => {
-          navigate(`/?e=${error}`);
+          navigate(`/game?e=${error}`);
         }
       );
     }

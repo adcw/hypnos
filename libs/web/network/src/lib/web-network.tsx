@@ -89,7 +89,7 @@ const LobbyHandler = (props: LobbyHandlerProps) => {
       state.roomCode,
       state.me.player.isMaster
     );
-  }, ['lobby', 'game']);
+  }, ['game/room', 'game']);
 
   const handleNotifyJoin = (player: PlayerEntity) => {
     if (!context) return;
@@ -160,7 +160,7 @@ const LobbyHandler = (props: LobbyHandlerProps) => {
   };
 
   const handleGameStart = () => {
-    navigate('/game');
+    navigate('/game/room');
   };
 
   useEffect(() => {
@@ -172,7 +172,7 @@ const LobbyHandler = (props: LobbyHandlerProps) => {
     }
 
     if (state.players.length === 0) {
-      navigate('/');
+      navigate('/game');
     }
 
     // Notify if everyone has chosen their card
