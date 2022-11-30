@@ -21,6 +21,7 @@
       "@hypnos/shared/constants": ["libs/shared/constants/src/index.ts"],
       "@hypnos/shared/gameevents": ["libs/shared/gameevents/src/index.ts"],
       "@hypnos/shared/images": ["libs/shared/images/src/index.ts"],
+      "@hypnos/ui-welcome": ["libs/ui-welcome/src/index.ts"],
       "@hypnos/web/network": ["libs/web/network/src/index.ts"],
       "@hypnos/web/ui-design-system": [
         "libs/web/ui-design-system/src/index.ts"
@@ -31,7 +32,8 @@
       ],
       "@hypnos/web/ui-lobby": ["libs/web/ui-lobby/src/index.ts"],
       "@hypnos/web/ui-mainmenu": ["libs/web/ui-mainmenu/src/index.ts"],
-      "@hypnos/web/ui-room": ["libs/web/ui-room/src/index.ts"]
+      "@hypnos/web/ui-room": ["libs/web/ui-room/src/index.ts"],
+      "@hypnos/web/ui-welcome": ["libs/web/ui-welcome/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
