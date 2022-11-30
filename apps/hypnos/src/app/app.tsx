@@ -4,6 +4,7 @@ import { MantineProvider, Text } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { MainMenu } from '@hypnos/web/ui-mainmenu';
+import { Welcome } from '@hypnos/web/ui-welcome'
 import { GameProvider } from '@hypnos/web/network';
 import { Lobby } from '@hypnos/web/ui-lobby';
 import { Game } from '@hypnos/web/ui-game';
@@ -35,7 +36,8 @@ export function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<GameProvider mySocket={socket} />}>
-            <Route path="/" element={<MainMenu />} />
+            <Route path="/" element={<Welcome />} />
+            <Route path="/menu" element={<MainMenu />} />
             <Route path="/game" element={<Room />} />
           </Route>
         </Routes>
