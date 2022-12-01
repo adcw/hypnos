@@ -37,7 +37,7 @@ export function Welcome(props: WebUiWelcomeProps) {
           <Image src={logo}></Image>
           <Center>
             <Button
-              onClick={() => navigate("/menu")}
+              onClick={() => navigate("/game")}
             >PLAY GAME</Button>
           </Center>
           <Center style={{ marginTop: '50px', marginBottom: '50px' }}>
