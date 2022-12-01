@@ -11,7 +11,7 @@ import {
   Tooltip,
   Box,
 } from '@mantine/core';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import { Card, PlayerList } from 'libs/web/ui-game-controls/src';
 import {
@@ -22,6 +22,7 @@ import { Socket } from 'socket.io';
 import { useEvent } from 'libs/web/network/src/lib/hooks';
 import { ActionType, GameEntity } from 'libs/web/network/src/lib/types';
 import { useNextPhase } from '../Hooks';
+import { arrayShuffle } from '@hypnos/shared/constants';
 
 export interface SubmitPayload {
   cardUrl: string;
@@ -32,6 +33,12 @@ export const VotingPhase = () => {
 
   const [card, setCard] = useState<string | null>();
   const [submitted, setSubmitted] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  const sortedCards = useMemo(
+    () => (context ? arrayShuffle(context[0]?.round?.playerData ?? []) : []),
+    [mounted]
+  );
 
   const nextPhase = useNextPhase();
 
@@ -135,7 +142,7 @@ export const VotingPhase = () => {
                 {context[0].round?.phrase ?? '?'}
               </Text>
               <Group>
-                {context[0].round?.playerData.map((p, k) =>
+                {sortedCards.map((p, k) =>
                   p.playerSID === context[0].me.player.socketId ? (
                     <Card
                       key={k}
