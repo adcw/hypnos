@@ -196,7 +196,9 @@ export function MainMenu(props: MainmenuProps) {
               error={roomCodeError}
               label="Enter room code"
               value={roomCode ?? ''}
-              onChange={(event) => setRoomCode(event.currentTarget.value)}
+              onChange={(event) =>
+                setRoomCode(event.currentTarget.value.toUpperCase())
+              }
               maxLength={4}
               autoComplete="off"
               rightSection={
