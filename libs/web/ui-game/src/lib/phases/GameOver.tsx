@@ -7,11 +7,15 @@ import {
   Stack,
   Title,
   Text,
+  Button,
 } from '@mantine/core';
 import { useContext, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Socket } from 'socket.io';
 
 export const GameOver = () => {
   const context = useContext(GameContext);
+  const navigate = useNavigate();
 
   const data = useMemo(() => {
     if (!context) return;
@@ -23,6 +27,10 @@ export const GameOver = () => {
       }, 0),
     };
   }, [context]);
+
+  const handleExit = () => {
+    navigate('/game');
+  };
 
   return (
     <Grid m={0} p={0}>
@@ -55,6 +63,7 @@ export const GameOver = () => {
                   </Group>
                 );
               })}
+            <Button onClick={handleExit}>Exit</Button>
           </Stack>
         </Center>
       </Grid.Col>
