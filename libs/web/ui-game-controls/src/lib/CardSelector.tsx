@@ -19,7 +19,7 @@ export const CardSelector = (props: CardSelectorProps) => {
   };
 
   return (
-    <Group position="center" mb={12} sx={{ height: '280px' }}>
+    <Group position="center" mb={12} sx={{ height: '220px' }}>
       {props.cards.map((c, key) => {
         return (
           <Card

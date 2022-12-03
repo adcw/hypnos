@@ -43,7 +43,7 @@ export const Card = (props: CardProps) => {
         p="xs"
         radius="md"
         sx={{
-          width: 170,
+          width: 140,
           cursor: props.disabled ? 'not-allowed' : 'pointer',
           transition: '0.3s',
 
@@ -52,7 +52,7 @@ export const Card = (props: CardProps) => {
           },
         }}
       >
-        <Box sx={{ height: 260, width: '100%' }}>
+        <Box sx={{ height: 200, width: '100%' }}>
           {props.chosen && (
             <Box
               sx={{
@@ -82,7 +82,7 @@ export const Card = (props: CardProps) => {
                 position: 'absolute',
                 zIndex: 20,
                 height: 'inherit',
-                width: 150,
+                width: 140,
               }}
             >
               <Text
@@ -113,7 +113,7 @@ export const Card = (props: CardProps) => {
       <Modal
         opened={fullscreen}
         onClose={() => setFullscreen(false)}
-        fullScreen
+        // fullScreen
       >
         <Image src={props.src} />
       </Modal>

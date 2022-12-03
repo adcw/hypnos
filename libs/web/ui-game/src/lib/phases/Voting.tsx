@@ -129,9 +129,9 @@ export const VotingPhase = () => {
       </Grid.Col>
 
       <Grid.Col span={10}>
-        <Center sx={{ height: 'calc(100vh - 24px)' }}>
+        <Center sx={{ height: '100vh' }}>
           {context && (
-            <Stack align="center">
+            <Stack align="center" sx={{ height: '100vh' }}>
               {context[0].me.player.socketId ===
               context[0].round?.currentPlayerSID ? (
                 <Text>Waiting for players to guess your card</Text>
@@ -167,7 +167,7 @@ export const VotingPhase = () => {
               {context[0].me.player.socketId !==
                 context[0].round?.currentPlayerSID && (
                 <Button disabled={!card || submitted} onClick={notifySubmit}>
-                  Submit
+                  Ready
                 </Button>
               )}
             </Stack>

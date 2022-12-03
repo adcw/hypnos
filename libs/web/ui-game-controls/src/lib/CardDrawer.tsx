@@ -56,8 +56,11 @@ export const CardDrawer = (props: CardDrawerProps) => {
         padding="md"
       >
         <ScrollArea style={{ height: '100%' }}>
-          <Stack align="center">
-            {props.mode === 'select' && <Text size="lg">Choose your card</Text>}
+          <Stack align="center" spacing={6}>
+            <Text size="lg">
+              {props.mode === 'select' ? ' Choose your card' : '_'}
+            </Text>
+
             <CardSelector
               mode={props.mode}
               cards={context?.[0].me.player.cards ?? []}

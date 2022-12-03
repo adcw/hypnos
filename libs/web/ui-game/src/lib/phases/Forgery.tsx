@@ -33,8 +33,6 @@ export const Forgery = () => {
 
     const [state] = context;
 
-    console.log('Emmiting');
-
     (state.me.socket as Socket).emit(
       ForgeryPhaseEvents.submit,
       state.roomCode,
@@ -108,7 +106,7 @@ export const Forgery = () => {
       <CardDrawer
         opened={cardsOpened}
         setOpened={setCardsOpened}
-        mode="select"
+        mode={'select'}
         onChange={handleCardChange}
         value={card}
       />
@@ -130,7 +128,7 @@ export const Forgery = () => {
         </Grid.Col>
 
         <Grid.Col span={10}>
-          <Center sx={{ height: 'calc(100vh - 24px)' }}>
+          <Center sx={{ height: '100vh' }}>
             <Stack justify="center" align="center">
               {context &&
               context[0].me.socket.id === context[0].round?.currentPlayerSID ? (
@@ -147,7 +145,7 @@ export const Forgery = () => {
                     (p) => p.playerSID === context[0].me.player.socketId
                   ) ? (
                     <Button disabled={!prompt || !card} onClick={notifySubmit}>
-                      Submit
+                      Ready
                     </Button>
                   ) : (
                     <Text>Wait for other players</Text>

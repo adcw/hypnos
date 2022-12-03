@@ -166,10 +166,10 @@ export const PhrasePhase = () => {
         </Grid.Col>
 
         <Grid.Col span={10}>
-          <Center sx={{ height: 'calc(100vh - 24px)' }}>
+          <Center sx={{ height: '100vh' }}>
             {context &&
             context[0].me.socket.id === context[0].round?.currentPlayerSID ? (
-              <Stack justify="center" align="center">
+              <Stack justify="center" align="center" spacing={6}>
                 <Text>Chose card from drawer and enter a prompt: </Text>
                 <TextInput
                   autoComplete="off"
