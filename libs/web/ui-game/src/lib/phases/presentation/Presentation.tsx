@@ -51,9 +51,7 @@ export const Presentation = () => {
     const areCardsSufficient = cardSufficient();
     const areMaxPointsReached = maxPointsReached();
 
-    if (cardIndex === context?.[0].players.length && areCardsSufficient) {
-      // dispatch({ type: ActionType.initRound, payload: null });
-
+    if (cardIndex === context?.[0].players.length) {
       dispatch({
         type: ActionType.setGame,
         payload: {
@@ -71,27 +69,21 @@ export const Presentation = () => {
               points: (p.points ?? 0) + sum,
             };
           }),
+
+          round:
+            !areCardsSufficient || areMaxPointsReached
+              ? {
+                  ...state.round,
+                  roundPhase: RoundPhase.GAME_OVER,
+                }
+              : state.round,
         } as GameEntity,
       });
-      dispatch({ type: ActionType.initRound, payload: null });
 
-      return;
-    }
+      areCardsSufficient &&
+        !areMaxPointsReached &&
+        dispatch({ type: ActionType.initRound, payload: null });
 
-    if (
-      cardIndex === context?.[0].players.length &&
-      (!areCardsSufficient || areMaxPointsReached)
-    ) {
-      dispatch({
-        type: ActionType.setGame,
-        payload: {
-          ...state,
-          round: {
-            ...state.round,
-            roundPhase: RoundPhase.GAME_OVER,
-          },
-        } as GameEntity,
-      });
       return;
     }
 
@@ -99,7 +91,6 @@ export const Presentation = () => {
       PresentationPhaseEvents.setScene,
       context[0].roomCode,
       cardIndex === null ? 0 : cardIndex + 1
-      //  % (state.players.length + 1)
     );
   };
 
@@ -108,9 +99,16 @@ export const Presentation = () => {
   };
 
   const maxPointsReached = () => {
-    console.log(!!context?.[0].players.find((p) => (p.points ?? 0) > 10));
-
-    return !!context?.[0].players.find((p) => (p.points ?? 0) > 10);
+    return !!context?.[0].players.find((p) => {
+      const player = data.find((pd) => pd.ownerSID === p.socketId);
+      return (
+        (p.points ?? 0) +
+          (player?.forgeryPoints ?? 0) +
+          (player?.guessPoints ?? 0) +
+          (player?.narrationPoints ?? 0) >=
+        30
+      );
+    });
   };
 
   const handleNextScene = async (index: number) => {
