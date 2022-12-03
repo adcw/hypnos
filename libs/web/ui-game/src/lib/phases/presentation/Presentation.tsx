@@ -49,6 +49,7 @@ export const Presentation = () => {
     if (!state.me.player.isMaster) return;
 
     const areCardsSufficient = cardSufficient();
+    const areMaxPointsReached = maxPointsReached();
 
     if (cardIndex === context?.[0].players.length && areCardsSufficient) {
       // dispatch({ type: ActionType.initRound, payload: null });
@@ -77,7 +78,10 @@ export const Presentation = () => {
       return;
     }
 
-    if (cardIndex === context?.[0].players.length && !areCardsSufficient) {
+    if (
+      cardIndex === context?.[0].players.length &&
+      (!areCardsSufficient || areMaxPointsReached)
+    ) {
       dispatch({
         type: ActionType.setGame,
         payload: {
@@ -103,6 +107,12 @@ export const Presentation = () => {
     return !context?.[0].players.find((p) => p.cards.length == 1);
   };
 
+  const maxPointsReached = () => {
+    console.log(!!context?.[0].players.find((p) => (p.points ?? 0) > 10));
+
+    return !!context?.[0].players.find((p) => (p.points ?? 0) > 10);
+  };
+
   const handleNextScene = async (index: number) => {
     await continueControls.start({ opacity: 0 });
     await cardControls.start({ y: '-1000px' });
@@ -126,89 +136,97 @@ export const Presentation = () => {
   useEvent(PresentationPhaseEvents.setScene, handleNextScene);
 
   return (
-    <Center sx={{ height: 'calc(100vh - 50px)' }}>
-      <Stack justify="center" align="center">
+    <Center>
+      <Stack justify="center" align="center" sx={{ height: '100vh' }}>
         {cardIndex === null && !context?.[0].me.player.isMaster && (
           <Center>
             <Text color="dimmed">Waiting for master to start presentation</Text>
           </Center>
         )}
 
-        {cardIndex !== null && cardIndex < (context?.[0].players.length ?? 0) && (
-          <Group>
-            <Stack>
-              <motion.div initial={{ y: '-1000px' }} animate={nicknameControls}>
-                <Stack spacing="xs" align="center">
-                  {isFinal ? (
-                    <Text size={18}>The actual card:</Text>
-                  ) : (
-                    <Text>Card from:</Text>
-                  )}
-                  <Text size={30} variant="gradient">
-                    {
-                      context?.[0].players.find(
-                        (p) => p.socketId === currentRecord?.ownerSID
-                      )?.name
-                    }
-                  </Text>
-                </Stack>
-              </motion.div>
-              <motion.div initial={{ y: '-1000px' }} animate={cardControls}>
-                <Card
-                  src={currentRecord?.card ?? ''}
-                  // onClick={notifyNextScene}
-                />
-              </motion.div>
-            </Stack>
+        {cardIndex !== null &&
+          cardIndex < (context?.[0].players.length ?? 0) && (
+            <Group>
+              <Stack>
+                <motion.div
+                  initial={{ y: '-1000px' }}
+                  animate={nicknameControls}
+                >
+                  <Group spacing="xs" align="center">
+                    {isFinal ? (
+                      <Text size={18}>The actual card:</Text>
+                    ) : (
+                      <Text>Card from: {}</Text>
+                    )}
+                    <Text size={18} variant="gradient">
+                      {
+                        context?.[0].players.find(
+                          (p) => p.socketId === currentRecord?.ownerSID
+                        )?.name
+                      }
+                    </Text>
+                  </Group>
+                </motion.div>
+                <motion.div initial={{ y: '-1000px' }} animate={cardControls}>
+                  <Card
+                    src={currentRecord?.card ?? ''}
+                    // onClick={notifyNextScene}
+                  />
+                </motion.div>
+              </Stack>
 
-            <Stack>
-              <motion.div initial={{ y: '-1000px' }} animate={votesControls}>
-                <Text>Votes on this card:</Text>
-                {currentRecord && currentRecord?.votes.length > 0 ? (
-                  currentRecord?.votes.map((vote, i) => {
-                    return (
-                      <motion.div
-                        key={i}
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ delay: i * 0.2 }}
-                      >
-                        <Group>
-                          <Text>
-                            {
-                              context?.[0].players.find(
-                                (p) => p.socketId === vote.playerSID
-                              )?.name
-                            }
-                          </Text>
-                          {/* <Text>{isFinal ? '' : '+3'}</Text> */}
-                        </Group>
-                      </motion.div>
-                    );
-                  })
-                ) : (
-                  <Text>No votes :/</Text>
-                )}
-              </motion.div>
-            </Stack>
-          </Group>
-        )}
+              <Stack>
+                <motion.div initial={{ y: '-1000px' }} animate={votesControls}>
+                  <Text>Votes on this card:</Text>
+                  {currentRecord && currentRecord?.votes.length > 0 ? (
+                    currentRecord?.votes.map((vote, i) => {
+                      return (
+                        <motion.div
+                          key={i}
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ delay: i * 0.2 }}
+                        >
+                          <Group>
+                            <Text>
+                              {
+                                context?.[0].players.find(
+                                  (p) => p.socketId === vote.playerSID
+                                )?.name
+                              }
+                            </Text>
+                            {/* <Text>{isFinal ? '' : '+3'}</Text> */}
+                          </Group>
+                        </motion.div>
+                      );
+                    })
+                  ) : (
+                    <Text>No votes :/</Text>
+                  )}
+                </motion.div>
+              </Stack>
+            </Group>
+          )}
 
         {cardIndex !== null &&
           cardIndex === (context?.[0].players.length ?? 0) && (
             <ShowPoints data={data} />
           )}
 
-        {context?.[0].me.player.isMaster && (
+        {context?.[0].me.player.isMaster ? (
           <Center
-            sx={{ minHeight: '100px', cursor: 'pointer' }}
+            sx={{ minHeight: '50px', cursor: 'pointer' }}
             onClick={notifyNextScene}
           >
             <motion.div initial={{ opacity: 0 }} animate={continueControls}>
-              <Text sx={{ fontStyle: 'italic' }} color={'dimmed'} size="xl">
+              <Text sx={{ fontStyle: 'italic' }} color={'dimmed'} size="md">
                 {cardIndex === null ? 'Tap to start' : 'Tap to continue'}
               </Text>
             </motion.div>
+          </Center>
+        ) : (
+          <Center sx={{ minHeight: '50px' }}>
+            <></>
           </Center>
         )}
       </Stack>
@@ -277,7 +295,9 @@ const usePresentationData = () => {
 
           guessPoints:
             playerData.find((pd) => pd.playerSID === player.playerSID)
-              ?.votedCardUrl === actualCard
+              ?.votedCardUrl === actualCard ||
+            (player.votedCardUrl !== undefined &&
+              !playerData.find((pd) => pd.votedCardUrl === actualCard))
               ? 2
               : 0,
 
