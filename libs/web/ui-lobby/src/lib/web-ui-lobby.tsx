@@ -9,6 +9,7 @@ import { Socket } from 'socket.io';
 
 import { GiCrown } from 'react-icons/gi';
 import { ActionType } from 'libs/web/network/src/lib/types';
+import { sx } from 'libs/web/ui-design-system/src/lib/buttonSX';
 
 /* eslint-disable-next-line */
 export interface LobbyProps {}
@@ -68,7 +69,7 @@ export function Lobby(props: LobbyProps) {
               <Text size={40} color="teal">
                 {roomCode}
               </Text>
-              <Button onClick={() => console.log(context?.[0])}>
+              <Button sx={sx} onClick={() => console.log(context?.[0])}>
                 Log the state
               </Button>
             </Stack>
@@ -119,6 +120,7 @@ export function Lobby(props: LobbyProps) {
               <Button
                 onClick={handleGameStart}
                 disabled={context[0].players.length < 3}
+                sx={sx}
               >
                 Start game!
               </Button>
