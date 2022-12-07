@@ -5,6 +5,7 @@ import logo from "../lib/logo.png";
 import { useState } from 'react';
 import { IconCircleCheck } from '@tabler/icons';
 import { useNavigate } from "react-router-dom";
+import GButton from '../../../network/src/lib/GButton'
 
 
 /* eslint-disable-next-line */
@@ -36,14 +37,16 @@ export function Welcome(props: WebUiWelcomeProps) {
         >
           <Image src={logo}></Image>
           <Center>
-            <Button
+            <GButton
+              width={200}
               onClick={() => navigate("/game")}
-            >PLAY GAME</Button>
+            >Play Game</GButton>
           </Center>
           <Center style={{ marginTop: '50px', marginBottom: '50px' }}>
-            <Button
+            <GButton
+              width={200}
               onClick={() => setOpened(true)}
-            >GAME MANUAL</Button>
+            >Game Manual</GButton>
           </Center>
 
           <Modal
