@@ -11,6 +11,7 @@ import {
   GameEntity,
   PlayerEntity,
 } from 'libs/web/network/src/lib/types';
+import { sx } from 'libs/web/ui-design-system/src/lib/buttonSX';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { Action } from 'rxjs/internal/scheduler/Action';
 import { Socket } from 'socket.io';
@@ -144,7 +145,7 @@ export const Forgery = () => {
                   {!context?.[0].round?.playerData.find(
                     (p) => p.playerSID === context[0].me.player.socketId
                   ) ? (
-                    <Button disabled={!prompt || !card} onClick={notifySubmit}>
+                    <Button sx={sx} disabled={!prompt || !card} onClick={notifySubmit}>
                       Ready
                     </Button>
                   ) : (

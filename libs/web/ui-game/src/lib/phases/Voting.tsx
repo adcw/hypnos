@@ -23,6 +23,7 @@ import { useEvent } from 'libs/web/network/src/lib/hooks';
 import { ActionType, GameEntity } from 'libs/web/network/src/lib/types';
 import { useNextPhase } from '../Hooks';
 import { arrayShuffle } from '@hypnos/shared/constants';
+import { sx } from 'libs/web/ui-design-system/src/lib/buttonSX';
 
 export interface SubmitPayload {
   cardUrl: string;
@@ -166,7 +167,7 @@ export const VotingPhase = () => {
               </Group>
               {context[0].me.player.socketId !==
                 context[0].round?.currentPlayerSID && (
-                <Button disabled={!card || submitted} onClick={notifySubmit}>
+                <Button sx={sx} disabled={!card || submitted} onClick={notifySubmit}>
                   Ready
                 </Button>
               )}

@@ -22,6 +22,7 @@ import { CardDrawer, PlayerList } from 'libs/web/ui-game-controls/src';
 import { Card } from 'libs/web/ui-game-controls/src/lib/Card';
 import { Socket } from 'socket.io';
 import { useNextPhase } from '../Hooks';
+import { sx } from 'libs/web/ui-design-system/src/lib/buttonSX';
 
 export interface SubmitPayload {
   phrase: string;
@@ -155,7 +156,7 @@ export const PhrasePhase = () => {
                   onChange={(e) => setPrompt(e.target.value)}
                 />
                 {card && <Card src={card} />}
-                <Button disabled={!prompt || !card} onClick={notifySubmit}>
+                <Button sx={sx} disabled={!prompt || !card} onClick={notifySubmit}>
                   Submit
                 </Button>
               </Stack>
