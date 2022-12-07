@@ -14,6 +14,7 @@ import {
   Text,
 } from '@mantine/core';
 import { RoundPhase } from 'libs/web/network/src/lib/types';
+import { sx } from 'libs/web/ui-design-system/src/lib/buttonSX';
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Forgery } from './phases/Forgery';
@@ -58,7 +59,7 @@ export function Game(props: GameProps) {
               connect
             </Text>
             <Loader variant="dots" />
-            <Button onClick={() => navigate('/game')}>Exit to menu</Button>
+            <Button sx={sx} onClick={() => navigate('/game')}>Exit to menu</Button>
           </Stack>
         </Modal>
       )}

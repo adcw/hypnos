@@ -24,6 +24,8 @@ import {
   ActionType,
   GameEntity,
 } from 'libs/web/network/src/lib/types';
+import { sx } from '../../../ui-design-system/src/lib/buttonSX'
+
 
 /* eslint-disable-next-line */
 export interface MainmenuProps {}
@@ -173,7 +175,7 @@ export function MainMenu(props: MainmenuProps) {
         centered
       >
         <Text pb={12}>{connectionError}</Text>
-        <Button size="sm" onClick={() => navigate('/game')}>
+        <Button sx={sx} size="sm" onClick={() => navigate('/game')}>
           OK
         </Button>
       </Modal>
@@ -204,6 +206,7 @@ export function MainMenu(props: MainmenuProps) {
                   fullWidth
                   disabled={!roomCodeValid || !nickname}
                   onClick={() => onJoin()}
+                  sx={sx}
                 >
                   Join
                 </Button>
@@ -211,12 +214,13 @@ export function MainMenu(props: MainmenuProps) {
               rightSectionWidth={70}
             />
 
-            <Text size="sm">Or</Text>
+            <Text size="sm" color="yellow">Or</Text>
 
             <Button
               disabled={!nickname}
-              color="teal"
+              // color="teal"
               onClick={() => onCreate()}
+              sx={sx}
             >
               Create new room
             </Button>
