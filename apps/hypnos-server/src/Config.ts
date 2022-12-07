@@ -8,7 +8,7 @@ import https = require('https');
 import fs = require('fs');
 
 /* SETUP start */
-const isProduction = process.env['NODE_' + 'ENV'] === 'production';
+const isProduction = false; // process.env['NODE_' + 'ENV'] === 'production';
 
 const DOMAIN = isProduction
   ? 'https://hypnos-game.duckdns.org'
@@ -35,4 +35,6 @@ const httpsServer = isProduction
 
 httpsServer.listen(SERVER_PORT);
 
-export const io = new socketio.Server(httpsServer);
+export const io = new socketio.Server(httpsServer, {
+  cors: { origin: 'http://localhost' },
+});
