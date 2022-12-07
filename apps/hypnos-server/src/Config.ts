@@ -35,11 +35,4 @@ const httpsServer = isProduction
 
 httpsServer.listen(SERVER_PORT);
 
-export const io = new socketio.Server(
-  httpsServer,
-  isProduction
-    ? undefined
-    : {
-        cors: { origin: 'http://localhost' },
-      }
-);
+export const io = new socketio.Server(httpsServer);

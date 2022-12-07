@@ -11,7 +11,7 @@ import { Game } from '@hypnos/web/ui-game';
 import { themeOverride } from '@hypnos/web/ui-design-system';
 import { Room } from '@hypnos/web/ui-room';
 
-const socket = io('localhost:3301');
+const socket = io();
 
 export function App() {
   const [isConnected, setIsConnected] = useState(socket.connected);

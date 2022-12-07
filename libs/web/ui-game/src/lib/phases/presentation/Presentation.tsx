@@ -1,25 +1,12 @@
-import { PresentationPhaseEvents, RoomEvents } from '@hypnos/shared/gameevents';
+import { PresentationPhaseEvents } from '@hypnos/shared/gameevents';
 import { GameContext } from '@hypnos/web/network';
-import {
-  Affix,
-  Box,
-  BoxProps,
-  Button,
-  Center,
-  Grid,
-  Group,
-  JsonInput,
-  Stack,
-  StackProps,
-  Text,
-} from '@mantine/core';
-import arrayShuffle from 'array-shuffle';
+import { Center, Group, Stack, Text } from '@mantine/core';
 import { useEvent } from 'libs/web/network/src/lib/hooks';
 import { useContext, useEffect, useState } from 'react';
 import { Socket } from 'socket.io-client';
 
-import { motion, useAnimationControls } from 'framer-motion';
 import { Card } from '@hypnos/web/ui-game-controls';
+import { motion, useAnimationControls } from 'framer-motion';
 import {
   ActionType,
   GameEntity,
@@ -106,7 +93,7 @@ export const Presentation = () => {
           (player?.forgeryPoints ?? 0) +
           (player?.guessPoints ?? 0) +
           (player?.narrationPoints ?? 0) >=
-        30
+        5
       );
     });
   };
@@ -154,7 +141,7 @@ export const Presentation = () => {
                     {isFinal ? (
                       <Text size={18}>The actual card:</Text>
                     ) : (
-                      <Text>Card from: {}</Text>
+                      <Text>Card from</Text>
                     )}
                     <Text size={18} variant="gradient">
                       {
@@ -228,18 +215,6 @@ export const Presentation = () => {
           </Center>
         )}
       </Stack>
-
-      <Affix>
-        <Text size={10}>
-          {JSON.stringify(
-            data.map(
-              (d) =>
-                context?.[0].players.find((p) => p.socketId === d.ownerSID)
-                  ?.name
-            )
-          )}
-        </Text>
-      </Affix>
     </Center>
   );
 };

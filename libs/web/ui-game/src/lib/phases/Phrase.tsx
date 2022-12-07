@@ -1,14 +1,8 @@
 import { GameContext } from '@hypnos/web/network';
 import {
-  ActionIcon,
-  Affix,
   Button,
   Center,
-  CheckIcon,
-  Container,
-  Drawer,
   Grid,
-  Group,
   Loader,
   Stack,
   Text,
@@ -17,19 +11,17 @@ import {
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { useDrawCards, useNextPlayerSID } from './hooks';
 
-import { GiCardPick } from 'react-icons/gi';
-import { CardDrawer, PlayerList } from 'libs/web/ui-game-controls/src';
-import { XNickname } from '@hypnos/web/ui-design-system';
-import { Card } from 'libs/web/ui-game-controls/src/lib/Card';
+import { PhrasePhaseEvents } from '@hypnos/shared/gameevents';
+import { useEvent } from 'libs/web/network/src/lib/hooks';
 import {
   ActionType,
-  GameEntity,
   PlayerEntity,
   RoundEntity,
 } from 'libs/web/network/src/lib/types';
-import { useNextPhase } from '../Hooks';
-import { PhrasePhaseEvents } from '@hypnos/shared/gameevents';
+import { CardDrawer, PlayerList } from 'libs/web/ui-game-controls/src';
+import { Card } from 'libs/web/ui-game-controls/src/lib/Card';
 import { Socket } from 'socket.io';
+import { useNextPhase } from '../Hooks';
 
 export interface SubmitPayload {
   phrase: string;
@@ -120,20 +112,7 @@ export const PhrasePhase = () => {
     [context?.[0]]
   );
 
-  useEffect(() => {
-    if (!context) return;
-
-    console.log('OK');
-
-    const [state] = context;
-    const socket = state.me.socket as Socket;
-
-    socket.on(PhrasePhaseEvents.submit, handleSubmit);
-
-    return () => {
-      socket.off(PhrasePhaseEvents.submit, handleSubmit);
-    };
-  }, [context?.[0]]);
+  useEvent(PhrasePhaseEvents.submit, handleSubmit);
 
   return (
     <>

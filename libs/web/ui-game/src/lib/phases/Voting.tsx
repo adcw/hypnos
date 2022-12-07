@@ -131,7 +131,7 @@ export const VotingPhase = () => {
       <Grid.Col span={10}>
         <Center sx={{ height: '100vh' }}>
           {context && (
-            <Stack align="center" sx={{ height: '100vh' }}>
+            <Stack align="center" justify="center" sx={{ height: '100vh' }}>
               {context[0].me.player.socketId ===
               context[0].round?.currentPlayerSID ? (
                 <Text>Waiting for players to guess your card</Text>
