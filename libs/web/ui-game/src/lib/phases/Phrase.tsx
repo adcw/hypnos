@@ -4,6 +4,7 @@ import {
   Center,
   Grid,
   Loader,
+  Navbar,
   Stack,
   Text,
   TextInput,
@@ -18,7 +19,11 @@ import {
   PlayerEntity,
   RoundEntity,
 } from 'libs/web/network/src/lib/types';
-import { CardDrawer, PlayerList } from 'libs/web/ui-game-controls/src';
+import {
+  CardDrawer,
+  GameProgress,
+  PlayerList,
+} from 'libs/web/ui-game-controls/src';
 import { Card } from 'libs/web/ui-game-controls/src/lib/Card';
 import { Socket } from 'socket.io';
 import { useNextPhase } from '../Hooks';
@@ -117,6 +122,7 @@ export const PhrasePhase = () => {
 
   return (
     <>
+      {/* <GameProgress maxValue={30} data={context?.[0].players ?? []} /> */}
       <CardDrawer
         opened={cardsOpened}
         setOpened={setCardsOpened}
@@ -132,11 +138,11 @@ export const PhrasePhase = () => {
       <Grid m={0}>
         <Grid.Col span={2}>
           <PlayerList
-            players={
+            maxValue={30}
+            data={
               context?.[0].players.map((p, key) => ({
-                name: p.name ?? '???',
+                player: p,
                 highlight: p.socketId === context[0].me.player.socketId,
-                color: p.color,
                 state:
                   p.socketId === context[0].round?.currentPlayerSID
                     ? 'notready'

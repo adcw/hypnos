@@ -114,11 +114,11 @@ export const Forgery = () => {
       <Grid m={0}>
         <Grid.Col span={2}>
           <PlayerList
-            players={
+            maxValue={30}
+            data={
               context?.[0].players.map((p, key) => ({
-                name: p.name ?? '???',
+                player: p,
                 highlight: p.socketId === context[0].me.player.socketId,
-                color: p.color,
                 state: context[0].round?.playerData.find(
                   (pp) => pp.playerSID === p.socketId
                 )
