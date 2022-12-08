@@ -1,18 +1,5 @@
 import { GameContext } from '@hypnos/web/network';
-import { CardDrawer, PlayerList } from '@hypnos/web/ui-game-controls';
-import {
-  Box,
-  Button,
-  Card,
-  Center,
-  Group,
-  Loader,
-  LoadingOverlay,
-  Modal,
-  Overlay,
-  Stack,
-  Text,
-} from '@mantine/core';
+import { Box, Button, Loader, Modal, Stack, Text } from '@mantine/core';
 import { RoundPhase } from 'libs/web/network/src/lib/types';
 import { sx } from 'libs/web/ui-design-system/src/lib/buttonSX';
 import { useContext, useEffect, useState } from 'react';
@@ -59,7 +46,9 @@ export function Game(props: GameProps) {
               connect
             </Text>
             <Loader variant="dots" />
-            <Button sx={sx} onClick={() => navigate('/game')}>Exit to menu</Button>
+            <Button sx={sx} onClick={() => navigate('/game')}>
+              Exit to menu
+            </Button>
           </Stack>
         </Modal>
       )}

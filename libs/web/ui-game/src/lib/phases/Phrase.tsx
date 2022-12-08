@@ -136,6 +136,7 @@ export const PhrasePhase = () => {
               context?.[0].players.map((p, key) => ({
                 name: p.name ?? '???',
                 highlight: p.socketId === context[0].me.player.socketId,
+                color: p.color,
                 state:
                   p.socketId === context[0].round?.currentPlayerSID
                     ? 'notready'
@@ -156,7 +157,11 @@ export const PhrasePhase = () => {
                   onChange={(e) => setPrompt(e.target.value)}
                 />
                 {card && <Card src={card} />}
-                <Button sx={sx} disabled={!prompt || !card} onClick={notifySubmit}>
+                <Button
+                  sx={sx}
+                  disabled={!prompt || !card}
+                  onClick={notifySubmit}
+                >
                   Submit
                 </Button>
               </Stack>

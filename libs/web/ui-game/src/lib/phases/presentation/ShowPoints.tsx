@@ -60,7 +60,9 @@ export const ShowPoints = (props: ShowPointsProps) => {
               return (
                 <tr key={i}>
                   <td>{`${i + 1}. `}</td>
-                  <td> {pdata?.name}</td>
+                  <td>
+                    <Text color={pdata?.color}>{pdata?.name}</Text>
+                  </td>
                   <td> {pdata?.points ?? 0}</td>
                   <td>{zerofy(precord?.forgeryPoints)}</td>
                   <td>{zerofy(precord?.narrationPoints)}</td>

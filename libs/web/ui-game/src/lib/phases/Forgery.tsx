@@ -118,6 +118,7 @@ export const Forgery = () => {
               context?.[0].players.map((p, key) => ({
                 name: p.name ?? '???',
                 highlight: p.socketId === context[0].me.player.socketId,
+                color: p.color,
                 state: context[0].round?.playerData.find(
                   (pp) => pp.playerSID === p.socketId
                 )
@@ -145,7 +146,11 @@ export const Forgery = () => {
                   {!context?.[0].round?.playerData.find(
                     (p) => p.playerSID === context[0].me.player.socketId
                   ) ? (
-                    <Button sx={sx} disabled={!prompt || !card} onClick={notifySubmit}>
+                    <Button
+                      sx={sx}
+                      disabled={!prompt || !card}
+                      onClick={notifySubmit}
+                    >
                       Ready
                     </Button>
                   ) : (

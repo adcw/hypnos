@@ -1,4 +1,4 @@
-import { XNickname } from '@hypnos/web/ui-design-system';
+import { color, XNickname } from '@hypnos/web/ui-design-system';
 import { Box, CheckIcon, Container, Group, Loader, Stack } from '@mantine/core';
 
 export interface PlayerListProps {
@@ -6,6 +6,7 @@ export interface PlayerListProps {
     name: string;
     state: PlayerState;
     highlight: boolean;
+    color?: string;
   }[];
 }
 
@@ -19,9 +20,9 @@ export const PlayerList = (props: PlayerListProps) => {
           <Group key={key} position="apart">
             <XNickname
               value={p.name}
-              color="gray"
+              color={p.color}
               size="lg"
-              highlight={p.highlight}
+              // highlight={p.highlight}
             />
             {p.state === 'ready' && (
               <Box sx={{ color: 'green' }}>

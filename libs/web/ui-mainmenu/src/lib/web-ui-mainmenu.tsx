@@ -24,8 +24,8 @@ import {
   ActionType,
   GameEntity,
 } from 'libs/web/network/src/lib/types';
-import { sx } from '../../../ui-design-system/src/lib/buttonSX'
-
+import { sx } from '../../../ui-design-system/src/lib/buttonSX';
+import { color } from '@hypnos/web/ui-design-system';
 
 /* eslint-disable-next-line */
 export interface MainmenuProps {}
@@ -139,6 +139,7 @@ export function MainMenu(props: MainmenuProps) {
         isMaster: true,
         name: nickname ?? undefined,
         cards: [],
+        color: color(0),
       };
 
       dispatch({
@@ -216,7 +217,9 @@ export function MainMenu(props: MainmenuProps) {
               rightSectionWidth={70}
             />
 
-            <Text size="sm" color="yellow">Or</Text>
+            <Text size="sm" color="yellow">
+              Or
+            </Text>
 
             <Button
               disabled={!nickname}

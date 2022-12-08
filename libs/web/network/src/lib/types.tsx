@@ -16,6 +16,7 @@ export interface PlayerEntity {
   points?: number;
   isMaster?: boolean;
   cards: string[];
+  color?: string;
 }
 
 export interface GameEntity {

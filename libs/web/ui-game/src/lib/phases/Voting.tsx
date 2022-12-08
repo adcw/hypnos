@@ -113,6 +113,7 @@ export const VotingPhase = () => {
             context?.[0].players.map((p, key) => ({
               name: p.name ?? '???',
               highlight: p.socketId === context[0].me.player.socketId,
+              color: p.color,
               state:
                 // p.socketId === context[0].round?.currentPlayerSID
                 //   ? 'notready'
@@ -167,7 +168,11 @@ export const VotingPhase = () => {
               </Group>
               {context[0].me.player.socketId !==
                 context[0].round?.currentPlayerSID && (
-                <Button sx={sx} disabled={!card || submitted} onClick={notifySubmit}>
+                <Button
+                  sx={sx}
+                  disabled={!card || submitted}
+                  onClick={notifySubmit}
+                >
                   Ready
                 </Button>
               )}

@@ -1,3 +1,4 @@
+import { color } from '@hypnos/web/ui-design-system';
 import { getSafeId } from '@mantine/utils';
 import {
   GameEntity,
@@ -16,7 +17,10 @@ export const reducer = (state: GameEntity, action: Action): GameEntity => {
 
       return {
         ...state,
-        players: [...state.players, player],
+        players: [
+          ...state.players,
+          { ...player, color: color(state.players.length + 1) },
+        ],
       };
     }
 

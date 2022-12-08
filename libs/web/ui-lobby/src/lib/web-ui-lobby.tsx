@@ -1,5 +1,5 @@
 import { PhrasePhaseEvents, RoomEvents } from '@hypnos/shared/gameevents';
-import { XCard, XNickname } from '@hypnos/web/ui-design-system';
+import { color, XCard, XNickname } from '@hypnos/web/ui-design-system';
 import { Box, Button, Center, Grid, Group, Stack, Text } from '@mantine/core';
 import { GameContext } from 'libs/web/network/src/lib/web-network';
 import React, { useLayoutEffect } from 'react';
@@ -69,32 +69,33 @@ export function Lobby(props: LobbyProps) {
               <Text size={40} color="teal">
                 {roomCode}
               </Text>
-              <Button sx={sx} onClick={() => console.log(context?.[0])}>
+              {/* <Button sx={sx} onClick={() => console.log(context?.[0])}>
                 Log the state
-              </Button>
+              </Button> */}
             </Stack>
 
             <Center>
               <XCard mt="lg" sx={{ width: '400px' }}>
                 <Stack mx={16} spacing={4}>
                   <Text>Connected players:</Text>
-                  {
-                    <Group position="apart">
-                      <Group spacing={4}>
-                        <XNickname
-                          value={
-                            context?.[0].players.find((p) => p.isMaster)?.name
-                          }
-                          color="#666666"
-                          highlight={
-                            context?.[0].players.find((p) => p.isMaster)
-                              ?.socketId === context?.[0].me.socket.id
-                          }
-                        />
+                  {[0].map(() => {
+                    const player = context?.[0].players.find((p) => p.isMaster);
+                    return (
+                      <Group position="apart" key={0}>
+                        <Group spacing={4}>
+                          <XNickname
+                            value={player?.name}
+                            color={player?.color}
+                            highlight={
+                              context?.[0].players.find((p) => p.isMaster)
+                                ?.socketId === context?.[0].me.socket.id
+                            }
+                          />
+                        </Group>
+                        <GiCrown color="#666666" />
                       </Group>
-                      <GiCrown color="#666666" />
-                    </Group>
-                  }
+                    );
+                  })}
                   {context?.[0].players
                     .filter((p) => !p.isMaster)
                     .map((player, key) => {
@@ -102,10 +103,10 @@ export function Lobby(props: LobbyProps) {
                         <Group key={key} position="apart">
                           <XNickname
                             value={player.name}
-                            color="#666666"
-                            highlight={
-                              player.socketId === context[0].me.socket.id
-                            }
+                            color={player.color}
+                            // highlight={
+                            //   player.socketId === context[0].me.socket.id
+                            // }
                           />
                         </Group>
                       );

@@ -165,6 +165,9 @@ export const Presentation = () => {
                   <Text>Votes on this card:</Text>
                   {currentRecord && currentRecord?.votes.length > 0 ? (
                     currentRecord?.votes.map((vote, i) => {
+                      const player = context?.[0].players.find(
+                        (p) => p.socketId === vote.playerSID
+                      );
                       return (
                         <motion.div
                           key={i}
@@ -173,13 +176,8 @@ export const Presentation = () => {
                           transition={{ delay: i * 0.2 }}
                         >
                           <Group>
-                            <Text>
-                              {
-                                context?.[0].players.find(
-                                  (p) => p.socketId === vote.playerSID
-                                )?.name
-                              }
-                            </Text>
+                            <Text color={player?.color}>{player?.name}</Text>
+
                             {/* <Text>{isFinal ? '' : '+3'}</Text> */}
                           </Group>
                         </motion.div>

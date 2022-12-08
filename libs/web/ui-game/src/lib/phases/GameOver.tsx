@@ -1,4 +1,5 @@
 import { GameContext } from '@hypnos/web/network';
+import { color } from '@hypnos/web/ui-design-system';
 import {
   Center,
   Grid,
@@ -53,6 +54,7 @@ export const GameOver = () => {
                         label={`${p.points} ${
                           p.points === 1 ? 'point' : 'points'
                         }`}
+                        color={p.color}
                         radius="xs"
                         size="xl"
                         value={((p.points ?? 0) / (data?.max ?? 1)) * 100}
