@@ -135,57 +135,46 @@ export const PhrasePhase = () => {
         onChange={handleCardChange}
         value={card}
       />
-      <Grid m={0}>
-        <Grid.Col span={2}>
-          <PlayerList
-            maxValue={30}
-            data={
-              context?.[0].players.map((p, key) => ({
-                player: p,
-                highlight: p.socketId === context[0].me.player.socketId,
-                state:
-                  p.socketId === context[0].round?.currentPlayerSID
-                    ? 'notready'
-                    : 'none',
-              })) ?? []
-            }
-          />
-        </Grid.Col>
-
-        <Grid.Col span={10}>
-          <Center sx={{ height: '100vh' }}>
-            {context &&
-            context[0].me.socket.id === context[0].round?.currentPlayerSID ? (
-              <Stack justify="center" align="center" spacing={6}>
-                <Text>Chose card from drawer and enter a prompt: </Text>
-                <TextInput
-                  autoComplete="off"
-                  onChange={(e) => setPrompt(e.target.value)}
-                />
-                {card && <Card src={card} />}
-                <Button
-                  sx={sx}
-                  disabled={!prompt || !card}
-                  onClick={notifySubmit}
-                >
-                  Submit
-                </Button>
-              </Stack>
-            ) : (
-              context && (
-                <Stack justify="center" align="center">
-                  <Text>{`Waiting for ${
-                    context?.[0].players.find(
-                      (p) => p.socketId === context[0].round?.currentPlayerSID
-                    )?.name
-                  } to choose card and prompt`}</Text>
-                  <Loader size="lg" />
-                </Stack>
-              )
-            )}
-          </Center>
-        </Grid.Col>
-      </Grid>
+      <PlayerList
+        maxValue={30}
+        data={
+          context?.[0].players.map((p, key) => ({
+            player: p,
+            highlight: p.socketId === context[0].me.player.socketId,
+            state:
+              p.socketId === context[0].round?.currentPlayerSID
+                ? 'notready'
+                : 'none',
+          })) ?? []
+        }
+      />
+      <Center sx={{ height: '100vh' }}>
+        {context &&
+        context[0].me.socket.id === context[0].round?.currentPlayerSID ? (
+          <Stack justify="center" align="center" spacing={6}>
+            <Text>Chose card from drawer and enter a prompt: </Text>
+            <TextInput
+              autoComplete="off"
+              onChange={(e) => setPrompt(e.target.value)}
+            />
+            {card && <Card src={card} />}
+            <Button sx={sx} disabled={!prompt || !card} onClick={notifySubmit}>
+              Submit
+            </Button>
+          </Stack>
+        ) : (
+          context && (
+            <Stack justify="center" align="center">
+              <Text>{`Waiting for ${
+                context?.[0].players.find(
+                  (p) => p.socketId === context[0].round?.currentPlayerSID
+                )?.name
+              } to choose card and prompt`}</Text>
+              <Loader size="lg" />
+            </Stack>
+          )
+        )}
+      </Center>
     </>
   );
 };
