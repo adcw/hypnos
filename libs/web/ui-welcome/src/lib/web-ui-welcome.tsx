@@ -3,7 +3,7 @@ import { List, Box, Modal, BackgroundImage, Center, Card, Group, Button, Image, 
 import image from "../lib/background.jpg";
 import logo from "../lib/logo.png";
 import { useState } from 'react';
-import { IconCircleCheck } from '@tabler/icons';
+import { IconStar, IconArrowBigRight } from '@tabler/icons';
 import { useNavigate } from "react-router-dom";
 import { sx } from '../../../ui-design-system/src/lib/buttonSX'
 
@@ -63,16 +63,22 @@ export function Welcome(props: WebUiWelcomeProps) {
               size="md"
               center
               icon={
-                <ThemeIcon color="teal" size={24} radius="xl">
-                  <IconCircleCheck size={16} />
+                <ThemeIcon color="orange" size={24} radius="xl">
+                  <IconArrowBigRight size={16} />
                 </ThemeIcon>
               }
             >
-              <List.Item>Clone or download repository from GitHub</List.Item>
-              <List.Item>Install dependencies with yarn</List.Item>
-              <List.Item>To start development server run npm start command</List.Item>
-              <List.Item>Run tests to make sure your changes do not break the build</List.Item>
-
+              <List.Item>Choose card and create a phrase to describe the picture</List.Item>
+              <List.Item>Make sure that phrase is not too easy to guess</List.Item>
+              <List.Item>Let others try to pick card that match your phrase</List.Item>
+              <List.Item>Voting Time! Everyone votes on a card that matches best to phrase in their opinion</List.Item>
+              <List.Item>Earn points and swap roles with other players in next rounds</List.Item>
+              <br></br>
+              <List.Item icon={
+                 <ThemeIcon color="yellow" size={24} radius="xl">
+                  <IconStar />
+                 </ThemeIcon>
+                 }>Get the most points and win! </List.Item>
             </List>
           </Modal>
 
