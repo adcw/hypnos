@@ -31,6 +31,17 @@ export interface CardDrawerProps {
 export const CardDrawer = (props: CardDrawerProps) => {
   const context = useContext(GameContext);
 
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    if (!isMounted) {
+      context?.[0].me.player.cards.forEach((c) => {
+        const a = <img src={c} />;
+      });
+      setIsMounted(true);
+    }
+  }, []);
+
   const handleSubmit = (src: string) => {
     props.setOpened(false);
   };
