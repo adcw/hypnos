@@ -4,7 +4,8 @@ import {
 } from '@hypnos/shared/gameevents';
 import { GameContext } from '@hypnos/web/network';
 import { CardDrawer, PlayerList, Card } from '@hypnos/web/ui-game-controls';
-import { Button, Center, Grid, Stack, Text } from '@mantine/core';
+import { Box, Button, Center, Grid, Group, Stack, Text } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import { useEvent } from 'libs/web/network/src/lib/hooks';
 import {
   ActionType,
@@ -24,6 +25,8 @@ export const Forgery = () => {
   const [card, setCard] = useState<string | null>(null);
 
   const nextPhase = useNextPhase();
+
+  const isMobile = useMediaQuery('(max-width: 900px)');
 
   const handleCardChange = (src: string) => {
     setCard(src);
@@ -111,57 +114,61 @@ export const Forgery = () => {
         onChange={handleCardChange}
         value={card}
       />
-      <Grid m={0}>
-        <Grid.Col span={2}>
-          <PlayerList
-            maxValue={30}
-            data={
-              context?.[0].players.map((p, key) => ({
-                player: p,
-                highlight: p.socketId === context[0].me.player.socketId,
-                state: context[0].round?.playerData.find(
-                  (pp) => pp.playerSID === p.socketId
-                )
-                  ? 'ready'
-                  : 'notready',
-              })) ?? []
-            }
-          />
-        </Grid.Col>
+      <PlayerList
+        maxValue={30}
+        data={
+          context?.[0].players.map((p, key) => ({
+            player: p,
+            highlight: p.socketId === context[0].me.player.socketId,
+            state: context[0].round?.playerData.find(
+              (pp) => pp.playerSID === p.socketId
+            )
+              ? 'ready'
+              : 'notready',
+          })) ?? []
+        }
+      />
 
-        <Grid.Col span={10}>
-          <Center sx={{ height: '100vh' }}>
+      <Center sx={{ height: '100vh' }}>
+        <Stack justify="center" align="center">
+          {context &&
+          context[0].me.socket.id === context[0].round?.currentPlayerSID ? (
+            <Text
+              size={isMobile ? 'xs' : undefined}
+              color="dimmed"
+            >{`Wait for other players to choose the most convincing card for your prompt`}</Text>
+          ) : (
             <Stack justify="center" align="center">
-              {context &&
-              context[0].me.socket.id === context[0].round?.currentPlayerSID ? (
-                <Text>{`Wait for other players to choose the most convincing card for your prompt`}</Text>
-              ) : (
-                <Stack justify="center" align="center">
-                  <Text color="teal" size={26}>
+              <Group>
+                <Box>
+                  <Text color="teal" size={isMobile ? 20 : 26}>
                     {context?.[0].round?.phrase}
                   </Text>
-                  <Text>Chose a card matching this phrase the best</Text>
-
-                  {card && <Card src={card} />}
-                  {!context?.[0].round?.playerData.find(
-                    (p) => p.playerSID === context[0].me.player.socketId
-                  ) ? (
-                    <Button
-                      sx={sx}
-                      disabled={!prompt || !card}
-                      onClick={notifySubmit}
-                    >
-                      Ready
-                    </Button>
-                  ) : (
-                    <Text>Wait for other players</Text>
-                  )}
-                </Stack>
+                  <Text color="dimmed" size={isMobile ? 'sm' : undefined}>
+                    Chose a card matching this phrase the best
+                  </Text>
+                </Box>
+                <Box>{card && <Card src={card} />}</Box>
+              </Group>
+              {!context?.[0].round?.playerData.find(
+                (p) => p.playerSID === context[0].me.player.socketId
+              ) ? (
+                <Button
+                  sx={sx}
+                  disabled={!prompt || !card}
+                  onClick={notifySubmit}
+                >
+                  Ready
+                </Button>
+              ) : (
+                <Text size={isMobile ? 'sm' : undefined}>
+                  Wait for other players
+                </Text>
               )}
             </Stack>
-          </Center>
-        </Grid.Col>
-      </Grid>
+          )}
+        </Stack>
+      </Center>
     </>
   );
 };

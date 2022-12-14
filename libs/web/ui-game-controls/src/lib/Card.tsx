@@ -13,7 +13,7 @@ import {
 } from '@mantine/core';
 // import { useLongPress } from 'libs/web/ui-game/src/lib/phases/hooks';
 
-import { MouseEvent, useState } from 'react';
+import { MouseEvent, useMemo, useState } from 'react';
 
 export interface CardProps {
   src: string;
@@ -22,7 +22,12 @@ export interface CardProps {
   disabled?: boolean;
   onClick?: () => void;
   text?: string;
+  height?: number;
+  width?: number;
 }
+
+export const DEFAULT_CARD_WIDTH = 140;
+export const DEFAULT_CARD_HEIGHT = 200;
 
 export const Card = (props: CardProps) => {
   const [fullscreen, setFullscreen] = useState(false);
@@ -34,6 +39,11 @@ export const Card = (props: CardProps) => {
 
   const [onStart, onEnd] = useLongPress(handleHold, 200);
 
+  const checkSize = useMemo(
+    () => (props.width ?? DEFAULT_CARD_WIDTH) * 0.4,
+    [props.width]
+  );
+
   return (
     <>
       <MCard
@@ -43,7 +53,7 @@ export const Card = (props: CardProps) => {
         p="xs"
         radius="md"
         sx={{
-          width: 140,
+          width: props.width ?? DEFAULT_CARD_WIDTH,
           cursor: props.disabled ? 'not-allowed' : 'pointer',
           transition: '0.3s',
 
@@ -52,18 +62,18 @@ export const Card = (props: CardProps) => {
           },
         }}
       >
-        <Box sx={{ height: 200, width: '100%' }}>
+        <Box sx={{ height: '100%', width: '100%' }}>
           {props.chosen && (
             <Box
               sx={{
                 position: 'absolute',
                 zIndex: 300,
 
-                height: '80px',
-                width: '80px',
+                height: `${checkSize}px`,
+                width: `${checkSize}px`,
 
-                top: 'calc(50% - 40px)',
-                left: 'calc(50% - 40px)',
+                top: `calc(50% - ${checkSize / 2}px)`,
+                left: `calc(50% - ${checkSize / 2}px)`,
 
                 color: '#08962e',
 
@@ -80,9 +90,11 @@ export const Card = (props: CardProps) => {
             <Center
               style={{
                 position: 'absolute',
+                left: 0,
+                right: 0,
                 zIndex: 20,
                 height: 'inherit',
-                width: 140,
+                width: props.width ?? DEFAULT_CARD_WIDTH,
               }}
             >
               <Text

@@ -24,6 +24,7 @@ import { ActionType, GameEntity } from 'libs/web/network/src/lib/types';
 import { useNextPhase } from '../Hooks';
 import { arrayShuffle } from '@hypnos/shared/constants';
 import { sx } from 'libs/web/ui-design-system/src/lib/buttonSX';
+import { useMediaQuery } from '@mantine/hooks';
 
 export interface SubmitPayload {
   cardUrl: string;
@@ -40,6 +41,8 @@ export const VotingPhase = () => {
     () => (context ? arrayShuffle(context[0]?.round?.playerData ?? []) : []),
     [mounted]
   );
+
+  const isMobile = useMediaQuery('(max-width: 900px)');
 
   const nextPhase = useNextPhase();
 
@@ -106,80 +109,89 @@ export const VotingPhase = () => {
   useEvent(VotingPhaseEvents.phaseEnd, handlePhaseEnd);
 
   return (
-    <Grid m={0}>
-      <Grid.Col span={2}>
-        <PlayerList
-          maxValue={30}
-          data={
-            context?.[0].players.map((p, key) => ({
-              player: p,
-              highlight: p.socketId === context[0].me.player.socketId,
-              state:
-                // p.socketId === context[0].round?.currentPlayerSID
-                //   ? 'notready'
-                //   : 'none',
-                p.socketId === context[0].round?.currentPlayerSID
-                  ? 'none'
-                  : context[0].round?.playerData.find(
-                      (pd) => pd.playerSID === p.socketId
-                    )?.votedCardUrl
-                  ? 'ready'
-                  : 'notready',
-            })) ?? []
-          }
-        />
-      </Grid.Col>
+    <>
+      <PlayerList
+        maxValue={30}
+        data={
+          context?.[0].players.map((p, key) => ({
+            player: p,
+            highlight: p.socketId === context[0].me.player.socketId,
+            state:
+              // p.socketId === context[0].round?.currentPlayerSID
+              //   ? 'notready'
+              //   : 'none',
+              p.socketId === context[0].round?.currentPlayerSID
+                ? 'none'
+                : context[0].round?.playerData.find(
+                    (pd) => pd.playerSID === p.socketId
+                  )?.votedCardUrl
+                ? 'ready'
+                : 'notready',
+          })) ?? []
+        }
+      />
 
-      <Grid.Col span={10}>
-        <Center sx={{ height: '100vh' }}>
-          {context && (
-            <Stack align="center" justify="center" sx={{ height: '100vh' }}>
-              {context[0].me.player.socketId ===
-              context[0].round?.currentPlayerSID ? (
-                <Text>Waiting for players to guess your card</Text>
-              ) : (
-                <Text>Try to guess original card</Text>
-              )}
-              <Text color="teal" size={26}>
-                {context[0].round?.phrase ?? '?'}
+      <Center sx={{ height: '100vh' }}>
+        {context && (
+          <Stack
+            align="center"
+            justify="center"
+            sx={{ height: '100vh' }}
+            spacing={isMobile ? 'xs' : undefined}
+          >
+            {context[0].me.player.socketId ===
+            context[0].round?.currentPlayerSID ? (
+              <Text size={isMobile ? 'sm' : undefined} color="dimmed">
+                Waiting for players to guess your card
               </Text>
-              <Group>
-                {sortedCards.map((p, k) =>
-                  p.playerSID === context[0].me.player.socketId ? (
-                    <Card
-                      key={k}
-                      src={p.ownedCardUrl ?? ''}
-                      disabled
-                      text="Your card"
-                    />
-                  ) : (
-                    <Card
-                      chosen={p.ownedCardUrl === card}
-                      onClick={() => setCard(p.ownedCardUrl)}
-                      key={k}
-                      src={p.ownedCardUrl ?? ''}
-                      disabled={
-                        context[0].me.player.socketId ===
-                        context[0].round?.currentPlayerSID
-                      }
-                    />
-                  )
-                )}
-              </Group>
-              {context[0].me.player.socketId !==
-                context[0].round?.currentPlayerSID && (
-                <Button
-                  sx={sx}
-                  disabled={!card || submitted}
-                  onClick={notifySubmit}
-                >
-                  Ready
-                </Button>
+            ) : (
+              <Text size={isMobile ? 'sm' : undefined}>
+                Try to guess original card
+              </Text>
+            )}
+            <Text color="teal" size={isMobile ? 'lg' : 'xl'}>
+              {context[0].round?.phrase ?? '?'}
+            </Text>
+            <Group>
+              {sortedCards.map((p, k) =>
+                p.playerSID === context[0].me.player.socketId ? (
+                  <Card
+                    width={isMobile ? 120 : undefined}
+                    height={isMobile ? 80 : undefined}
+                    key={k}
+                    src={p.ownedCardUrl ?? ''}
+                    disabled
+                    text="Your card"
+                  />
+                ) : (
+                  <Card
+                    width={isMobile ? 120 : undefined}
+                    height={isMobile ? 80 : undefined}
+                    chosen={p.ownedCardUrl === card}
+                    onClick={() => setCard(p.ownedCardUrl)}
+                    key={k}
+                    src={p.ownedCardUrl ?? ''}
+                    disabled={
+                      context[0].me.player.socketId ===
+                      context[0].round?.currentPlayerSID
+                    }
+                  />
+                )
               )}
-            </Stack>
-          )}
-        </Center>
-      </Grid.Col>
-    </Grid>
+            </Group>
+            {context[0].me.player.socketId !==
+              context[0].round?.currentPlayerSID && (
+              <Button
+                sx={sx}
+                disabled={!card || submitted}
+                onClick={notifySubmit}
+              >
+                Ready
+              </Button>
+            )}
+          </Stack>
+        )}
+      </Center>
+    </>
   );
 };

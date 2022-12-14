@@ -28,6 +28,7 @@ import { Card } from 'libs/web/ui-game-controls/src/lib/Card';
 import { Socket } from 'socket.io';
 import { useNextPhase } from '../Hooks';
 import { sx } from 'libs/web/ui-design-system/src/lib/buttonSX';
+import { useMediaQuery } from '@mantine/hooks';
 
 export interface SubmitPayload {
   phrase: string;
@@ -44,6 +45,8 @@ export const PhrasePhase = () => {
   const [cardsOpened, setCardsOpened] = useState(false);
   const [card, setCard] = useState<string | null>(null);
   const [prompt, setPrompt] = useState<string | null>(null);
+
+  const isMobile = useMediaQuery('(max-width: 900px)');
 
   const init = useCallback(() => {
     if (!context) return;
@@ -152,12 +155,17 @@ export const PhrasePhase = () => {
         {context &&
         context[0].me.socket.id === context[0].round?.currentPlayerSID ? (
           <Stack justify="center" align="center" spacing={6}>
-            <Text>Chose card from drawer and enter a prompt: </Text>
+            <Text size={isMobile ? 'xs' : undefined}>
+              Chose card from drawer and enter a prompt:{' '}
+            </Text>
+            {card && <Card src={card} />}
             <TextInput
+              width={400}
+              size="xs"
               autoComplete="off"
               onChange={(e) => setPrompt(e.target.value)}
             />
-            {card && <Card src={card} />}
+
             <Button sx={sx} disabled={!prompt || !card} onClick={notifySubmit}>
               Submit
             </Button>

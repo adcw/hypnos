@@ -35,7 +35,7 @@ export const PlayerList = (props: PlayerListProps) => {
               .fill(0)
               .map((_, i) => {
                 return (
-                  <Text size="xs" color="dimmed">
+                  <Text key={i} size="xs" color="dimmed">
                     {Math.floor((i * props.maxValue) / (labelCount - 1))}
                   </Text>
                 );
@@ -80,25 +80,5 @@ export const PlayerList = (props: PlayerListProps) => {
         ))}
       </Stack>
     </Navbar>
-    // <Stack m={12} sx={{ width: '170px' }} spacing="xs">
-    //   {props.players.map((p, key) => {
-    //     return (
-    //       <Group key={key} position="apart">
-    //         <XNickname
-    //           value={p.name}
-    //           color={p.color}
-    //           size="sm"
-    //           // highlight={p.highlight}
-    //         />
-    //         {p.state === 'ready' && (
-    //           <Box sx={{ color: 'green' }}>
-    //             <CheckIcon height={20} width={20} fillOpacity={1} />
-    //           </Box>
-    //         )}
-    //         {p.state === 'notready' && <Loader variant="dots" size="sm" />}
-    //       </Group>
-    //     );
-    //   })}
-    // </Stack>
   );
 };

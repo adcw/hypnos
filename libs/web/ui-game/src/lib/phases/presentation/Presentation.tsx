@@ -13,6 +13,7 @@ import {
   RoundPhase,
 } from 'libs/web/network/src/lib/types';
 import { ShowPoints } from './ShowPoints';
+import { useMediaQuery } from '@mantine/hooks';
 
 export const Presentation = () => {
   const context = useContext(GameContext);
@@ -28,8 +29,11 @@ export const Presentation = () => {
   const votesControls = useAnimationControls();
   const continueControls = useAnimationControls();
 
+  const isMobile = useMediaQuery('(max-width: 900px)');
+  const [canContinue, setCanContinue] = useState(true);
+
   const notifyNextScene = () => {
-    if (!context) return;
+    if (!canContinue || !context) return;
 
     const [state, dispatch] = context;
 
@@ -99,6 +103,8 @@ export const Presentation = () => {
   };
 
   const handleNextScene = async (index: number) => {
+    setCanContinue(false);
+
     await continueControls.start({ opacity: 0 });
     await cardControls.start({ y: '-1000px' });
     await nicknameControls.start({ y: '-1000px' });
@@ -113,6 +119,8 @@ export const Presentation = () => {
       await nicknameControls.start({ y: '0px' });
       await votesControls.start({ y: '0px' });
       await continueControls.start({ opacity: 1 });
+
+      setCanContinue(true);
     };
 
     animate();
@@ -155,7 +163,8 @@ export const Presentation = () => {
                 <motion.div initial={{ y: '-1000px' }} animate={cardControls}>
                   <Card
                     src={currentRecord?.card ?? ''}
-                    // onClick={notifyNextScene}
+                    width={isMobile ? 120 : undefined}
+                    height={isMobile ? 180 : undefined}
                   />
                 </motion.div>
               </Stack>
@@ -177,8 +186,6 @@ export const Presentation = () => {
                         >
                           <Group>
                             <Text color={player?.color}>{player?.name}</Text>
-
-                            {/* <Text>{isFinal ? '' : '+3'}</Text> */}
                           </Group>
                         </motion.div>
                       );
