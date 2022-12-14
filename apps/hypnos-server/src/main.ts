@@ -28,7 +28,11 @@ io.on('connection', (socket) => {
 
   socket.on(RoomEvents.leaveroom, (room, isMaster) => {
     console.log(`Socket ${socket.id} leaving ${room}`);
-    socket.leave(room);
+    // socket.leave(room);
+
+    for (const room of socket.rooms.values()) {
+      socket.leave(room);
+    }
 
     io.to(room).emit(RoomEvents.notifyleave, socket.id);
   });
@@ -60,19 +64,20 @@ io.on('connection', (socket) => {
   });
 
   socket.on(RoomEvents.broadcastgameupdate, (gameState) => {
-    let socketRoom;
-    let i = 0;
+    // let socketRoom;
+    // let i = 0;
     socket.rooms.forEach((room) => {
-      if (i === 1) {
-        socketRoom = room;
-      }
-
-      i++;
+      socket.to(room).emit(RoomEvents.broadcastgameupdate, gameState);
     });
 
-    if (socketRoom) {
-      socket.to(socketRoom).emit(RoomEvents.broadcastgameupdate, gameState);
-    }
+    // console.log('Socket rooms are: ');
+    // for (const entry of socket.rooms.entries()) {
+    //   console.log(entry);
+    // }
+
+    // if (socketRoom) {
+    //   socket.to(socketRoom).emit(RoomEvents.broadcastgameupdate, gameState);
+    // }
   });
 
   socket.on(PhrasePhaseEvents.submit, (roomCode, obj) => {
