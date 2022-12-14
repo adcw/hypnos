@@ -47,9 +47,38 @@ export function MainMenu(props: MainmenuProps) {
   const [roomCodeError, setRoomCodeError] = useState<string | null>(null);
   const [connectionError, setConnectionError] = useState<string | null>(null);
 
+  const [mounted, setMounted] = useState(false);
+
   const context = useContext(GameContext);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!mounted) {
+      console.log('Initialize all data');
+
+      if (!context) return;
+
+      const [state, dispatch] = context;
+
+      dispatch({
+        type: ActionType.initialize,
+        payload: {
+          cards: [],
+          players: [],
+          me: {
+            player: {
+              socketId: (state.me.socket as Socket).id,
+              cards: [],
+            },
+            socket: state.me.socket,
+          },
+        } as GameEntity,
+      });
+
+      setMounted(true);
+    }
+  });
 
   const onJoin = () => {
     if (!roomCodeValid || !context || !nickname) {
