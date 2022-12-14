@@ -26,7 +26,7 @@ export type PlayerState = 'notready' | 'ready' | 'none';
 export const PlayerList = (props: PlayerListProps) => {
   const labelCount = 11;
   return (
-    <Navbar height={12} fixed sx={{ top: '0px', width: '100vw' }}>
+    <Navbar height={12} fixed sx={{ top: '0px', width: '100vw' }} zIndex={200}>
       <Stack spacing={0} sx={{ width: 'auto' }} m="md">
         <Group spacing={0} position="apart">
           <Box sx={{ width: '140px' }} />
