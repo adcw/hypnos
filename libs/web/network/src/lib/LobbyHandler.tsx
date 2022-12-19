@@ -1,8 +1,12 @@
+import { CARDS_IN_HANDS } from '@hypnos/shared/constants';
 import {
   RoomEvents,
   ForgeryPhaseEvents,
   VotingPhaseEvents,
+  PhrasePhaseEvents,
 } from '@hypnos/shared/gameevents';
+import { PhrasePhase } from '@hypnos/web/ui-game';
+import { useDrawCards } from 'libs/web/ui-game/src/lib/phases/hooks';
 import { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Socket } from 'socket.io';
@@ -102,6 +106,31 @@ export const LobbyHandler = (props: LobbyHandlerProps) => {
     navigate('/game/room');
   };
 
+  // const handleDrawCards = (socketId: string) => {
+  //   if (!context) return;
+  //   const [state, dispatch] = context;
+  //   if (!state.me.player.isMaster) return;
+
+  //   const player = state.players.find((p) => p.socketId === socketId);
+  //   const allCards = state.cards;
+
+  //   const playerCards = [
+  //     ...(player?.cards || []),
+  //     ...allCards.splice(0, CARDS_IN_HANDS - (player?.cards.length ?? 0)),
+  //   ];
+
+  //   dispatch({
+  //     type: ActionType.setGame,
+  //     payload: {
+  //       ...state,
+  //       cards: allCards,
+  //       players: state.players.map((p) =>
+  //         p.socketId === socketId ? { ...player, cards: playerCards } : p
+  //       ),
+  //     } as GameEntity,
+  //   });
+  // };
+
   useEffect(() => {
     if (!context) return;
     const [state] = context;
@@ -156,6 +185,7 @@ export const LobbyHandler = (props: LobbyHandlerProps) => {
   useEvent(RoomEvents.broadcastgameupdate, handleGameUpdate);
   useEvent(RoomEvents.notifyleave, handleNotifyLeave);
   useEvent(RoomEvents.gamestart, handleGameStart);
+  // useEvent(PhrasePhaseEvents.drawCards, handleDrawCards);
 
   useEffect(() => {
     if (!context) return;

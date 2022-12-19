@@ -1,5 +1,6 @@
 export const PhrasePhaseEvents = {
   submit: 'ppSubmit',
+  // drawCards: 'ppDrawCards',
 };
 
 export const ForgeryPhaseEvents = {

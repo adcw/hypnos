@@ -48,22 +48,24 @@ export const PhrasePhase = () => {
 
   const isMobile = useMediaQuery('(max-width: 900px)');
 
-  const init = useCallback(() => {
-    if (!context) return;
-
-    const [state] = context;
-
-    if (state.me.player.isMaster) {
-      draw();
-    }
-  }, [context, draw]);
-
   useEffect(() => {
     if (!mounted) {
-      init();
+      if (!context) return;
+
+      const [state] = context;
+
+      if (state.me.player.isMaster) {
+        draw();
+      }
+
+      // (state.me.socket as Socket).emit(
+      //   PhrasePhaseEvents.drawCards,
+      //   state.roomCode
+      // );
+
       setMounted(true);
     }
-  }, [init, mounted]);
+  }, [mounted]);
 
   const handleCardChange = (src: string) => {
     setCard(src);

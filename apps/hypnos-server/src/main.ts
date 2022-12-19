@@ -84,6 +84,10 @@ io.on('connection', (socket) => {
     io.to(roomCode).emit(PhrasePhaseEvents.submit, obj);
   });
 
+  // socket.on(PhrasePhaseEvents.drawCards, (roomCode) => {
+  //   io.to(roomCode).emit(PhrasePhaseEvents.drawCards, socket.id);
+  // });
+
   socket.on(VotingPhaseEvents.submit, (roomCode, card, sid) => {
     console.log('card: ', card);
 
