@@ -255,6 +255,17 @@ const usePresentationData = () => {
       );
     });
 
+    const actualCard = playerData.find(
+      (pd) => pd.playerSID === context[0].round?.currentPlayerSID
+    )?.ownedCardUrl;
+
+    const nGuessed = playerData.filter(
+      (pd) => pd.votedCardUrl === actualCard
+    ).length;
+
+    const isNarrationSuccessfull =
+      nGuessed > 0 && nGuessed < playerData.length - 1;
+
     setPointObject(
       playerData.map((player) => {
         const votes = playerData.filter(
@@ -264,29 +275,28 @@ const usePresentationData = () => {
         const isNarrator =
           player.playerSID === context[0].round?.currentPlayerSID;
 
-        const actualCard = playerData.find(
-          (pd) => pd.playerSID === context[0].round?.currentPlayerSID
-        )?.ownedCardUrl;
+        const narrationSuccessPoints = isNarrator ? 3 : 0;
+        const narrationFailPoints = isNarrator ? 0 : 2;
 
         return {
           card: player.ownedCardUrl,
           ownerSID: player.playerSID,
-          forgeryPoints: !isNarrator ? votes.length : 0,
+
+          narrationPoints: isNarrationSuccessfull
+            ? narrationSuccessPoints
+            : narrationFailPoints,
+
+          forgeryPoints:
+            !isNarrator && isNarrationSuccessfull ? votes.length : 0,
 
           guessPoints:
+            !isNarrator &&
+            isNarrationSuccessfull &&
             playerData.find((pd) => pd.playerSID === player.playerSID)
-              ?.votedCardUrl === actualCard ||
-            (player.votedCardUrl !== undefined &&
-              !playerData.find((pd) => pd.votedCardUrl === actualCard))
-              ? 2
-              : 0,
-
-          narrationPoints:
-            isNarrator &&
-            votes.length > 0 &&
-            votes.length < playerData.length - 1
+              ?.votedCardUrl === actualCard
               ? 3
               : 0,
+
           votes: votes.map((v) => ({ playerSID: v.playerSID, points: 2 })),
         };
       })
