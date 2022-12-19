@@ -15,6 +15,8 @@ import {
 import { ShowPoints } from './ShowPoints';
 import { useMediaQuery } from '@mantine/hooks';
 
+export const MAX_POINTS = 30;
+
 export const Presentation = () => {
   const context = useContext(GameContext);
   const data = usePresentationData();
@@ -97,7 +99,7 @@ export const Presentation = () => {
           (player?.forgeryPoints ?? 0) +
           (player?.guessPoints ?? 0) +
           (player?.narrationPoints ?? 0) >=
-        5
+        MAX_POINTS
       );
     });
   };
