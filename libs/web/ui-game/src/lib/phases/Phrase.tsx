@@ -54,14 +54,21 @@ export const PhrasePhase = () => {
 
       const [state] = context;
 
-      if (state.me.player.isMaster) {
-        draw();
-      }
-
       // (state.me.socket as Socket).emit(
       //   PhrasePhaseEvents.drawCards,
       //   state.roomCode
       // );
+
+      if (state.me.player.isMaster) {
+        draw();
+      }
+
+      if (!state.me.player.isMaster && !state.me.player.isActive) {
+        (state.me.socket as Socket).emit(
+          PhrasePhaseEvents.drawCards,
+          state.roomCode
+        );
+      }
 
       setMounted(true);
     }
