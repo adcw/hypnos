@@ -1,3 +1,5 @@
+# Gra dostępna jest pod adresem http://hypnos-game.duckdns.org/
+
 # Kroki uruchomienia gry lokalnie:
 
 1. Zainstalować wszelkie zależności
